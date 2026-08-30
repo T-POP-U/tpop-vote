@@ -1,6 +1,5 @@
 import os
 import hashlib
-import json
 import sqlite3
 from flask import Flask, render_template, request, jsonify
 
@@ -15,7 +14,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             my_id TEXT PRIMARY KEY,
             pin_hash TEXT,
-            encrypted_contact TEXT
+            contact TEXT
         )
     ''')
     c.execute('''
@@ -38,16 +37,6 @@ def hash_vote(voter_id, target_id):
     raw = f"{voter_id}_{target_id}_{salt}"
     return hashlib.sha256(raw.encode('utf-8')).hexdigest()
 
-# 連絡先の文字シフト暗号化/復号化（運営もすぐ解読不可）
-def encrypt_contact(contact, pin):
-    return "".join([chr(ord(c) + int(pin[i % len(pin)])) for i, c in enumerate(contact)])
-
-def decrypt_contact(encrypted_str, pin):
-    try:
-        return "".join([chr(ord(c) - int(pin[i % len(pin)])) for i, c in enumerate(encrypted_str)])
-    except Exception:
-        return encrypted_str
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -64,15 +53,14 @@ def vote():
         return jsonify({'success': False, 'message': '必須項目を入力してください'}), 400
 
     pin_h = hash_pin(pin)
-    contact_enc = encrypt_contact(contact, pin)
 
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
 
     c.execute('''
-        INSERT OR REPLACE INTO users (my_id, pin_hash, encrypted_contact)
+        INSERT OR REPLACE INTO users (my_id, pin_hash, contact)
         VALUES (?, ?, ?)
-    ''', (my_id, pin_h, contact_enc))
+    ''', (my_id, pin_h, contact))
 
     c.execute('DELETE FROM votes WHERE voter_id = ?', (my_id,))
 
@@ -103,12 +91,12 @@ def result():
         conn.close()
         return jsonify({'success': False, 'message': 'IDまたはパスワードが正しくありません'}), 400
 
-    c.execute('SELECT my_id, encrypted_contact FROM users WHERE my_id != ?', (my_id,))
+    c.execute('SELECT my_id, contact FROM users WHERE my_id != ?', (my_id,))
     other_users = c.fetchall()
 
     matches = []
 
-    for other_id, other_contact_enc in other_users:
+    for other_id, other_contact in other_users:
         my_vote_hash = hash_vote(my_id, other_id)
         other_vote_hash = hash_vote(other_id, my_id)
 
@@ -121,7 +109,7 @@ def result():
         if i_voted and they_voted:
             matches.append({
                 'id': other_id,
-                'contact': other_contact_enc  # 暗号化された連絡先を返しフロントで解読
+                'contact': other_contact
             })
 
     conn.close()
