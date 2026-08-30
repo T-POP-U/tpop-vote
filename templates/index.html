@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>T-POP シークレット投票</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; }
+    .container { max-width: 420px; margin: 0 auto; }
+    .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    h1 { font-size: 20px; margin-top: 0; text-align: center; color: #1a73e8; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 12px; border: none; background: #e4e6eb; font-weight: bold; border-radius: 10px; cursor: pointer; font-size: 15px; }
+    .tab-btn.active { background: #1a73e8; color: white; }
+    label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
+    select, input[type="text"], input[type="password"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+    .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
+    .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
+    button.submit-btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+    .result-box { padding: 16px; border-radius: 10px; margin-top: 16px; text-align: center; font-weight: bold; }
+    .success { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
+    .fail { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>T-POP シークレット投票 🥂</h1>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('vote')">🗳️ 投票する</button>
+      <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
+    </div>
+
+    <!-- 投票タブ -->
+    <div id="vote-tab" class="card">
+      <form id="voteForm">
+        <label>自分の番号札（ID）</label>
+        <select id="my_id" required>
+          <option value="">選択してください</option>
+          <option value="M-1">男性 M-1</option>
+          <option value="M-2">男性 M-2</option>
+          <option value="M-3">男性 M-3</option>
+          <option value="M-4">男性 M-4</option>
+          <option value="M-5">男性 M-5</option>
+          <option value="F-1">女性 F-1</option>
+          <option value="F-2">女性 F-2</option>
+          <option value="F-3">女性 F-3</option>
+          <option value="F-4">女性 F-4</option>
+          <option value="F-5">女性 F-5</option>
+        </select>
+
+        <label>パスワード（数字4桁）※自分で決める</label>
+        <input type="password" id="pin" placeholder="例: 1234" maxlength="4" required>
+
+        <label>自分の連絡先（LINE ID または Instagram）</label>
+        <input type="text" id="contact" placeholder="例: @tpop_tsukuba" required>
+
+        <label>気になった相手を選択（複数選択OK）</label>
+        <div class="grid">
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-1"> M-1</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-2"> M-2</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-3"> M-3</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-4"> M-4</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-5"> M-5</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-1"> F-1</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-2"> F-2</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-3"> F-3</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-4"> F-4</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-5"> F-5</label>
+        </div>
+
+        <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
+      </form>
+    </div>
+
+    <!-- 結果確認タブ -->
+    <div id="result-tab" class="card" style="display:none;">
+      <label>自分の番号札（ID）</label>
+      <select id="res_my_id">
+        <option value="">選択してください</option>
+        <option value="M-1">男性 M-1</option>
+        <option value="M-2">男性 M-2</option>
+        <option value="M-3">男性 M-3</option>
+        <option value="M-4">男性 M-4</option>
+        <option value="M-5">男性 M-5</option>
+        <option value="F-1">女性 F-1</option>
+        <option value="F-2">女性 F-2</option>
+        <option value="F-3">女性 F-3</option>
+        <option value="F-4">女性 F-4</option>
+        <option value="F-5">女性 F-5</option>
+      </select>
+
+      <label>設定したパスワード（4桁）</label>
+      <input type="password" id="res_pin" placeholder="4桁の数字" maxlength="4">
+
+      <button type="button" class="submit-btn" onclick="checkResult()">結果を見る</button>
+
+      <div id="result-display"></div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if(tab === 'vote') {
+        document.getElementById('vote-tab').style.display = 'block';
+        document.getElementById('result-tab').style.display = 'none';
+        event.target.classList.add('active');
+      } else {
+        document.getElementById('vote-tab').style.display = 'none';
+        document.getElementById('result-tab').style.display = 'block';
+        event.target.classList.add('active');
+      }
+    }
+
+    async function submitVote() {
+      const my_id = document.getElementById('my_id').value;
+      const pin = document.getElementById('pin').value;
+      const contact = document.getElementById('contact').value;
+      const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
+
+      if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
+      if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
+
+      const res = await fetch('/api/vote', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ my_id, pin, contact, target_ids })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("投票が完了しました！イベント終了後に「結果確認」タブからご覧ください。");
+        document.getElementById('voteForm').reset();
+      } else {
+        alert(data.message || "エラーが発生しました");
+      }
+    }
+
+    async function checkResult() {
+      const my_id = document.getElementById('res_my_id').value;
+      const pin = document.getElementById('res_pin').value;
+      const display = document.getElementById('result-display');
+
+      if (!my_id || !pin) return alert("IDとパスワードを入力してください");
+
+      display.innerHTML = "<p style='text-align:center;'>照合中...</p>";
+
+      const res = await fetch('/api/result', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ my_id, pin })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        display.innerHTML = `<div class="result-box fail">${data.message}</div>`;
+        return;
+      }
+
+      if (data.matched) {
+        let html = '<div class="result-box success">🎉 おめでとうございます！マッチング成立です！<br><br>';
+        data.matches.forEach(m => {
+          html += `お相手: <strong>${m.id}</strong><br>`;
+        });
+        html += '<br>お互い指名し合いました！会場やLINEで連絡を取ってみましょう！</div>';
+        display.innerHTML = html;
+      } else {
+        display.innerHTML = '<div class="result-box fail">今回はマッチングしませんでした。</div>';
+      }
+    }
+  </script>
+</body>
+</html>
