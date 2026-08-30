@@ -21,6 +21,7 @@
     .result-box { padding: 16px; border-radius: 10px; margin-top: 16px; text-align: center; font-weight: bold; }
     .success { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
     .fail { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
+    .contact-badge { background: #ffffff; padding: 8px 12px; border-radius: 6px; display: inline-block; margin-top: 6px; border: 1px solid #ceead6; color: #1a73e8; font-size: 18px; }
   </style>
 </head>
 <body>
@@ -32,7 +33,6 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
-    <!-- 投票タブ -->
     <div id="vote-tab" class="card">
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
@@ -74,7 +74,6 @@
       </form>
     </div>
 
-    <!-- 結果確認タブ -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -162,8 +161,11 @@
         let html = '<div class="result-box success">🎉 おめでとうございます！マッチング成立です！<br><br>';
         data.matches.forEach(m => {
           html += `お相手: <strong>${m.id}</strong><br>`;
+          if(m.contact) {
+            html += `連絡先: <div class="contact-badge"><strong>${m.contact}</strong></div><br><br>`;
+          }
         });
-        html += '<br>お互い指名し合いました！会場やLINEで連絡を取ってみましょう！</div>';
+        html += '連絡を取ってみましょう！</div>';
         display.innerHTML = html;
       } else {
         display.innerHTML = '<div class="result-box fail">今回はマッチングしませんでした。</div>';
