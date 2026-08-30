@@ -22,6 +22,9 @@
     .success { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
     .fail { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
     .contact-badge { background: #ffffff; padding: 8px 12px; border-radius: 6px; display: inline-block; margin-top: 6px; border: 1px solid #ceead6; color: #1a73e8; font-size: 18px; word-break: break-all; }
+    .complete-box { text-align: center; padding: 20px 10px; }
+    .complete-icon { font-size: 48px; margin-bottom: 12px; }
+    .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -33,6 +36,7 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
+    <!-- 投票フォーム画面 -->
     <div id="vote-tab" class="card">
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
@@ -156,6 +160,20 @@
       </form>
     </div>
 
+    <!-- 投票完了画面（初期状態は非表示） -->
+    <div id="complete-view" class="card" style="display:none;">
+      <div class="complete-box">
+        <div class="complete-icon">✨</div>
+        <h2 style="color: #1a73e8; margin-top: 0;">投票ありがとうございます！</h2>
+        <p style="color: #666; line-height: 1.6;">
+          ご投票を受け付けました。<br>
+          イベント終了後に上部の「🎉 結果確認」タブからマッチング結果をご確認ください！
+        </p>
+        <button class="re-vote-btn" onclick="resetVoteForm()">内容をやり直す・修正する</button>
+      </div>
+    </div>
+
+    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -226,11 +244,19 @@
     function showTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       if(tab === 'vote') {
-        document.getElementById('vote-tab').style.display = 'block';
         document.getElementById('result-tab').style.display = 'none';
+        // 投票完了済みなら完了画面を表示、まだならフォームを表示
+        if(document.getElementById('complete-view').getAttribute('data-completed') === 'true') {
+          document.getElementById('vote-tab').style.display = 'none';
+          document.getElementById('complete-view').style.display = 'block';
+        } else {
+          document.getElementById('vote-tab').style.display = 'block';
+          document.getElementById('complete-view').style.display = 'none';
+        }
         event.target.classList.add('active');
       } else {
         document.getElementById('vote-tab').style.display = 'none';
+        document.getElementById('complete-view').style.display = 'none';
         document.getElementById('result-tab').style.display = 'block';
         event.target.classList.add('active');
       }
@@ -252,11 +278,20 @@
       });
       const data = await res.json();
       if (res.ok) {
-        alert("投票が完了しました！イベント終了後に「結果確認」タブからご覧ください。");
+        // 投票成功時にフォームを隠して完了画面を表示
+        document.getElementById('vote-tab').style.display = 'none';
+        document.getElementById('complete-view').style.display = 'block';
+        document.getElementById('complete-view').setAttribute('data-completed', 'true');
         document.getElementById('voteForm').reset();
       } else {
         alert(data.message || "エラーが発生しました");
       }
+    }
+
+    function resetVoteForm() {
+      document.getElementById('complete-view').style.display = 'none';
+      document.getElementById('complete-view').removeAttribute('data-completed');
+      document.getElementById('vote-tab').style.display = 'block';
     }
 
     async function checkResult() {
