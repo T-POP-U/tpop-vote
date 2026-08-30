@@ -1,6 +1,7 @@
 import os
 import hashlib
 import sqlite3
+from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
@@ -36,6 +37,12 @@ def hash_vote(voter_id, target_id):
     salt = "TPOP_SECRET_SALT_2026"
     raw = f"{voter_id}_{target_id}_{salt}"
     return hashlib.sha256(raw.encode('utf-8')).hexdigest()
+
+# ----------------------------------------------------
+# 🔓 結果が見れるようになる時間を指定（年, 月, 日, 時, 分）
+# 例: 2026年9月1日の 21:00 解禁の場合
+# ----------------------------------------------------
+UNLOCK_TIME = datetime(2026, 9, 1, 21, 0)
 
 @app.route('/')
 def index():
@@ -75,6 +82,14 @@ def vote():
 
 @app.route('/api/result', methods=['POST'])
 def result():
+    # ⏰ 時間チェック（指定時間前なら弾く）
+    if datetime.now() < 22:10:
+        time_str = UNLOCK_TIME.strftime('%H:%M')
+        return jsonify({
+            'success': False, 
+            'message': f'結果発表は【 {time_str} 】から確認できます！お楽しみに🥂'
+        }), 400
+
     data = request.json
     my_id = data.get('my_id')
     pin = data.get('pin')
