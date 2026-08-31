@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
-  <!-- 🎉 紙吹雪（Confetti）ライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; transition: background 0.5s ease; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
     .container { max-width: 420px; margin: 0 auto; }
     .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; position: relative; }
     h1 { font-size: 20px; margin-top: 0; text-align: center; color: #1a73e8; }
@@ -29,8 +28,6 @@
       margin-top: 8px;
       line-height: 1.5;
     }
-    .contact-guide-item { margin-bottom: 6px; }
-    .contact-guide-item:last-child { margin-bottom: 0; }
 
     /* 🔒 プライバシー注記ボックス */
     .privacy-notice {
@@ -57,9 +54,6 @@
       border-radius: 8px;
       margin-top: 14px;
       margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
@@ -72,129 +66,63 @@
 
     button.submit-btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
     .complete-box { text-align: center; padding: 20px 10px; }
-    .complete-icon { font-size: 48px; margin-bottom: 12px; }
     .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
 
-    /* ----------------------------------------------------
-       🔥 暗転 ＆ ネオン発光カウントダウン
-    ---------------------------------------------------- */
+    /* カウントダウンオーバーレイ */
     .dark-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #0a0a0c;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease-out;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #0a0a0c; z-index: 9999; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
     }
-    .countdown-title { color: #888; font-size: 14px; font-weight: bold; letter-spacing: 4px; margin-bottom: 20px; text-transform: uppercase; }
+    .countdown-title { color: #888; font-size: 14px; font-weight: bold; letter-spacing: 4px; margin-bottom: 20px; }
     .countdown-num-glow {
       font-size: 120px; font-weight: 900; color: #fff;
       text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
-      animation: neonPulse 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
-    }
-    @keyframes neonPulse {
-      0% { transform: scale(0.6); opacity: 0.3; }
-      50% { transform: scale(1.25); opacity: 1; filter: drop-shadow(0 0 15px #00f0ff); }
-      100% { transform: scale(1); opacity: 1; }
     }
 
-    /* ----------------------------------------------------
-       🎉 マッチング成功演出＆SNS別ボタン
-    ---------------------------------------------------- */
-    .shake-screen { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-    @keyframes shake {
-      10%, 90% { transform: translate3d(-2px, 0, 0); }
-      20%, 80% { transform: translate3d(4px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
-      40%, 60% { transform: translate3d(8px, 0, 0); }
-    }
-    .card-3d-wrap { perspective: 1000px; margin-top: 20px; }
-    .card-3d { transform-style: preserve-3d; animation: flipZoom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    @keyframes flipZoom {
-      0% { transform: scale(0.2) rotateY(-180deg); opacity: 0; }
-      100% { transform: scale(1) rotateY(0deg); opacity: 1; }
-    }
+    /* マッチング成功カードデザイン */
     .result-card-success {
       background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%);
       border: 3px solid #ff4081; border-radius: 20px; padding: 24px 18px;
-      text-align: center; box-shadow: 0 10px 30px rgba(255, 64, 129, 0.3);
-      position: relative; overflow: hidden;
+      text-align: center; box-shadow: 0 10px 30px rgba(255, 64, 129, 0.3); margin-top: 20px;
     }
     .match-header-badge {
       background: linear-gradient(45deg, #ff4081, #ff80ab); color: white;
-      font-size: 13px; font-weight: bold; padding: 6px 16px; border-radius: 20px;
-      display: inline-block; margin-bottom: 8px; letter-spacing: 2px;
+      font-size: 13px; font-weight: bold; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 8px;
     }
     .match-title { font-size: 24px; font-weight: 900; color: #ff1744; margin: 6px 0; }
     
     .partner-block {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.95);
       border: 1px solid #ffccd5;
       border-radius: 16px;
-      padding: 16px 12px;
+      padding: 18px 14px;
       margin-top: 14px;
     }
-    .partner-id { font-size: 24px; font-weight: 900; color: #333; margin: 4px 0 10px; }
+    .partner-id { font-size: 26px; font-weight: 900; color: #111; margin: 4px 0 12px; }
 
-    /* メッセージ吹出し */
+    /* 💌 メッセージ表示ボックス（強調表示） */
     .message-box {
-      background: #fff;
-      border: 1px solid #ff80ab;
+      background: #fff0f5;
+      border: 1.5px solid #ff80ab;
       border-radius: 12px;
       padding: 12px 14px;
-      margin: 10px 0 14px;
+      margin: 12px 0 16px;
       text-align: left;
-      position: relative;
-      box-shadow: 0 2px 8px rgba(255, 64, 129, 0.1);
+      box-shadow: 0 2px 8px rgba(255, 64, 129, 0.08);
     }
-    .message-title { font-size: 12px; font-weight: bold; color: #ff1744; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
-    .message-text { font-size: 14px; color: #333; line-height: 1.4; word-break: break-all; font-weight: 500; }
+    .message-title { font-size: 12px; font-weight: bold; color: #d81b60; margin-bottom: 6px; }
+    .message-text { font-size: 15px; color: #222; line-height: 1.5; font-weight: 600; word-break: break-all; white-space: pre-wrap; }
 
     /* SNS特化ボタン */
     .btn-contact {
-      display: inline-block;
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: bold;
-      color: white !important;
-      text-decoration: none;
-      box-sizing: border-box;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: transform 0.2s;
+      display: block; width: 100%; padding: 13px; border-radius: 12px;
+      font-size: 15px; font-weight: bold; color: white !important;
+      text-decoration: none; box-sizing: border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
     }
-    .btn-contact:active { transform: scale(0.98); }
     .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
     .btn-line { background: #06C755; }
     .btn-default { background: #1a73e8; }
-
-    /* ----------------------------------------------------
-       🌧️ ノーマッチング演出
-    ---------------------------------------------------- */
-    .sad-sway { animation: sadSway 3s ease-in-out infinite; }
-    @keyframes sadSway {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      33% { transform: translateY(6px) rotate(-1.5deg); }
-      66% { transform: translateY(3px) rotate(1.5deg); }
-    }
-    .spotlight-bg {
-      background: #121212 !important; color: white !important;
-      border-radius: 16px; padding: 30px 20px; text-align: center;
-      box-shadow: inset 0 0 100px rgba(0,0,0,0.8); position: relative; overflow: hidden;
-    }
-    .spotlight-card {
-      background: radial-gradient(circle at center, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.85) 80%);
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px; position: relative; z-index: 2;
-    }
-    .rain-drop {
-      position: absolute; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.4));
-      width: 1px; height: 30px; opacity: 0.5; animation: drop 1.2s infinite linear;
-    }
-    @keyframes drop { 0% { top: -40px; } 100% { top: 100%; } }
   </style>
 </head>
 <body id="body">
@@ -208,7 +136,6 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
-    <!-- 投票フォーム画面 -->
     <div id="vote-tab" class="card">
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
@@ -219,7 +146,6 @@
           <option value="M-11">男性 M-11</option><option value="M-12">男性 M-12</option><option value="M-13">男性 M-13</option><option value="M-14">男性 M-14</option><option value="M-15">男性 M-15</option>
           <option value="M-16">男性 M-16</option><option value="M-17">男性 M-17</option><option value="M-18">男性 M-18</option><option value="M-19">男性 M-19</option><option value="M-20">男性 M-20</option>
           <option value="M-21">男性 M-21</option><option value="M-22">男性 M-22</option><option value="M-23">男性 M-23</option><option value="M-24">男性 M-24</option><option value="M-25">男性 M-25</option>
-
           <option value="F-1">女性 F-1</option><option value="F-2">女性 F-2</option><option value="F-3">女性 F-3</option><option value="F-4">女性 F-4</option><option value="F-5">女性 F-5</option>
           <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
           <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
@@ -230,103 +156,50 @@
         <label>パスワード（数字4桁）※自分で決める</label>
         <input type="password" id="pin" placeholder="例: 1234" maxlength="4" required>
 
-        <label>自分の連絡先（Instagram または LINEのURL）</label>
-        <input type="text" id="contact" placeholder="例: InstagramまたはLINEのURL" required>
+        <label>自分の連絡先（Instagram または LINE友達追加URL）</label>
+        <input type="text" id="contact" placeholder="例: InstagramのURL または LINEのURL" required>
         
         <div class="contact-guide">
-          <div class="contact-guide-item">📸 <b>Instagram:</b> プロフィール ＞ シェア ＞ リンクをコピー</div>
-          <div class="contact-guide-item">💬 <b>LINE:</b> マイQRコード ＞ リンクをコピー</div>
+          💡 <b>LINE:</b> マイQRコード ＞ 「リンクをコピー」で取得したURLを貼ると直接繋がれます！
         </div>
 
-        <label>「また話してみたい」「もう少し知りたい」と思った人を選択（複数選択OK）</label>
+        <label>気になった相手を選択（複数選択OK）</label>
         
         <div class="privacy-notice">
           <strong>🔒 プライバシー完全保護</strong>
-          恋愛に限らず、友達として気が合いそう・もう少し話してみたいと感じた方にも気軽にチェックしてみてください✨<br>
-          お互いに選び合ってマッチングが成立した際のみ、お相手に連絡先が伝わります。（運営を含め他の誰にも投票内容はわかりません）
+          （運営を含め他の誰にも投票内容はわかりません）
         </div>
 
         <div class="grid">
-          <!-- 男性グループ見出し -->
           <div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>
-          
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-1" onchange="renderMessageInputs()"> M-1</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-2" onchange="renderMessageInputs()"> M-2</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-3" onchange="renderMessageInputs()"> M-3</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-4" onchange="renderMessageInputs()"> M-4</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-5" onchange="renderMessageInputs()"> M-5</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-6" onchange="renderMessageInputs()"> M-6</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-7" onchange="renderMessageInputs()"> M-7</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-8" onchange="renderMessageInputs()"> M-8</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-9" onchange="renderMessageInputs()"> M-9</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-10" onchange="renderMessageInputs()"> M-10</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-11" onchange="renderMessageInputs()"> M-11</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-12" onchange="renderMessageInputs()"> M-12</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-13" onchange="renderMessageInputs()"> M-13</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-14" onchange="renderMessageInputs()"> M-14</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-15" onchange="renderMessageInputs()"> M-15</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-16" onchange="renderMessageInputs()"> M-16</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-17" onchange="renderMessageInputs()"> M-17</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-18" onchange="renderMessageInputs()"> M-18</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-19" onchange="renderMessageInputs()"> M-19</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-20" onchange="renderMessageInputs()"> M-20</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-21" onchange="renderMessageInputs()"> M-21</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-22" onchange="renderMessageInputs()"> M-22</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-23" onchange="renderMessageInputs()"> M-23</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-24" onchange="renderMessageInputs()"> M-24</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-25" onchange="renderMessageInputs()"> M-25</label>
+          <script>
+            for(let i=1; i<=25; i++) {
+              document.write(`<label class="checkbox-card"><input type="checkbox" name="target" value="M-${i}" onchange="renderMessageInputs()"> M-${i}</label>`);
+            }
+          </script>
 
-          <!-- 女性グループ見出し -->
-          <div class="section-title" style="margin-top: 20px;">👩 女性メンバー（F-1 〜 F-25）</div>
-
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-1" onchange="renderMessageInputs()"> F-1</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-2" onchange="renderMessageInputs()"> F-2</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-3" onchange="renderMessageInputs()"> F-3</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-4" onchange="renderMessageInputs()"> F-4</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-5" onchange="renderMessageInputs()"> F-5</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-6" onchange="renderMessageInputs()"> F-6</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-7" onchange="renderMessageInputs()"> F-7</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-8" onchange="renderMessageInputs()"> F-8</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-9" onchange="renderMessageInputs()"> F-9</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-10" onchange="renderMessageInputs()"> F-10</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-11" onchange="renderMessageInputs()"> F-11</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-12" onchange="renderMessageInputs()"> F-12</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-13" onchange="renderMessageInputs()"> F-13</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-14" onchange="renderMessageInputs()"> F-14</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-15" onchange="renderMessageInputs()"> F-15</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-16" onchange="renderMessageInputs()"> F-16</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-17" onchange="renderMessageInputs()"> F-17</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-18" onchange="renderMessageInputs()"> F-18</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-19" onchange="renderMessageInputs()"> F-19</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-20" onchange="renderMessageInputs()"> F-20</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-21" onchange="renderMessageInputs()"> F-21</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-22" onchange="renderMessageInputs()"> F-22</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-23" onchange="renderMessageInputs()"> F-23</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-24" onchange="renderMessageInputs()"> F-24</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-25" onchange="renderMessageInputs()"> F-25</label>
+          <div class="section-title">👩 女性メンバー（F-1 〜 F-25）</div>
+          <script>
+            for(let i=1; i<=25; i++) {
+              document.write(`<label class="checkbox-card"><input type="checkbox" name="target" value="F-${i}" onchange="renderMessageInputs()"> F-${i}</label>`);
+            }
+          </script>
         </div>
 
-        <!-- 💬 チェックされた相手ごとに個別メッセージエリアが動的生成される容器 -->
         <div id="messages-container" class="messages-container"></div>
 
         <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
       </form>
     </div>
 
-    <!-- 投票完了画面 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
-        <div class="complete-icon">✨</div>
-        <h2 style="color: #1a73e8; margin-top: 0;">投票ありがとうございます！</h2>
-        <p style="color: #666; line-height: 1.6;">
-          ご投票を受け付けました。<br>
-          イベント終了後に上部の「🎉 結果確認」タブからマッチング結果をご確認ください！
-        </p>
+        <h2 style="color: #1a73e8;">投票完了✨</h2>
+        <p style="color: #666; line-height: 1.6;">ご投票を受け付けました。<br>イベント終了後に「🎉 結果確認」タブから結果をご確認ください！</p>
         <button class="re-vote-btn" onclick="resetVoteForm()">内容をやり直す・修正する</button>
       </div>
     </div>
 
-    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -336,7 +209,6 @@
         <option value="M-11">男性 M-11</option><option value="M-12">男性 M-12</option><option value="M-13">男性 M-13</option><option value="M-14">男性 M-14</option><option value="M-15">男性 M-15</option>
         <option value="M-16">男性 M-16</option><option value="M-17">男性 M-17</option><option value="M-18">男性 M-18</option><option value="M-19">男性 M-19</option><option value="M-20">男性 M-20</option>
         <option value="M-21">男性 M-21</option><option value="M-22">男性 M-22</option><option value="M-23">男性 M-23</option><option value="M-24">男性 M-24</option><option value="M-25">男性 M-25</option>
-
         <option value="F-1">女性 F-1</option><option value="F-2">女性 F-2</option><option value="F-3">女性 F-3</option><option value="F-4">女性 F-4</option><option value="F-5">女性 F-5</option>
         <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
         <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
@@ -354,19 +226,17 @@
   </div>
 
   <script>
-    // 🔄 チェックボックスで選択した人数分の個別メッセージ入力欄を生成
+    // チェックボックス選択に応じた個別のメッセージ欄生成
     function renderMessageInputs() {
       const checkedBoxes = Array.from(document.querySelectorAll('input[name="target"]:checked'));
       const container = document.getElementById('messages-container');
       
-      // 入力中のテキストを退避
       const currentValues = {};
       document.querySelectorAll('.individual-msg').forEach(ta => {
         currentValues[ta.getAttribute('data-target')] = ta.value;
       });
 
       container.innerHTML = '';
-
       if (checkedBoxes.length === 0) return;
 
       const title = document.createElement('label');
@@ -377,7 +247,6 @@
         const val = box.value;
         const div = document.createElement('div');
         div.className = 'single-msg-item';
-        
         const prevText = currentValues[val] || '';
         div.innerHTML = `
           <label>【 ${val} 】さんへのメッセージ</label>
@@ -413,7 +282,6 @@
       const contact = document.getElementById('contact').value;
       const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
 
-      // 各相手へのメッセージをオブジェクトでまとめる { "M-1": "メッセージ...", "M-2": "..." }
       const messages = {};
       document.querySelectorAll('.individual-msg').forEach(ta => {
         const target = ta.getAttribute('data-target');
@@ -449,18 +317,11 @@
       document.getElementById('vote-tab').style.display = 'block';
     }
 
-    function vibratePulse() {
-      if ("vibrate" in navigator) {
-        navigator.vibrate([100, 50, 100]);
-      }
-    }
-
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
       const display = document.getElementById('result-display');
       const layer = document.getElementById('countdown-layer');
-      const body = document.getElementById('body');
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
@@ -470,32 +331,13 @@
         body: JSON.stringify({ my_id, pin })
       });
 
-      layer.innerHTML = `
-        <div class="dark-overlay">
-          <div class="countdown-title">MATCHING CHECK</div>
-          <div id="count-num" class="countdown-num-glow">3</div>
-        </div>
-      `;
-
-      vibratePulse();
-
-      const countEl = document.getElementById('count-num');
-      await new Promise(r => setTimeout(r, 850));
-
-      if(countEl) {
-        countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null;
-        countEl.innerText = "2";
-        vibratePulse();
-      }
-      await new Promise(r => setTimeout(r, 850));
-
-      if(countEl) {
-        countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null;
-        countEl.innerText = "1";
-        vibratePulse();
-      }
-      await new Promise(r => setTimeout(r, 850));
-
+      // カウントダウン演出
+      layer.innerHTML = `<div class="dark-overlay"><div class="countdown-title">MATCHING CHECK</div><div id="count-num" class="countdown-num-glow">3</div></div>`;
+      await new Promise(r => setTimeout(r, 700));
+      document.getElementById('count-num').innerText = "2";
+      await new Promise(r => setTimeout(r, 700));
+      document.getElementById('count-num').innerText = "1";
+      await new Promise(r => setTimeout(r, 700));
       layer.innerHTML = "";
 
       const res = await resPromise;
@@ -507,16 +349,11 @@
       }
 
       if (data.matched) {
-        body.classList.add('shake-screen');
-        if ("vibrate" in navigator) navigator.vibrate([200, 100, 200, 100, 400]);
-        setTimeout(() => body.classList.remove('shake-screen'), 500);
-
         let html = `
-          <div class="card-3d-wrap">
-            <div class="card-3d result-card-success">
-              <div class="match-header-badge">T-POP MATCHED</div>
-              <div class="match-title">🎉 MATCHING!</div>
-              <p style="color:#666; font-size:12px; margin:0;">おめでとうございます！ペア成立です</p>
+          <div class="result-card-success">
+            <div class="match-header-badge">T-POP MATCHED</div>
+            <div class="match-title">🎉 MATCHING!</div>
+            <p style="color:#666; font-size:12px; margin:0;">おめでとうございます！ペア成立です</p>
         `;
 
         data.matches.forEach(m => {
@@ -526,7 +363,7 @@
               <div class="partner-id">【 ${m.id} 】</div>
           `;
 
-          // 一言メッセージの表示（APIからの応答メッセージ）
+          // 💌 相手からのメッセージが存在する場合は表示
           if (m.message && m.message.trim() !== "") {
             html += `
               <div class="message-box">
@@ -536,7 +373,7 @@
             `;
           }
 
-          // SNS連絡先判定＆ブランドアイコンボタン
+          // SNS連絡先判定＆ボタン表示
           if (m.contact) {
             const contactStr = m.contact.toLowerCase();
             const isUrl = m.contact.startsWith('http://') || m.contact.startsWith('https://');
@@ -556,56 +393,25 @@
         });
 
         html += `
-              <p style="font-size:13px; font-weight:bold; color:#ff1744; margin-top:16px;">
-                さっそく連絡を取ってみましょう！✨
-              </p>
-            </div>
+            <p style="font-size:13px; font-weight:bold; color:#ff1744; margin-top:16px;">
+              さっそく連絡を取ってみましょう！✨
+            </p>
           </div>
         `;
         display.innerHTML = html;
-        fireConfettiSpecial();
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 
       } else {
-        if ("vibrate" in navigator) navigator.vibrate(300);
-
-        let dropsHtml = '';
-        for(let i=0; i<12; i++) {
-          const left = Math.random() * 100;
-          const delay = Math.random() * 1.5;
-          dropsHtml += `<div class="rain-drop" style="left:${left}%; animation-delay:${delay}s;"></div>`;
-        }
-
         display.innerHTML = `
-          <div class="spotlight-bg sad-sway">
-            ${dropsHtml}
-            <div class="spotlight-card">
-              <div style="font-size:48px; margin-bottom:12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));">🌙</div>
-              <h3 style="margin:0 0 8px 0; font-size:20px; color:#fff;">今回はノーマッチング</h3>
-              <p style="font-size:13px; color:#ccc; line-height:1.6; margin:0;">
-                惜しくも今回はマッチングとなりませんでした。<br>
-                素敵な出会いは次の機会に！<br>またのご参加をお待ちしています🥂
-              </p>
-            </div>
+          <div style="background:#121212; color:white; border-radius:16px; padding:30px 20px; text-align:center; margin-top:20px;">
+            <div style="font-size:48px; margin-bottom:12px;">🌙</div>
+            <h3 style="margin:0 0 8px 0; font-size:20px;">今回はノーマッチング</h3>
+            <p style="font-size:13px; color:#ccc; line-height:1.6; margin:0;">
+              惜しくも今回はマッチングとなりませんでした。<br>またのご参加をお待ちしています🥂
+            </p>
           </div>
         `;
       }
-    }
-
-    function fireConfettiSpecial() {
-      const duration = 3 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
-
-      function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-
-      const interval = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) return clearInterval(interval);
-
-        const particleCount = 50 * (timeLeft / duration);
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-      }, 250);
     }
   </script>
 </body>
