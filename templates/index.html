@@ -14,8 +14,9 @@
     .tab-btn { flex: 1; padding: 12px; border: none; background: #e4e6eb; font-weight: bold; border-radius: 10px; cursor: pointer; font-size: 15px; }
     .tab-btn.active { background: #1a73e8; color: white; }
     label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
-    select, input[type="text"], input[type="password"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-    
+    select, input[type="text"], input[type="password"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+    textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+
     /* 💡 連絡先補足ガイド */
     .contact-guide {
       font-size: 11px;
@@ -27,12 +28,8 @@
       margin-top: 8px;
       line-height: 1.5;
     }
-    .contact-guide-item {
-      margin-bottom: 6px;
-    }
-    .contact-guide-item:last-child {
-      margin-bottom: 0;
-    }
+    .contact-guide-item { margin-bottom: 6px; }
+    .contact-guide-item:last-child { margin-bottom: 0; }
 
     /* 🔒 プライバシー注記ボックス */
     .privacy-notice {
@@ -45,16 +42,10 @@
       color: #174ea6;
       line-height: 1.5;
     }
-    .privacy-notice strong {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 4px;
-      color: #1a73e8;
-    }
+    .privacy-notice strong { display: block; font-size: 13px; margin-bottom: 4px; color: #1a73e8; }
 
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
     
-    /* 区分用セクションタイトル（2列ぶち抜き） */
     .section-title {
       grid-column: 1 / -1;
       font-size: 14px;
@@ -91,18 +82,9 @@
       align-items: center;
       animation: fadeIn 0.3s ease-out;
     }
-    .countdown-title {
-      color: #888;
-      font-size: 14px;
-      font-weight: bold;
-      letter-spacing: 4px;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-    }
+    .countdown-title { color: #888; font-size: 14px; font-weight: bold; letter-spacing: 4px; margin-bottom: 20px; text-transform: uppercase; }
     .countdown-num-glow {
-      font-size: 120px;
-      font-weight: 900;
-      color: #fff;
+      font-size: 120px; font-weight: 900; color: #fff;
       text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
       animation: neonPulse 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
     }
@@ -113,7 +95,7 @@
     }
 
     /* ----------------------------------------------------
-       🎉 マッチング成功演出（3D＆揺れ）
+       🎉 マッチング成功演出（3D＆揺れ＆アイコン＆メッセージ）
     ---------------------------------------------------- */
     .shake-screen { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
     @keyframes shake {
@@ -123,42 +105,60 @@
       40%, 60% { transform: translate3d(8px, 0, 0); }
     }
     .card-3d-wrap { perspective: 1000px; margin-top: 20px; }
-    .card-3d {
-      transform-style: preserve-3d;
-      animation: flipZoom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
+    .card-3d { transform-style: preserve-3d; animation: flipZoom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     @keyframes flipZoom {
       0% { transform: scale(0.2) rotateY(-180deg); opacity: 0; }
       100% { transform: scale(1) rotateY(0deg); opacity: 1; }
     }
     .result-card-success {
       background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%);
-      border: 3px solid #ff4081;
-      border-radius: 20px;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(255, 64, 129, 0.3);
-      position: relative;
-      overflow: hidden;
+      border: 3px solid #ff4081; border-radius: 20px; padding: 24px 18px;
+      text-align: center; box-shadow: 0 10px 30px rgba(255, 64, 129, 0.3);
+      position: relative; overflow: hidden;
     }
     .match-header-badge {
-      background: linear-gradient(45deg, #ff4081, #ff80ab);
-      color: white; font-size: 14px; font-weight: bold;
-      padding: 6px 16px; border-radius: 20px; display: inline-block;
-      margin-bottom: 12px; letter-spacing: 2px;
+      background: linear-gradient(45deg, #ff4081, #ff80ab); color: white;
+      font-size: 13px; font-weight: bold; padding: 6px 16px; border-radius: 20px;
+      display: inline-block; margin-bottom: 8px; letter-spacing: 2px;
     }
-    .match-title { font-size: 26px; font-weight: 900; color: #ff1744; margin: 8px 0; }
-    .partner-id { font-size: 32px; font-weight: 900; color: #333; margin: 12px 0; }
+    .match-title { font-size: 24px; font-weight: 900; color: #ff1744; margin: 6px 0; }
+    
+    /* 👤 アイコン＆パートナー表示 */
+    .partner-avatar {
+      font-size: 52px;
+      margin-top: 10px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
+    .partner-id { font-size: 28px; font-weight: 900; color: #333; margin: 4px 0 12px; }
+
+    /* 💌 相手からのメッセージ吹き出し */
+    .message-box {
+      background: #fff;
+      border: 1px solid #ffccd5;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      text-align: left;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(255, 64, 129, 0.08);
+    }
+    .message-box::before {
+      content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+      border-width: 0 8px 8px; border-style: solid; border-color: transparent transparent #ffccd5;
+    }
+    .message-title { font-size: 11px; font-weight: bold; color: #ff4081; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+    .message-text { font-size: 13px; color: #444; line-height: 1.4; word-break: break-all; }
+
     .contact-badge-glow {
       background: #1a73e8; color: white; padding: 12px 18px;
-      border-radius: 12px; font-size: 18px; font-weight: bold;
+      border-radius: 12px; font-size: 16px; font-weight: bold;
       display: inline-block; margin-top: 10px;
       box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4); word-break: break-all;
       text-decoration: none;
     }
 
     /* ----------------------------------------------------
-       🌧️ ノーマッチング演出（哀愁揺れ＆雨降り）
+       🌧️ ノーマッチング演出
     ---------------------------------------------------- */
     .sad-sway { animation: sadSway 3s ease-in-out infinite; }
     @keyframes sadSway {
@@ -169,13 +169,11 @@
     .spotlight-bg {
       background: #121212 !important; color: white !important;
       border-radius: 16px; padding: 30px 20px; text-align: center;
-      box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
-      position: relative; overflow: hidden;
+      box-shadow: inset 0 0 100px rgba(0,0,0,0.8); position: relative; overflow: hidden;
     }
     .spotlight-card {
       background: radial-gradient(circle at center, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.85) 80%);
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px;
-      position: relative; z-index: 2;
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px; position: relative; z-index: 2;
     }
     .rain-drop {
       position: absolute; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.4));
@@ -220,14 +218,8 @@
         <input type="text" id="contact" placeholder="例: InstagramまたはLINEのURL" required>
         
         <div class="contact-guide">
-          <div class="contact-guide-item">
-            📸 <b>InstagramのURLコピー手順:</b><br>
-            プロフィール画面 ＞「プロフィールをシェア」＞「リンクをコピー」
-          </div>
-          <div class="contact-guide-item">
-            💬 <b>LINEのURLコピー手順:</b><br>
-            LINE ＞ マイQRコード ＞「リンクをコピー」
-          </div>
+          <div class="contact-guide-item">📸 <b>Instagram:</b> プロフィール ＞ シェア ＞ リンクをコピー</div>
+          <div class="contact-guide-item">💬 <b>LINE:</b> マイQRコード ＞ リンクをコピー</div>
         </div>
 
         <label>気になった相手を選択（複数選択OK）</label>
@@ -295,6 +287,26 @@
           <label class="checkbox-card"><input type="checkbox" name="target" value="F-24"> F-24</label>
           <label class="checkbox-card"><input type="checkbox" name="target" value="F-25"> F-25</label>
         </div>
+
+        <label style="margin-top:24px;">💌 本命・気になる相手へ一言メッセージ（任意）</label>
+        <select id="message_target">
+          <option value="">メッセージを送る相手を選択（なしでもOK）</option>
+          <optgroup label="男性">
+            <option value="M-1">M-1</option><option value="M-2">M-2</option><option value="M-3">M-3</option><option value="M-4">M-4</option><option value="M-5">M-5</option>
+            <option value="M-6">M-6</option><option value="M-7">M-7</option><option value="M-8">M-8</option><option value="M-9">M-9</option><option value="M-10">M-10</option>
+            <option value="M-11">M-11</option><option value="M-12">M-12</option><option value="M-13">M-13</option><option value="M-14">M-14</option><option value="M-15">M-15</option>
+            <option value="M-16">M-16</option><option value="M-17">M-17</option><option value="M-18">M-18</option><option value="M-19">M-19</option><option value="M-20">M-20</option>
+            <option value="M-21">M-21</option><option value="M-22">M-22</option><option value="M-23">M-23</option><option value="M-24">M-24</option><option value="M-25">M-25</option>
+          </optgroup>
+          <optgroup label="女性">
+            <option value="F-1">F-1</option><option value="F-2">F-2</option><option value="F-3">F-3</option><option value="F-4">F-4</option><option value="F-5">F-5</option>
+            <option value="F-6">F-6</option><option value="F-7">F-7</option><option value="F-8">F-8</option><option value="F-9">F-9</option><option value="F-10">F-10</option>
+            <option value="F-11">F-11</option><option value="F-12">F-12</option><option value="F-13">F-13</option><option value="F-14">F-14</option><option value="F-15">F-15</option>
+            <option value="F-16">F-16</option><option value="F-17">F-17</option><option value="F-18">F-18</option><option value="F-19">F-19</option><option value="F-20">F-20</option>
+            <option value="F-21">F-21</option><option value="F-22">F-22</option><option value="F-23">F-23</option><option value="F-24">F-24</option><option value="F-25">F-25</option>
+          </optgroup>
+        </select>
+        <textarea id="message_text" placeholder="例: 黒いシャツがとてもお似合いでした！お話しできて嬉しかったです✨" maxlength="100"></textarea>
 
         <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
       </form>
@@ -364,6 +376,8 @@
       const pin = document.getElementById('pin').value;
       const contact = document.getElementById('contact').value;
       const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
+      const message_target = document.getElementById('message_target').value;
+      const message_text = document.getElementById('message_text').value;
 
       if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
       if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
@@ -371,7 +385,7 @@
       const res = await fetch('/api/vote', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ my_id, pin, contact, target_ids })
+        body: JSON.stringify({ my_id, pin, contact, target_ids, message_target, message_text })
       });
       const data = await res.json();
       if (res.ok) {
@@ -457,25 +471,38 @@
             <div class="card-3d result-card-success">
               <div class="match-header-badge">T-POP MATCHED</div>
               <div class="match-title">🎉 MATCHING!</div>
-              <p style="color:#666; font-size:13px; margin:0;">おめでとうございます！ペア成立です</p>
-              <hr style="border:none; border-top:1px dashed #ff80ab; margin: 16px 0;">
+              <p style="color:#666; font-size:12px; margin:0;">おめでとうございます！ペア成立です</p>
+              <hr style="border:none; border-top:1px dashed #ff80ab; margin: 14px 0;">
         `;
 
         data.matches.forEach(m => {
+          // 👤 アバターアイコン判定（男性: 🤵, 女性: 💃）
+          const avatarIcon = m.id.startsWith('M') ? '🤵‍♂️' : '💃';
+
           html += `
-            <div style="font-size:12px; color:#888;">MATCHED PARTNER</div>
+            <div class="partner-avatar">${avatarIcon}</div>
+            <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">MATCHED PARTNER</div>
             <div class="partner-id">【 ${m.id} 】</div>
           `;
+
+          // 💌 メッセージがある場合
+          if (m.message) {
+            html += `
+              <div class="message-box">
+                <div class="message-title">💌 相手からのメッセージ</div>
+                <div class="message-text">「${m.message}」</div>
+              </div>
+            `;
+          }
+
           if(m.contact) {
             const isUrl = m.contact.startsWith('http://') || m.contact.startsWith('https://');
             if (isUrl) {
               html += `
-                <div style="font-size:12px; color:#888; margin-top:8px;">CONTACT LINK</div>
                 <a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="contact-badge-glow">🔗 相手を開く</a>
               `;
             } else {
               html += `
-                <div style="font-size:12px; color:#888; margin-top:8px;">CONTACT</div>
                 <div class="contact-badge-glow">${m.contact}</div>
               `;
             }
@@ -483,10 +510,9 @@
         });
 
         html += `
-              <p style="font-size:14px; font-weight:bold; color:#ff1744; margin-top:16px;">
+              <p style="font-size:13px; font-weight:bold; color:#ff1744; margin-top:16px;">
                 💬 さっそく連絡を取ってみましょう！
               </p>
-              <p style="font-size:11px; color:#aaa; margin-top:12px;">#TPOP #つくば #マッチング</p>
             </div>
           </div>
         `;
