@@ -17,7 +17,7 @@
     select, input[type="text"], input[type="password"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
     textarea { resize: vertical; min-height: 60px; font-family: inherit; }
 
-    /* 💡 連絡先補足ガイド */
+    /* 💡 連絡先補足ガイド（Insta & LINE 両方表示） */
     .contact-guide {
       font-size: 11px;
       color: #555;
@@ -28,8 +28,10 @@
       margin-top: 8px;
       line-height: 1.5;
     }
+    .contact-guide-item { margin-bottom: 6px; }
+    .contact-guide-item:last-child { margin-bottom: 0; }
 
-    /* 🔒 プライバシー注記ボックス */
+    /* 🔒 プライバシー注記ボックス（元の長文説明＋指定文言） */
     .privacy-notice {
       background: #e8f0fe;
       border: 1px solid #aecbfa;
@@ -101,7 +103,7 @@
     }
     .partner-id { font-size: 26px; font-weight: 900; color: #111; margin: 4px 0 12px; }
 
-    /* 💌 メッセージ表示ボックス（強調表示） */
+    /* 💌 メッセージ表示ボックス */
     .message-box {
       background: #fff0f5;
       border: 1.5px solid #ff80ab;
@@ -150,269 +152,4 @@
           <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
           <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
           <option value="F-16">女性 F-16</option><option value="F-17">女性 F-17</option><option value="F-18">女性 F-18</option><option value="F-19">女性 F-19</option><option value="F-20">女性 F-20</option>
-          <option value="F-21">女性 F-21</option><option value="F-22">女性 F-22</option><option value="F-23">女性 F-23</option><option value="F-24">女性 F-24</option><option value="F-25">女性 F-25</option>
-        </select>
-
-        <label>パスワード（数字4桁）※自分で決める</label>
-        <input type="password" id="pin" placeholder="例: 1234" maxlength="4" required>
-
-        <label>自分の連絡先（Instagram または LINE友達追加URL）</label>
-        <input type="text" id="contact" placeholder="例: InstagramのURL または LINEのURL" required>
-        
-        <div class="contact-guide">
-          💡 <b>LINE:</b> マイQRコード ＞ 「リンクをコピー」で取得したURLを貼ると直接繋がれます！
-        </div>
-
-        <label>気になった相手を選択（複数選択OK）</label>
-        
-        <div class="privacy-notice">
-          <strong>🔒 プライバシー完全保護</strong>
-          （運営を含め他の誰にも投票内容はわかりません）
-        </div>
-
-        <div class="grid">
-          <div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>
-          <script>
-            for(let i=1; i<=25; i++) {
-              document.write(`<label class="checkbox-card"><input type="checkbox" name="target" value="M-${i}" onchange="renderMessageInputs()"> M-${i}</label>`);
-            }
-          </script>
-
-          <div class="section-title">👩 女性メンバー（F-1 〜 F-25）</div>
-          <script>
-            for(let i=1; i<=25; i++) {
-              document.write(`<label class="checkbox-card"><input type="checkbox" name="target" value="F-${i}" onchange="renderMessageInputs()"> F-${i}</label>`);
-            }
-          </script>
-        </div>
-
-        <div id="messages-container" class="messages-container"></div>
-
-        <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
-      </form>
-    </div>
-
-    <div id="complete-view" class="card" style="display:none;">
-      <div class="complete-box">
-        <h2 style="color: #1a73e8;">投票完了✨</h2>
-        <p style="color: #666; line-height: 1.6;">ご投票を受け付けました。<br>イベント終了後に「🎉 結果確認」タブから結果をご確認ください！</p>
-        <button class="re-vote-btn" onclick="resetVoteForm()">内容をやり直す・修正する</button>
-      </div>
-    </div>
-
-    <div id="result-tab" class="card" style="display:none;">
-      <label>自分の番号札（ID）</label>
-      <select id="res_my_id">
-        <option value="">選択してください</option>
-        <option value="M-1">男性 M-1</option><option value="M-2">男性 M-2</option><option value="M-3">男性 M-3</option><option value="M-4">男性 M-4</option><option value="M-5">男性 M-5</option>
-        <option value="M-6">男性 M-6</option><option value="M-7">男性 M-7</option><option value="M-8">男性 M-8</option><option value="M-9">男性 M-9</option><option value="M-10">男性 M-10</option>
-        <option value="M-11">男性 M-11</option><option value="M-12">男性 M-12</option><option value="M-13">男性 M-13</option><option value="M-14">男性 M-14</option><option value="M-15">男性 M-15</option>
-        <option value="M-16">男性 M-16</option><option value="M-17">男性 M-17</option><option value="M-18">男性 M-18</option><option value="M-19">男性 M-19</option><option value="M-20">男性 M-20</option>
-        <option value="M-21">男性 M-21</option><option value="M-22">男性 M-22</option><option value="M-23">男性 M-23</option><option value="M-24">男性 M-24</option><option value="M-25">男性 M-25</option>
-        <option value="F-1">女性 F-1</option><option value="F-2">女性 F-2</option><option value="F-3">女性 F-3</option><option value="F-4">女性 F-4</option><option value="F-5">女性 F-5</option>
-        <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
-        <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
-        <option value="F-16">女性 F-16</option><option value="F-17">女性 F-17</option><option value="F-18">女性 F-18</option><option value="F-19">女性 F-19</option><option value="F-20">女性 F-20</option>
-        <option value="F-21">女性 F-21</option><option value="F-22">女性 F-22</option><option value="F-23">女性 F-23</option><option value="F-24">女性 F-24</option><option value="F-25">女性 F-25</option>
-      </select>
-
-      <label>設定したパスワード（4桁）</label>
-      <input type="password" id="res_pin" placeholder="4桁の数字" maxlength="4">
-
-      <button type="button" class="submit-btn" onclick="checkResultWithAnimation()">結果を見る 🔍</button>
-
-      <div id="result-display"></div>
-    </div>
-  </div>
-
-  <script>
-    // チェックボックス選択に応じた個別のメッセージ欄生成
-    function renderMessageInputs() {
-      const checkedBoxes = Array.from(document.querySelectorAll('input[name="target"]:checked'));
-      const container = document.getElementById('messages-container');
-      
-      const currentValues = {};
-      document.querySelectorAll('.individual-msg').forEach(ta => {
-        currentValues[ta.getAttribute('data-target')] = ta.value;
-      });
-
-      container.innerHTML = '';
-      if (checkedBoxes.length === 0) return;
-
-      const title = document.createElement('label');
-      title.innerHTML = '💬 一言メッセージ（任意・相手ごとに送れます）';
-      container.appendChild(title);
-
-      checkedBoxes.forEach(box => {
-        const val = box.value;
-        const div = document.createElement('div');
-        div.className = 'single-msg-item';
-        const prevText = currentValues[val] || '';
-        div.innerHTML = `
-          <label>【 ${val} 】さんへのメッセージ</label>
-          <textarea class="individual-msg" data-target="${val}" placeholder="例: お話しできて楽しかったです！ぜひまた話しましょう✨" maxlength="100">${prevText}</textarea>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function showTab(tab) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if(tab === 'vote') {
-        document.getElementById('result-tab').style.display = 'none';
-        if(document.getElementById('complete-view').getAttribute('data-completed') === 'true') {
-          document.getElementById('vote-tab').style.display = 'none';
-          document.getElementById('complete-view').style.display = 'block';
-        } else {
-          document.getElementById('vote-tab').style.display = 'block';
-          document.getElementById('complete-view').style.display = 'none';
-        }
-        event.target.classList.add('active');
-      } else {
-        document.getElementById('vote-tab').style.display = 'none';
-        document.getElementById('complete-view').style.display = 'none';
-        document.getElementById('result-tab').style.display = 'block';
-        event.target.classList.add('active');
-      }
-    }
-
-    async function submitVote() {
-      const my_id = document.getElementById('my_id').value;
-      const pin = document.getElementById('pin').value;
-      const contact = document.getElementById('contact').value;
-      const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
-
-      const messages = {};
-      document.querySelectorAll('.individual-msg').forEach(ta => {
-        const target = ta.getAttribute('data-target');
-        const text = ta.value.trim();
-        if (text) {
-          messages[target] = text;
-        }
-      });
-
-      if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
-      if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
-
-      const res = await fetch('/api/vote', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ my_id, pin, contact, target_ids, messages })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        document.getElementById('vote-tab').style.display = 'none';
-        document.getElementById('complete-view').style.display = 'block';
-        document.getElementById('complete-view').setAttribute('data-completed', 'true');
-        document.getElementById('voteForm').reset();
-        renderMessageInputs();
-      } else {
-        alert(data.message || "エラーが発生しました");
-      }
-    }
-
-    function resetVoteForm() {
-      document.getElementById('complete-view').style.display = 'none';
-      document.getElementById('complete-view').removeAttribute('data-completed');
-      document.getElementById('vote-tab').style.display = 'block';
-    }
-
-    async function checkResultWithAnimation() {
-      const my_id = document.getElementById('res_my_id').value;
-      const pin = document.getElementById('res_pin').value;
-      const display = document.getElementById('result-display');
-      const layer = document.getElementById('countdown-layer');
-
-      if (!my_id || !pin) return alert("IDとパスワードを入力してください");
-
-      const resPromise = fetch('/api/result', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ my_id, pin })
-      });
-
-      // カウントダウン演出
-      layer.innerHTML = `<div class="dark-overlay"><div class="countdown-title">MATCHING CHECK</div><div id="count-num" class="countdown-num-glow">3</div></div>`;
-      await new Promise(r => setTimeout(r, 700));
-      document.getElementById('count-num').innerText = "2";
-      await new Promise(r => setTimeout(r, 700));
-      document.getElementById('count-num').innerText = "1";
-      await new Promise(r => setTimeout(r, 700));
-      layer.innerHTML = "";
-
-      const res = await resPromise;
-      const data = await res.json();
-
-      if (!res.ok) {
-        display.innerHTML = `<div style="color:red; text-align:center; padding:20px; font-weight:bold;">${data.message}</div>`;
-        return;
-      }
-
-      if (data.matched) {
-        let html = `
-          <div class="result-card-success">
-            <div class="match-header-badge">T-POP MATCHED</div>
-            <div class="match-title">🎉 MATCHING!</div>
-            <p style="color:#666; font-size:12px; margin:0;">おめでとうございます！ペア成立です</p>
-        `;
-
-        data.matches.forEach(m => {
-          html += `
-            <div class="partner-block">
-              <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">MATCHED PARTNER</div>
-              <div class="partner-id">【 ${m.id} 】</div>
-          `;
-
-          // 💌 相手からのメッセージが存在する場合は表示
-          if (m.message && m.message.trim() !== "") {
-            html += `
-              <div class="message-box">
-                <div class="message-title">💌 相手からのメッセージ</div>
-                <div class="message-text">「${m.message}」</div>
-              </div>
-            `;
-          }
-
-          // SNS連絡先判定＆ボタン表示
-          if (m.contact) {
-            const contactStr = m.contact.toLowerCase();
-            const isUrl = m.contact.startsWith('http://') || m.contact.startsWith('https://');
-
-            if (contactStr.includes('instagram.com')) {
-              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く</a>`;
-            } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
-              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く</a>`;
-            } else if (isUrl) {
-              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
-            } else {
-              html += `<div style="font-size:14px; font-weight:bold; color:#1a73e8; word-break:break-all;">連絡先: ${m.contact}</div>`;
-            }
-          }
-
-          html += `</div>`;
-        });
-
-        html += `
-            <p style="font-size:13px; font-weight:bold; color:#ff1744; margin-top:16px;">
-              さっそく連絡を取ってみましょう！✨
-            </p>
-          </div>
-        `;
-        display.innerHTML = html;
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-
-      } else {
-        display.innerHTML = `
-          <div style="background:#121212; color:white; border-radius:16px; padding:30px 20px; text-align:center; margin-top:20px;">
-            <div style="font-size:48px; margin-bottom:12px;">🌙</div>
-            <h3 style="margin:0 0 8px 0; font-size:20px;">今回はノーマッチング</h3>
-            <p style="font-size:13px; color:#ccc; line-height:1.6; margin:0;">
-              惜しくも今回はマッチングとなりませんでした。<br>またのご参加をお待ちしています🥂
-            </p>
-          </div>
-        `;
-      }
-    }
-  </script>
-</body>
-</html>
+          <option value="F-21">女性 F-21</option><option value="F-22">女性 F-22</option><option value="F-23">女性 F-23</option><option value="F-24">女性 F-2
