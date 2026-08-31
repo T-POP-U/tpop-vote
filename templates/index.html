@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
+  <!-- 🎉 紙吹雪（Confetti）ライブラリの読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; }
     .container { max-width: 420px; margin: 0 auto; }
@@ -14,17 +16,23 @@
     .tab-btn.active { background: #1a73e8; color: white; }
     label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
     select, input[type="text"], input[type="password"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+    .grid { display: grid; grid-system-columns: repeat(2, 1fr); grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
     .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
     .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
     button.submit-btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-    .result-box { padding: 16px; border-radius: 10px; margin-top: 16px; text-align: center; font-weight: bold; }
-    .success { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
+    .result-box { padding: 20px; border-radius: 12px; margin-top: 16px; text-align: center; font-weight: bold; animation: popIn 0.5s ease-out; }
+    .success { background: #e6f4ea; color: #137333; border: 2px solid #34a853; }
     .fail { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
-    .contact-badge { background: #ffffff; padding: 8px 12px; border-radius: 6px; display: inline-block; margin-top: 6px; border: 1px solid #ceead6; color: #1a73e8; font-size: 18px; word-break: break-all; }
+    .contact-badge { background: #ffffff; padding: 10px 14px; border-radius: 8px; display: inline-block; margin-top: 8px; border: 2px solid #34a853; color: #1a73e8; font-size: 20px; word-break: break-all; }
     .complete-box { text-align: center; padding: 20px 10px; }
     .complete-icon { font-size: 48px; margin-bottom: 12px; }
     .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
+    
+    /* カウントダウン演出用のスタイル */
+    .countdown-overlay { text-align: center; padding: 30px 10px; }
+    .countdown-num { font-size: 64px; font-weight: 900; color: #1a73e8; animation: pulse 0.8s infinite alternate; }
+    @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.1); opacity: 1; } }
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   </style>
 </head>
 <body>
@@ -160,7 +168,7 @@
       </form>
     </div>
 
-    <!-- 投票完了画面（初期状態は非表示） -->
+    <!-- 投票完了画面 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
         <div class="complete-icon">✨</div>
@@ -234,7 +242,7 @@
       <label>設定したパスワード（4桁）</label>
       <input type="password" id="res_pin" placeholder="4桁の数字" maxlength="4">
 
-      <button type="button" class="submit-btn" onclick="checkResult()">結果を見る</button>
+      <button type="button" class="submit-btn" onclick="checkResultWithAnimation()">結果を見る 🔍</button>
 
       <div id="result-display"></div>
     </div>
@@ -245,7 +253,6 @@
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       if(tab === 'vote') {
         document.getElementById('result-tab').style.display = 'none';
-        // 投票完了済みなら完了画面を表示、まだならフォームを表示
         if(document.getElementById('complete-view').getAttribute('data-completed') === 'true') {
           document.getElementById('vote-tab').style.display = 'none';
           document.getElementById('complete-view').style.display = 'block';
@@ -278,7 +285,6 @@
       });
       const data = await res.json();
       if (res.ok) {
-        // 投票成功時にフォームを隠して完了画面を表示
         document.getElementById('vote-tab').style.display = 'none';
         document.getElementById('complete-view').style.display = 'block';
         document.getElementById('complete-view').setAttribute('data-completed', 'true');
@@ -294,20 +300,39 @@
       document.getElementById('vote-tab').style.display = 'block';
     }
 
-    async function checkResult() {
+    // 🌟 演出付き結果判定関数
+    async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
       const display = document.getElementById('result-display');
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
-      display.innerHTML = "<p style='text-align:center;'>照合中...</p>";
+      // 1. カウントダウン演出の表示
+      display.innerHTML = `
+        <div class="countdown-overlay">
+          <div style="font-size:16px; color:#666; margin-bottom:8px;">マッチング結果を照合中...</div>
+          <div id="count-num" class="countdown-num">3</div>
+        </div>
+      `;
 
-      const res = await fetch('/api/result', {
+      // APIリクエストを裏で飛ばしておく
+      const resPromise = fetch('/api/result', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ my_id, pin })
       });
+
+      // カウントダウンアニメーション（3 -> 2 -> 1）
+      const countEl = document.getElementById('count-num');
+      await new Promise(r => setTimeout(r, 700));
+      if(countEl) countEl.innerText = "2";
+      await new Promise(r => setTimeout(r, 700));
+      if(countEl) countEl.innerText = "1";
+      await new Promise(r => setTimeout(r, 700));
+
+      // 結果の取得
+      const res = await resPromise;
       const data = await res.json();
 
       if (!res.ok) {
@@ -315,19 +340,47 @@
         return;
       }
 
+      // 2. 成功 / 失敗に応じた画面演出
       if (data.matched) {
-        let html = '<div class="result-box success">🎉 おめでとうございます！マッチング成立です！<br><br>';
+        let html = '<div class="result-box success">🎉 おめでとうございます！<br>マッチング成立です！<br><br>';
         data.matches.forEach(m => {
           html += `お相手: <strong>${m.id}</strong><br>`;
           if(m.contact) {
             html += `連絡先: <div class="contact-badge"><strong>${m.contact}</strong></div><br><br>`;
           }
         });
-        html += '連絡を取ってみましょう！</div>';
+        html += 'さっそく連絡を取ってみましょう！</div>';
         display.innerHTML = html;
+
+        // 🎊 豪華な花吹雪（Confetti）を発射！
+        fireConfetti();
       } else {
-        display.innerHTML = '<div class="result-box fail">今回はマッチングしませんでした。</div>';
+        display.innerHTML = `
+          <div class="result-box fail">
+            <div style="font-size:32px; margin-bottom:8px;">😢</div>
+            今回はマッチングしませんでした。<br>
+            また次回のイベントでお待ちしています！
+          </div>
+        `;
       }
+    }
+
+    // 🎊 紙吹雪アニメーションの関数
+    function fireConfetti() {
+      const count = 200;
+      const defaults = { origin: { y: 0.7 } };
+
+      function fire(particleRatio, opts) {
+        confetti(Object.assign({}, defaults, opts, {
+          particleCount: Math.floor(count * particleRatio)
+        }));
+      }
+
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
     }
   </script>
 </body>
