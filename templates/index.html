@@ -17,6 +17,18 @@
     label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
     select, input[type="text"], input[type="password"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
     
+    /* 💡 連絡先補足ガイド */
+    .contact-guide {
+      font-size: 11px;
+      color: #666;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
     /* 🔒 プライバシー注記ボックス */
     .privacy-notice {
       background: #e8f0fe;
@@ -117,9 +129,10 @@
     .partner-id { font-size: 32px; font-weight: 900; color: #333; margin: 12px 0; }
     .contact-badge-glow {
       background: #1a73e8; color: white; padding: 12px 18px;
-      border-radius: 12px; font-size: 22px; font-weight: bold;
+      border-radius: 12px; font-size: 18px; font-weight: bold;
       display: inline-block; margin-top: 10px;
       box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4); word-break: break-all;
+      text-decoration: none;
     }
 
     /* ----------------------------------------------------
@@ -182,12 +195,17 @@
         <label>パスワード（数字4桁）※自分で決める</label>
         <input type="password" id="pin" placeholder="例: 1234" maxlength="4" required>
 
-        <label>自分の連絡先（LINE ID または Instagram）</label>
-        <input type="text" id="contact" placeholder="例: @tpop_tsukuba" required>
+        <label>自分の連絡先（Instagram または LINE友達追加URL）</label>
+        <input type="text" id="contact" placeholder="例: @tpop_tsukuba または LINEのURL" required>
+        
+        <div class="contact-guide">
+          💡 <b>LINEリンクのコピー手順:</b><br>
+          LINE ＞ マイQRコード ＞「リンクをコピー」で取れるURLを貼り付けると、ID検索オフでも直接繋がれます！
+        </div>
 
         <label>気になった相手を選択（複数選択OK）</label>
         
-        <!-- 🌟 プライバシー保護の注記エリア -->
+        <!-- 🔒 プライバシー保護の注記エリア -->
         <div class="privacy-notice">
           <strong>🔒 プライバシー完全保護</strong>
           誰に投票したかは<b>運営も含め誰にもわかりません</b>。<br>
@@ -421,10 +439,18 @@
             <div class="partner-id">【 ${m.id} 】</div>
           `;
           if(m.contact) {
-            html += `
-              <div style="font-size:12px; color:#888; margin-top:8px;">CONTACT</div>
-              <div class="contact-badge-glow">${m.contact}</div>
-            `;
+            const isUrl = m.contact.startsWith('http://') || m.contact.startsWith('https://');
+            if (isUrl) {
+              html += `
+                <div style="font-size:12px; color:#888; margin-top:8px;">CONTACT LINK</div>
+                <a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="contact-badge-glow">🔗 相手を開く</a>
+              `;
+            } else {
+              html += `
+                <div style="font-size:12px; color:#888; margin-top:8px;">CONTACT</div>
+                <div class="contact-badge-glow">${m.contact}</div>
+              `;
+            }
           }
         });
 
