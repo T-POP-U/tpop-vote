@@ -17,7 +17,7 @@
     select, input[type="text"], input[type="password"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
     textarea { resize: vertical; min-height: 60px; font-family: inherit; }
 
-    /* 💡 連絡先補足ガイド（Insta & LINE 両方表示） */
+    /* 💡 連絡先補足ガイド */
     .contact-guide {
       font-size: 11px;
       color: #555;
@@ -31,7 +31,7 @@
     .contact-guide-item { margin-bottom: 6px; }
     .contact-guide-item:last-child { margin-bottom: 0; }
 
-    /* 🔒 プライバシー注記ボックス（元の長文説明＋指定文言） */
+    /* 🔒 プライバシー注記ボックス */
     .privacy-notice {
       background: #e8f0fe;
       border: 1px solid #aecbfa;
@@ -365,11 +365,12 @@
               <div class="partner-id">【 ${m.id} 】</div>
           `;
 
+          // 💌 相手からのメッセージ（「」を取り除いて表示）
           if (m.message && m.message.trim() !== "") {
             html += `
               <div class="message-box">
                 <div class="message-title">💌 相手からのメッセージ</div>
-                <div class="message-text">「${m.message}」</div>
+                <div class="message-text">${m.message}</div>
               </div>
             `;
           }
