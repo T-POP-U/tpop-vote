@@ -4,38 +4,124 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
-  <!-- 🎉 紙吹雪（Confetti）ライブラリの読み込み -->
+  <!-- 🎉 紙吹雪（Confetti）ライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
     .container { max-width: 420px; margin: 0 auto; }
-    .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; position: relative; }
     h1 { font-size: 20px; margin-top: 0; text-align: center; color: #1a73e8; }
     .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
     .tab-btn { flex: 1; padding: 12px; border: none; background: #e4e6eb; font-weight: bold; border-radius: 10px; cursor: pointer; font-size: 15px; }
     .tab-btn.active { background: #1a73e8; color: white; }
     label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
     select, input[type="text"], input[type="password"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-    .grid { display: grid; grid-system-columns: repeat(2, 1fr); grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
     .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
     .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
     button.submit-btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-    .result-box { padding: 20px; border-radius: 12px; margin-top: 16px; text-align: center; font-weight: bold; animation: popIn 0.5s ease-out; }
-    .success { background: #e6f4ea; color: #137333; border: 2px solid #34a853; }
-    .fail { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
-    .contact-badge { background: #ffffff; padding: 10px 14px; border-radius: 8px; display: inline-block; margin-top: 8px; border: 2px solid #34a853; color: #1a73e8; font-size: 20px; word-break: break-all; }
     .complete-box { text-align: center; padding: 20px 10px; }
     .complete-icon { font-size: 48px; margin-bottom: 12px; }
     .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
-    
-    /* カウントダウン演出用のスタイル */
-    .countdown-overlay { text-align: center; padding: 30px 10px; }
-    .countdown-num { font-size: 64px; font-weight: 900; color: #1a73e8; animation: pulse 0.8s infinite alternate; }
-    @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.1); opacity: 1; } }
-    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    /* ----------------------------------------------------
+       🔥 豪華演出用のアニメーション＆スタイル
+    ---------------------------------------------------- */
+    /* 画面揺れ（シェイク） */
+    .shake-screen { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-2px, 0, 0); }
+      20%, 80% { transform: translate3d(4px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+      40%, 60% { transform: translate3d(8px, 0, 0); }
+    }
+
+    /* 3Dカードフリップ＆ズームイン */
+    .card-3d-wrap { perspective: 1000px; margin-top: 20px; }
+    .card-3d {
+      transform-style: preserve-3d;
+      animation: flipZoom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes flipZoom {
+      0% { transform: scale(0.2) rotateY(-180deg); opacity: 0; }
+      100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+    }
+
+    /* カウントダウン巨大数字（鼓動＆ズーム） */
+    .countdown-overlay { text-align: center; padding: 40px 10px; }
+    .countdown-num {
+      font-size: 90px;
+      font-weight: 900;
+      background: linear-gradient(45deg, #1a73e8, #ff4081);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      animation: zoomPulse 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+    }
+    @keyframes zoomPulse {
+      0% { transform: scale(0.5); opacity: 0.2; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ✨ マッチング成立：映えるスクショカード */
+    .result-card-success {
+      background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%);
+      border: 3px solid #ff4081;
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(255, 64, 129, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .match-header-badge {
+      background: linear-gradient(45deg, #ff4081, #ff80ab);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 6px 16px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    .match-title { font-size: 26px; font-weight: 900; color: #ff1744; margin: 8px 0; }
+    .partner-id { font-size: 32px; font-weight: 900; color: #333; margin: 12px 0; }
+    .contact-badge-glow {
+      background: #1a73e8;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 22px;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4);
+      word-break: break-all;
+    }
+
+    /* 🌑 マッチング不成立：スポットライト演出 */
+    .spotlight-bg {
+      background: #121212 !important;
+      color: white !important;
+      transition: background 0.8s ease;
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: inset 0 0 100px rgba(255,255,255,0.05);
+    }
+    .spotlight-card {
+      background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.8) 70%);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 24px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
-<body>
+<body id="body">
   <div class="container">
     <h1>T-POP シークレット投票 🥂</h1>
 
@@ -50,57 +136,17 @@
         <label>自分の番号札（ID）</label>
         <select id="my_id" required>
           <option value="">選択してください</option>
-          <option value="M-1">男性 M-1</option>
-          <option value="M-2">男性 M-2</option>
-          <option value="M-3">男性 M-3</option>
-          <option value="M-4">男性 M-4</option>
-          <option value="M-5">男性 M-5</option>
-          <option value="M-6">男性 M-6</option>
-          <option value="M-7">男性 M-7</option>
-          <option value="M-8">男性 M-8</option>
-          <option value="M-9">男性 M-9</option>
-          <option value="M-10">男性 M-10</option>
-          <option value="M-11">男性 M-11</option>
-          <option value="M-12">男性 M-12</option>
-          <option value="M-13">男性 M-13</option>
-          <option value="M-14">男性 M-14</option>
-          <option value="M-15">男性 M-15</option>
-          <option value="M-16">男性 M-16</option>
-          <option value="M-17">男性 M-17</option>
-          <option value="M-18">男性 M-18</option>
-          <option value="M-19">男性 M-19</option>
-          <option value="M-20">男性 M-20</option>
-          <option value="M-21">男性 M-21</option>
-          <option value="M-22">男性 M-22</option>
-          <option value="M-23">男性 M-23</option>
-          <option value="M-24">男性 M-24</option>
-          <option value="M-25">男性 M-25</option>
+          <option value="M-1">男性 M-1</option><option value="M-2">男性 M-2</option><option value="M-3">男性 M-3</option><option value="M-4">男性 M-4</option><option value="M-5">男性 M-5</option>
+          <option value="M-6">男性 M-6</option><option value="M-7">男性 M-7</option><option value="M-8">男性 M-8</option><option value="M-9">男性 M-9</option><option value="M-10">男性 M-10</option>
+          <option value="M-11">男性 M-11</option><option value="M-12">男性 M-12</option><option value="M-13">男性 M-13</option><option value="M-14">男性 M-14</option><option value="M-15">男性 M-15</option>
+          <option value="M-16">男性 M-16</option><option value="M-17">男性 M-17</option><option value="M-18">男性 M-18</option><option value="M-19">男性 M-19</option><option value="M-20">男性 M-20</option>
+          <option value="M-21">男性 M-21</option><option value="M-22">男性 M-22</option><option value="M-23">男性 M-23</option><option value="M-24">男性 M-24</option><option value="M-25">男性 M-25</option>
 
-          <option value="F-1">女性 F-1</option>
-          <option value="F-2">女性 F-2</option>
-          <option value="F-3">女性 F-3</option>
-          <option value="F-4">女性 F-4</option>
-          <option value="F-5">女性 F-5</option>
-          <option value="F-6">女性 F-6</option>
-          <option value="F-7">女性 F-7</option>
-          <option value="F-8">女性 F-8</option>
-          <option value="F-9">女性 F-9</option>
-          <option value="F-10">女性 F-10</option>
-          <option value="F-11">女性 F-11</option>
-          <option value="F-12">女性 F-12</option>
-          <option value="F-13">女性 F-13</option>
-          <option value="F-14">女性 F-14</option>
-          <option value="F-15">女性 F-15</option>
-          <option value="F-16">女性 F-16</option>
-          <option value="F-17">女性 F-17</option>
-          <option value="F-18">女性 F-18</option>
-          <option value="F-19">女性 F-19</option>
-          <option value="F-20">女性 F-20</option>
-          <option value="F-21">女性 F-21</option>
-          <option value="F-22">女性 F-22</option>
-          <option value="F-23">女性 F-23</option>
-          <option value="F-24">女性 F-24</option>
-          <option value="F-25">女性 F-25</option>
+          <option value="F-1">女性 F-1</option><option value="F-2">女性 F-2</option><option value="F-3">女性 F-3</option><option value="F-4">女性 F-4</option><option value="F-5">女性 F-5</option>
+          <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
+          <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
+          <option value="F-16">女性 F-16</option><option value="F-17">女性 F-17</option><option value="F-18">女性 F-18</option><option value="F-19">女性 F-19</option><option value="F-20">女性 F-20</option>
+          <option value="F-21">女性 F-21</option><option value="F-22">女性 F-22</option><option value="F-23">女性 F-23</option><option value="F-24">女性 F-24</option><option value="F-25">女性 F-25</option>
         </select>
 
         <label>パスワード（数字4桁）※自分で決める</label>
@@ -186,57 +232,17 @@
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
         <option value="">選択してください</option>
-        <option value="M-1">男性 M-1</option>
-        <option value="M-2">男性 M-2</option>
-        <option value="M-3">男性 M-3</option>
-        <option value="M-4">男性 M-4</option>
-        <option value="M-5">男性 M-5</option>
-        <option value="M-6">男性 M-6</option>
-        <option value="M-7">男性 M-7</option>
-        <option value="M-8">男性 M-8</option>
-        <option value="M-9">男性 M-9</option>
-        <option value="M-10">男性 M-10</option>
-        <option value="M-11">男性 M-11</option>
-        <option value="M-12">男性 M-12</option>
-        <option value="M-13">男性 M-13</option>
-        <option value="M-14">男性 M-14</option>
-        <option value="M-15">男性 M-15</option>
-        <option value="M-16">男性 M-16</option>
-        <option value="M-17">男性 M-17</option>
-        <option value="M-18">男性 M-18</option>
-        <option value="M-19">男性 M-19</option>
-        <option value="M-20">男性 M-20</option>
-        <option value="M-21">男性 M-21</option>
-        <option value="M-22">男性 M-22</option>
-        <option value="M-23">男性 M-23</option>
-        <option value="M-24">男性 M-24</option>
-        <option value="M-25">男性 M-25</option>
+        <option value="M-1">男性 M-1</option><option value="M-2">男性 M-2</option><option value="M-3">男性 M-3</option><option value="M-4">男性 M-4</option><option value="M-5">男性 M-5</option>
+        <option value="M-6">男性 M-6</option><option value="M-7">男性 M-7</option><option value="M-8">男性 M-8</option><option value="M-9">男性 M-9</option><option value="M-10">男性 M-10</option>
+        <option value="M-11">男性 M-11</option><option value="M-12">男性 M-12</option><option value="M-13">男性 M-13</option><option value="M-14">男性 M-14</option><option value="M-15">男性 M-15</option>
+        <option value="M-16">男性 M-16</option><option value="M-17">男性 M-17</option><option value="M-18">男性 M-18</option><option value="M-19">男性 M-19</option><option value="M-20">男性 M-20</option>
+        <option value="M-21">男性 M-21</option><option value="M-22">男性 M-22</option><option value="M-23">男性 M-23</option><option value="M-24">男性 M-24</option><option value="M-25">男性 M-25</option>
 
-        <option value="F-1">女性 F-1</option>
-        <option value="F-2">女性 F-2</option>
-        <option value="F-3">女性 F-3</option>
-        <option value="F-4">女性 F-4</option>
-        <option value="F-5">女性 F-5</option>
-        <option value="F-6">女性 F-6</option>
-        <option value="F-7">女性 F-7</option>
-        <option value="F-8">女性 F-8</option>
-        <option value="F-9">女性 F-9</option>
-        <option value="F-10">女性 F-10</option>
-        <option value="F-11">女性 F-11</option>
-        <option value="F-12">女性 F-12</option>
-        <option value="F-13">女性 F-13</option>
-        <option value="F-14">女性 F-14</option>
-        <option value="F-15">女性 F-15</option>
-        <option value="F-16">女性 F-16</option>
-        <option value="F-17">女性 F-17</option>
-        <option value="F-18">女性 F-18</option>
-        <option value="F-19">女性 F-19</option>
-        <option value="F-20">女性 F-20</option>
-        <option value="F-21">女性 F-21</option>
-        <option value="F-22">女性 F-22</option>
-        <option value="F-23">女性 F-23</option>
-        <option value="F-24">女性 F-24</option>
-        <option value="F-25">女性 F-25</option>
+        <option value="F-1">女性 F-1</option><option value="F-2">女性 F-2</option><option value="F-3">女性 F-3</option><option value="F-4">女性 F-4</option><option value="F-5">女性 F-5</option>
+        <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
+        <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
+        <option value="F-16">女性 F-16</option><option value="F-17">女性 F-17</option><option value="F-18">女性 F-18</option><option value="F-19">女性 F-19</option><option value="F-20">女性 F-20</option>
+        <option value="F-21">女性 F-21</option><option value="F-22">女性 F-22</option><option value="F-23">女性 F-23</option><option value="F-24">女性 F-24</option><option value="F-25">女性 F-25</option>
       </select>
 
       <label>設定したパスワード（4桁）</label>
@@ -300,87 +306,124 @@
       document.getElementById('vote-tab').style.display = 'block';
     }
 
-    // 🌟 演出付き結果判定関数
+    // 🌟 究極クオリティ演出関数
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
       const display = document.getElementById('result-display');
+      const body = document.getElementById('body');
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
-      // 1. カウントダウン演出の表示
+      // カウントダウン開始
       display.innerHTML = `
         <div class="countdown-overlay">
-          <div style="font-size:16px; color:#666; margin-bottom:8px;">マッチング結果を照合中...</div>
+          <div style="font-size:14px; color:#888; font-weight:bold; letter-spacing:2px; margin-bottom:12px;">MATCHING CHECK</div>
           <div id="count-num" class="countdown-num">3</div>
         </div>
       `;
 
-      // APIリクエストを裏で飛ばしておく
+      // 裏でAPIリクエスト
       const resPromise = fetch('/api/result', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ my_id, pin })
       });
 
-      // カウントダウンアニメーション（3 -> 2 -> 1）
+      // 3 -> 2 -> 1 アニメーション切り替え
       const countEl = document.getElementById('count-num');
-      await new Promise(r => setTimeout(r, 700));
-      if(countEl) countEl.innerText = "2";
-      await new Promise(r => setTimeout(r, 700));
-      if(countEl) countEl.innerText = "1";
-      await new Promise(r => setTimeout(r, 700));
+      await new Promise(r => setTimeout(r, 800));
+      if(countEl) { countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null; countEl.innerText = "2"; }
+      await new Promise(r => setTimeout(r, 800));
+      if(countEl) { countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null; countEl.innerText = "1"; }
+      await new Promise(r => setTimeout(r, 800));
 
-      // 結果の取得
       const res = await resPromise;
       const data = await res.json();
 
       if (!res.ok) {
-        display.innerHTML = `<div class="result-box fail">${data.message}</div>`;
+        display.innerHTML = `<div style="color:red; text-align:center; padding:20px; font-weight:bold;">${data.message}</div>`;
         return;
       }
 
-      // 2. 成功 / 失敗に応じた画面演出
+      // --------------------------------------------------
+      // 🎉 マッチング成功演出
+      // --------------------------------------------------
       if (data.matched) {
-        let html = '<div class="result-box success">🎉 おめでとうございます！<br>マッチング成立です！<br><br>';
+        // 1. 画面をド派手に揺らす（シェイク）
+        body.classList.add('shake-screen');
+        setTimeout(() => body.classList.remove('shake-screen'), 500);
+
+        // 2. 映えるスクショ用3D回転カードの描画
+        let html = `
+          <div class="card-3d-wrap">
+            <div class="card-3d result-card-success">
+              <div class="match-header-badge">T-POP MATCHED</div>
+              <div class="match-title">🎉 MATCHING!</div>
+              <p style="color:#666; font-size:13px; margin:0;">おめでとうございます！ペア成立です</p>
+              <hr style="border:none; border-top:1px dashed #ff80ab; margin: 16px 0;">
+        `;
+
         data.matches.forEach(m => {
-          html += `お相手: <strong>${m.id}</strong><br>`;
+          html += `
+            <div style="font-size:12px; color:#888;">MATCHED PARTNER</div>
+            <div class="partner-id">【 ${m.id} 】</div>
+          `;
           if(m.contact) {
-            html += `連絡先: <div class="contact-badge"><strong>${m.contact}</strong></div><br><br>`;
+            html += `
+              <div style="font-size:12px; color:#888; margin-top:8px;">CONTACT</div>
+              <div class="contact-badge-glow">${m.contact}</div>
+            `;
           }
         });
-        html += 'さっそく連絡を取ってみましょう！</div>';
+
+        html += `
+              <p style="font-size:11px; color:#aaa; margin-top:20px;">#TPOP #つくば #マッチング</p>
+            </div>
+          </div>
+        `;
         display.innerHTML = html;
 
-        // 🎊 豪華な花吹雪（Confetti）を発射！
-        fireConfetti();
+        // 3. 豪快な紙吹雪発射（Web Audioでファンファーレ効果音風の振動）
+        fireConfettiSpecial();
+
       } else {
+        // --------------------------------------------------
+        // 🌑 マッチング不成立：スポットライト演出
+        // --------------------------------------------------
         display.innerHTML = `
-          <div class="result-box fail">
-            <div style="font-size:32px; margin-bottom:8px;">😢</div>
-            今回はマッチングしませんでした。<br>
-            また次回のイベントでお待ちしています！
+          <div class="spotlight-bg">
+            <div class="spotlight-card">
+              <div style="font-size:48px; margin-bottom:12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));">🌙</div>
+              <h3 style="margin:0 0 8px 0; font-size:20px; color:#fff;">今回はノーマッチング</h3>
+              <p style="font-size:13px; color:#ccc; line-height:1.6; margin:0;">
+                惜しくも今回はマッチングとなりませんでした。<br>
+                素敵な出会いは次の機会に！<br>またのご参加をお待ちしています🥂
+              </p>
+            </div>
           </div>
         `;
       }
     }
 
-    // 🎊 紙吹雪アニメーションの関数
-    function fireConfetti() {
-      const count = 200;
-      const defaults = { origin: { y: 0.7 } };
+    // 🎊 豪華版紙吹雪エフェクト
+    function fireConfettiSpecial() {
+      const duration = 3 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
 
-      function fire(particleRatio, opts) {
-        confetti(Object.assign({}, defaults, opts, {
-          particleCount: Math.floor(count * particleRatio)
-        }));
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
       }
 
-      fire(0.25, { spread: 26, startVelocity: 55 });
-      fire(0.2, { spread: 60 });
-      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-      fire(0.1, { spread: 120, startVelocity: 45 });
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      }, 250);
     }
   </script>
 </body>
