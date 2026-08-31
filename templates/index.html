@@ -7,7 +7,7 @@
   <!-- 🎉 紙吹雪（Confetti）ライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; transition: background 0.5s ease; }
     .container { max-width: 420px; margin: 0 auto; }
     .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; position: relative; }
     h1 { font-size: 20px; margin-top: 0; text-align: center; color: #1a73e8; }
@@ -25,9 +25,43 @@
     .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
 
     /* ----------------------------------------------------
-       🔥 豪華演出用のアニメーション＆スタイル
+       🔥 暗転 ＆ ネオン発光カウントダウン
     ---------------------------------------------------- */
-    /* 画面揺れ（シェイク） */
+    .dark-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #0a0a0c;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+    .countdown-title {
+      color: #888;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .countdown-num-glow {
+      font-size: 120px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
+      animation: neonPulse 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+    }
+    @keyframes neonPulse {
+      0% { transform: scale(0.6); opacity: 0.3; }
+      50% { transform: scale(1.25); opacity: 1; filter: drop-shadow(0 0 15px #00f0ff); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ----------------------------------------------------
+       🎉 マッチング成功演出（3D＆揺れ）
+    ---------------------------------------------------- */
     .shake-screen { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
     @keyframes shake {
       10%, 90% { transform: translate3d(-2px, 0, 0); }
@@ -35,8 +69,6 @@
       30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
       40%, 60% { transform: translate3d(8px, 0, 0); }
     }
-
-    /* 3Dカードフリップ＆ズームイン */
     .card-3d-wrap { perspective: 1000px; margin-top: 20px; }
     .card-3d {
       transform-style: preserve-3d;
@@ -46,25 +78,6 @@
       0% { transform: scale(0.2) rotateY(-180deg); opacity: 0; }
       100% { transform: scale(1) rotateY(0deg); opacity: 1; }
     }
-
-    /* カウントダウン巨大数字（鼓動＆ズーム） */
-    .countdown-overlay { text-align: center; padding: 40px 10px; }
-    .countdown-num {
-      font-size: 90px;
-      font-weight: 900;
-      background: linear-gradient(45deg, #1a73e8, #ff4081);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-      animation: zoomPulse 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
-    }
-    @keyframes zoomPulse {
-      0% { transform: scale(0.5); opacity: 0.2; }
-      50% { transform: scale(1.3); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* ✨ マッチング成立：映えるスクショカード */
     .result-card-success {
       background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%);
       border: 3px solid #ff4081;
@@ -77,51 +90,49 @@
     }
     .match-header-badge {
       background: linear-gradient(45deg, #ff4081, #ff80ab);
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-      padding: 6px 16px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 12px;
-      letter-spacing: 2px;
+      color: white; font-size: 14px; font-weight: bold;
+      padding: 6px 16px; border-radius: 20px; display: inline-block;
+      margin-bottom: 12px; letter-spacing: 2px;
     }
     .match-title { font-size: 26px; font-weight: 900; color: #ff1744; margin: 8px 0; }
     .partner-id { font-size: 32px; font-weight: 900; color: #333; margin: 12px 0; }
     .contact-badge-glow {
-      background: #1a73e8;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 22px;
-      font-weight: bold;
-      display: inline-block;
-      margin-top: 10px;
-      box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4);
-      word-break: break-all;
+      background: #1a73e8; color: white; padding: 12px 18px;
+      border-radius: 12px; font-size: 22px; font-weight: bold;
+      display: inline-block; margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4); word-break: break-all;
     }
 
-    /* 🌑 マッチング不成立：スポットライト演出 */
+    /* ----------------------------------------------------
+       🌧️ ノーマッチング演出（哀愁揺れ＆雨降り）
+    ---------------------------------------------------- */
+    .sad-sway { animation: sadSway 3s ease-in-out infinite; }
+    @keyframes sadSway {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(6px) rotate(-1.5deg); }
+      66% { transform: translateY(3px) rotate(1.5deg); }
+    }
     .spotlight-bg {
-      background: #121212 !important;
-      color: white !important;
-      transition: background 0.8s ease;
-      border-radius: 16px;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: inset 0 0 100px rgba(255,255,255,0.05);
+      background: #121212 !important; color: white !important;
+      border-radius: 16px; padding: 30px 20px; text-align: center;
+      box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+      position: relative; overflow: hidden;
     }
     .spotlight-card {
-      background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.8) 70%);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 16px;
-      padding: 24px;
-      animation: fadeIn 1s ease-in-out;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.85) 80%);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px;
+      position: relative; z-index: 2;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .rain-drop {
+      position: absolute; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.4));
+      width: 1px; height: 30px; opacity: 0.5; animation: drop 1.2s infinite linear;
+    }
+    @keyframes drop { 0% { top: -40px; } 100% { top: 100%; } }
   </style>
 </head>
 <body id="body">
+  <div id="countdown-layer"></div>
+
   <div class="container">
     <h1>T-POP シークレット投票 🥂</h1>
 
@@ -306,37 +317,60 @@
       document.getElementById('vote-tab').style.display = 'block';
     }
 
-    // 🌟 究極クオリティ演出関数
+    // 震動（バイブレーション）発火用関数
+    function vibratePulse() {
+      if ("vibrate" in navigator) {
+        navigator.vibrate([100, 50, 100]); // ドクン、ドクンと手に響くバイブ
+      }
+    }
+
+    // 🌟 全面暗転＆ネオン発光カウントダウン関数
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
       const display = document.getElementById('result-display');
+      const layer = document.getElementById('countdown-layer');
       const body = document.getElementById('body');
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
-      // カウントダウン開始
-      display.innerHTML = `
-        <div class="countdown-overlay">
-          <div style="font-size:14px; color:#888; font-weight:bold; letter-spacing:2px; margin-bottom:12px;">MATCHING CHECK</div>
-          <div id="count-num" class="countdown-num">3</div>
-        </div>
-      `;
-
-      // 裏でAPIリクエスト
+      // 裏でAPIリクエストを開始
       const resPromise = fetch('/api/result', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ my_id, pin })
       });
 
-      // 3 -> 2 -> 1 アニメーション切り替え
+      // 1. 暗転レイヤーの表示
+      layer.innerHTML = `
+        <div class="dark-overlay">
+          <div class="countdown-title">MATCHING CHECK</div>
+          <div id="count-num" class="countdown-num-glow">3</div>
+        </div>
+      `;
+
+      // 3の振動
+      vibratePulse();
+
       const countEl = document.getElementById('count-num');
-      await new Promise(r => setTimeout(r, 800));
-      if(countEl) { countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null; countEl.innerText = "2"; }
-      await new Promise(r => setTimeout(r, 800));
-      if(countEl) { countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null; countEl.innerText = "1"; }
-      await new Promise(r => setTimeout(r, 800));
+      await new Promise(r => setTimeout(r, 850));
+
+      if(countEl) {
+        countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null;
+        countEl.innerText = "2";
+        vibratePulse(); // 2の振動
+      }
+      await new Promise(r => setTimeout(r, 850));
+
+      if(countEl) {
+        countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null;
+        countEl.innerText = "1";
+        vibratePulse(); // 1の振動
+      }
+      await new Promise(r => setTimeout(r, 850));
+
+      // 暗転解除
+      layer.innerHTML = "";
 
       const res = await resPromise;
       const data = await res.json();
@@ -350,11 +384,10 @@
       // 🎉 マッチング成功演出
       // --------------------------------------------------
       if (data.matched) {
-        // 1. 画面をド派手に揺らす（シェイク）
         body.classList.add('shake-screen');
+        if ("vibrate" in navigator) navigator.vibrate([200, 100, 200, 100, 400]); // 成功時の喜びのロングバイブ
         setTimeout(() => body.classList.remove('shake-screen'), 500);
 
-        // 2. 映えるスクショ用3D回転カードの描画
         let html = `
           <div class="card-3d-wrap">
             <div class="card-3d result-card-success">
@@ -386,18 +419,26 @@
           </div>
         `;
         display.innerHTML = html;
-
-        // 3. 豪快な紙吹雪発射
         fireConfettiSpecial();
 
       } else {
         // --------------------------------------------------
-        // 🌑 マッチング不成立：スポットライト演出
+        // 🌧️ ノーマッチング：哀愁の降り注ぐ雨＆がっかり揺れ演出
         // --------------------------------------------------
+        if ("vibrate" in navigator) navigator.vibrate(300); // 重い低音バイブ
+
+        let dropsHtml = '';
+        for(let i=0; i<12; i++) {
+          const left = Math.random() * 100;
+          const delay = Math.random() * 1.5;
+          dropsHtml += `<div class="rain-drop" style="left:${left}%; animation-delay:${delay}s;"></div>`;
+        }
+
         display.innerHTML = `
-          <div class="spotlight-bg">
+          <div class="spotlight-bg sad-sway">
+            ${dropsHtml}
             <div class="spotlight-card">
-              <div style="font-size:48px; margin-bottom:12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));">🌙</div>
+              <div style="font-size:48px; margin-bottom:12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));">🌙</div>
               <h3 style="margin:0 0 8px 0; font-size:20px; color:#fff;">今回はノーマッチング</h3>
               <p style="font-size:13px; color:#ccc; line-height:1.6; margin:0;">
                 惜しくも今回はマッチングとなりませんでした。<br>
@@ -415,9 +456,7 @@
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
 
-      function randomInRange(min, max) {
-        return Math.random() * (max - min) + min;
-      }
+      function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
       const interval = setInterval(function() {
         const timeLeft = animationEnd - Date.now();
