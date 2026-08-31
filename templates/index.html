@@ -361,4 +361,152 @@
     }
 
     function resetVoteForm() {
-      document.getElementById('complete-view').style.display =
+      document.getElementById('complete-view').style.display = 'none';
+      document.getElementById('complete-view').removeAttribute('data-completed');
+      document.getElementById('vote-tab').style.display = 'block';
+    }
+
+    function renderContactBtn(contact) {
+      if (!contact) return '';
+      const contactStr = contact.toLowerCase();
+      const isUrl = contact.startsWith('http://') || contact.startsWith('https://');
+
+      if (contactStr.includes('instagram.com')) {
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く</a>`;
+      } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く</a>`;
+      } else if (isUrl) {
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
+      } else {
+        return `<div style="font-size:14px; font-weight:bold; color:#1a73e8; word-break:break-all;">連絡先: ${contact}</div>`;
+      }
+    }
+
+    async function checkResultWithAnimation() {
+      const my_id = document.getElementById('res_my_id').value;
+      const pin = document.getElementById('res_pin').value;
+      const display = document.getElementById('result-display');
+      const layer = document.getElementById('countdown-layer');
+
+      if (!my_id || !pin) return alert("IDとパスワードを入力してください");
+
+      const resPromise = fetch('/api/result', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ my_id, pin })
+      });
+
+      layer.innerHTML = `<div class="dark-overlay"><div class="countdown-title">MATCHING CHECK</div><div id="count-num" class="countdown-num-glow">3</div></div>`;
+      await new Promise(r => setTimeout(r, 700));
+      document.getElementById('count-num').innerText = "2";
+      await new Promise(r => setTimeout(r, 700));
+      document.getElementById('count-num').innerText = "1";
+      await new Promise(r => setTimeout(r, 700));
+      layer.innerHTML = "";
+
+      const res = await resPromise;
+      const data = await res.json();
+
+      if (!res.ok) {
+        display.innerHTML = `<div style="color:red; text-align:center; padding:20px; font-weight:bold;">${data.message}</div>`;
+        return;
+      }
+
+      let html = "";
+
+      // 1. 両思い（マッチング成功）がある場合
+      if (data.matched) {
+        html += `
+          <div class="result-card-success">
+            <div class="match-header-badge">T-POP MATCHED</div>
+            <div class="match-title">🎉 MATCHING!</div>
+            <p style="color:#666; font-size:12px; margin:0;">おめでとうございます！ペア成立です</p>
+        `;
+
+        data.matches.forEach(m => {
+          html += `
+            <div class="partner-block">
+              <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">MATCHED PARTNER</div>
+              <div class="partner-id">【 ${m.id} 】</div>
+          `;
+
+          if (m.message && m.message.trim() !== "") {
+            html += `
+              <div class="message-box matched-msg">
+                <div class="message-title">💌 相手からのメッセージ</div>
+                <div class="message-text">${m.message}</div>
+              </div>
+            `;
+          }
+
+          html += renderContactBtn(m.contact);
+          html += `</div>`;
+        });
+
+        html += `
+            <p style="font-size:13px; font-weight:bold; color:#ff1744; margin-top:16px;">
+              さっそく連絡を取ってみましょう！✨
+            </p>
+          </div>
+        `;
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      }
+
+      // 2. 片思いアプローチが届いている場合
+      if (data.has_unrequited) {
+        html += `
+          <div class="result-card-approach">
+            <div class="approach-header-badge">SPECIAL APPROACH</div>
+            <div class="approach-title">💌 アプローチが届いています！</div>
+            <p style="color:#666; font-size:12px; margin:0;">あなたに興味を持っている方から連絡先が届きました✨</p>
+        `;
+
+        data.unrequited_approaches.forEach(a => {
+          html += `
+            <div class="partner-block">
+              <div style="font-size:11px; color:#64748b; font-weight:bold; letter-spacing:1px;">SENDER</div>
+              <div class="partner-id">【 ${a.id} 】</div>
+          `;
+
+          if (a.message && a.message.trim() !== "") {
+            html += `
+              <div class="message-box">
+                <div class="message-title">💬 相手からのメッセージ</div>
+                <div class="message-text">${a.message}</div>
+              </div>
+            `;
+          }
+
+          html += renderContactBtn(a.contact);
+          html += `</div>`;
+        });
+
+        html += `
+            <p style="font-size:13px; font-weight:bold; color:#1d4ed8; margin-top:16px;">
+              気になったらぜひ連絡してみましょう！💬
+            </p>
+          </div>
+        `;
+        if (!data.matched) {
+          confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
+        }
+      }
+
+      // 3. マッチングもアプローチも無い場合
+      if (!data.matched && !data.has_unrequited) {
+        html = `
+          <div style="background:#121212; color:white; border-radius:16px; padding:30px 20px; text-align:center; margin-top:20px;">
+            <div style="font-size:48px; margin-bottom:12px;">🌙</div>
+            <h3 style="margin:0 0 8px 0; font-size:20px;">今回はノーマッチング</h3>
+            <p style="font-size:13px; color:#ccc; line-height:1.6; margin:0;">
+              惜しくも今回はマッチングとなりませんでした。<br>またのご参加をお待ちしています🥂
+            </p>
+          </div>
+        `;
+      }
+
+      display.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
