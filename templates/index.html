@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
+  <!-- 🎉 紙吹雪（Confetti）ライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
@@ -61,10 +62,22 @@
     .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
     .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
     
-    /* 💬 複数選択時の個別メッセージ入力欄 */
+    /* 💬 複数選択時の個別メッセージ＆片思い送信設定 */
     .messages-container { margin-top: 20px; }
     .single-msg-item { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
     .single-msg-item label { margin: 0 0 6px 0; color: #1a73e8; font-size: 13px; }
+    
+    .unrequited-option {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #cbd5e1;
+      font-size: 12px;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .unrequited-option input { width: 16px; height: 16px; margin-right: 8px; cursor: pointer; }
 
     button.submit-btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
     .complete-box { text-align: center; padding: 20px 10px; }
@@ -93,10 +106,22 @@
       font-size: 13px; font-weight: bold; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 8px;
     }
     .match-title { font-size: 24px; font-weight: 900; color: #ff1744; margin: 6px 0; }
+
+    /* 💌 アプローチ受領カードデザイン（片思い用） */
+    .result-card-approach {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+      border: 3px solid #3b82f6; border-radius: 20px; padding: 24px 18px;
+      text-align: center; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25); margin-top: 20px;
+    }
+    .approach-header-badge {
+      background: linear-gradient(45deg, #3b82f6, #60a5fa); color: white;
+      font-size: 13px; font-weight: bold; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 8px;
+    }
+    .approach-title { font-size: 22px; font-weight: 900; color: #1d4ed8; margin: 6px 0; }
     
     .partner-block {
       background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #ffccd5;
+      border: 1px solid #cbd5e1;
       border-radius: 16px;
       padding: 18px 14px;
       margin-top: 14px;
@@ -105,15 +130,19 @@
 
     /* 💌 メッセージ表示ボックス */
     .message-box {
-      background: #fff0f5;
-      border: 1.5px solid #ff80ab;
+      background: #f8fafc;
+      border: 1.5px solid #94a3b8;
       border-radius: 12px;
       padding: 12px 14px;
       margin: 12px 0 16px;
       text-align: left;
-      box-shadow: 0 2px 8px rgba(255, 64, 129, 0.08);
     }
-    .message-title { font-size: 12px; font-weight: bold; color: #d81b60; margin-bottom: 6px; }
+    .message-box.matched-msg {
+      background: #fff0f5;
+      border-color: #ff80ab;
+    }
+    .message-title { font-size: 12px; font-weight: bold; color: #475569; margin-bottom: 6px; }
+    .matched-msg .message-title { color: #d81b60; }
     .message-text { font-size: 15px; color: #222; line-height: 1.5; font-weight: 600; word-break: break-all; white-space: pre-wrap; }
 
     /* SNS特化ボタン */
@@ -138,6 +167,7 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
+    <!-- 投票画面 -->
     <div id="vote-tab" class="card">
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
@@ -190,12 +220,14 @@
           </script>
         </div>
 
+        <!-- 選択した相手ごとの一言メッセージ＆片思い送信オプション -->
         <div id="messages-container" class="messages-container"></div>
 
         <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
       </form>
     </div>
 
+    <!-- 投票完了表示 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
         <h2 style="color: #1a73e8;">投票完了✨</h2>
@@ -204,6 +236,7 @@
       </div>
     </div>
 
+    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -235,15 +268,20 @@
       const container = document.getElementById('messages-container');
       
       const currentValues = {};
+      const currentUnrequited = {};
+
       document.querySelectorAll('.individual-msg').forEach(ta => {
         currentValues[ta.getAttribute('data-target')] = ta.value;
+      });
+      document.querySelectorAll('.unrequited-chk').forEach(chk => {
+        currentUnrequited[chk.getAttribute('data-target')] = chk.checked;
       });
 
       container.innerHTML = '';
       if (checkedBoxes.length === 0) return;
 
       const title = document.createElement('label');
-      title.innerHTML = '💬 一言メッセージ（任意・相手ごとに送れます）';
+      title.innerHTML = '💬 アプローチ設定（相手ごとに選べます）';
       container.appendChild(title);
 
       checkedBoxes.forEach(box => {
@@ -251,9 +289,16 @@
         const div = document.createElement('div');
         div.className = 'single-msg-item';
         const prevText = currentValues[val] || '';
+        const prevUnreq = currentUnrequited[val] || false;
+
         div.innerHTML = `
-          <label>【 ${val} 】さんへのメッセージ</label>
+          <label>【 ${val} 】さんへのメッセージ＆アプローチ</label>
           <textarea class="individual-msg" data-target="${val}" placeholder="例: お話しできて楽しかったです！ぜひまた話しましょう✨" maxlength="100">${prevText}</textarea>
+          
+          <label class="unrequited-option">
+            <input type="checkbox" class="unrequited-chk" data-target="${val}" ${prevUnreq ? 'checked' : ''}>
+            <span>💌 マッチングしなくても、この人に自分のID・メッセージ・連絡先を届ける</span>
+          </label>
         `;
         container.appendChild(div);
       });
@@ -294,13 +339,19 @@
         }
       });
 
+      const allow_unrequited = {};
+      document.querySelectorAll('.unrequited-chk').forEach(chk => {
+        const target = chk.getAttribute('data-target');
+        allow_unrequited[target] = chk.checked;
+      });
+
       if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
       if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
 
       const res = await fetch('/api/vote', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ my_id, pin, contact, target_ids, messages })
+        body: JSON.stringify({ my_id, pin, contact, target_ids, messages, allow_unrequited })
       });
       const data = await res.json();
       if (res.ok) {
@@ -318,6 +369,22 @@
       document.getElementById('complete-view').style.display = 'none';
       document.getElementById('complete-view').removeAttribute('data-completed');
       document.getElementById('vote-tab').style.display = 'block';
+    }
+
+    function renderContactBtn(contact) {
+      if (!contact) return '';
+      const contactStr = contact.toLowerCase();
+      const isUrl = contact.startsWith('http://') || contact.startsWith('https://');
+
+      if (contactStr.includes('instagram.com')) {
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く</a>`;
+      } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く</a>`;
+      } else if (isUrl) {
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
+      } else {
+        return `<div style="font-size:14px; font-weight:bold; color:#1a73e8; word-break:break-all;">連絡先: ${contact}</div>`;
+      }
     }
 
     async function checkResultWithAnimation() {
@@ -350,8 +417,11 @@
         return;
       }
 
+      let html = "";
+
+      // 1. 両思い（マッチング成功）がある場合
       if (data.matched) {
-        let html = `
+        html += `
           <div class="result-card-success">
             <div class="match-header-badge">T-POP MATCHED</div>
             <div class="match-title">🎉 MATCHING!</div>
@@ -365,31 +435,16 @@
               <div class="partner-id">【 ${m.id} 】</div>
           `;
 
-          // 💌 相手からのメッセージ（「」を取り除いて表示）
           if (m.message && m.message.trim() !== "") {
             html += `
-              <div class="message-box">
+              <div class="message-box matched-msg">
                 <div class="message-title">💌 相手からのメッセージ</div>
                 <div class="message-text">${m.message}</div>
               </div>
             `;
           }
 
-          if (m.contact) {
-            const contactStr = m.contact.toLowerCase();
-            const isUrl = m.contact.startsWith('http://') || m.contact.startsWith('https://');
-
-            if (contactStr.includes('instagram.com')) {
-              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く</a>`;
-            } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
-              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く</a>`;
-            } else if (isUrl) {
-              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
-            } else {
-              html += `<div style="font-size:14px; font-weight:bold; color:#1a73e8; word-break:break-all;">連絡先: ${m.contact}</div>`;
-            }
-          }
-
+          html += renderContactBtn(m.contact);
           html += `</div>`;
         });
 
@@ -399,11 +454,52 @@
             </p>
           </div>
         `;
-        display.innerHTML = html;
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      }
 
-      } else {
-        display.innerHTML = `
+      // 2. 片思いアプローチが届いている場合
+      if (data.has_unrequited) {
+        html += `
+          <div class="result-card-approach">
+            <div class="approach-header-badge">SPECIAL APPROACH</div>
+            <div class="approach-title">💌 アプローチが届いています！</div>
+            <p style="color:#666; font-size:12px; margin:0;">あなたに興味を持っている方から連絡先が届きました✨</p>
+        `;
+
+        data.unrequited_approaches.forEach(a => {
+          html += `
+            <div class="partner-block">
+              <div style="font-size:11px; color:#64748b; font-weight:bold; letter-spacing:1px;">SENDER</div>
+              <div class="partner-id">【 ${a.id} 】</div>
+          `;
+
+          if (a.message && a.message.trim() !== "") {
+            html += `
+              <div class="message-box">
+                <div class="message-title">💬 相手からのメッセージ</div>
+                <div class="message-text">${a.message}</div>
+              </div>
+            `;
+          }
+
+          html += renderContactBtn(a.contact);
+          html += `</div>`;
+        });
+
+        html += `
+            <p style="font-size:13px; font-weight:bold; color:#1d4ed8; margin-top:16px;">
+              気になったらぜひ連絡してみましょう！💬
+            </p>
+          </div>
+        `;
+        if (!data.matched) {
+          confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
+        }
+      }
+
+      // 3. マッチングもアプローチも無い場合
+      if (!data.matched && !data.has_unrequited) {
+        html = `
           <div style="background:#121212; color:white; border-radius:16px; padding:30px 20px; text-align:center; margin-top:20px;">
             <div style="font-size:48px; margin-bottom:12px;">🌙</div>
             <h3 style="margin:0 0 8px 0; font-size:20px;">今回はノーマッチング</h3>
@@ -413,6 +509,8 @@
           </div>
         `;
       }
+
+      display.innerHTML = html;
     }
   </script>
 </body>
