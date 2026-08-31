@@ -16,6 +16,25 @@
     .tab-btn.active { background: #1a73e8; color: white; }
     label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
     select, input[type="text"], input[type="password"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+    
+    /* 🔒 プライバシー注記ボックス */
+    .privacy-notice {
+      background: #e8f0fe;
+      border: 1px solid #aecbfa;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 10px 0 16px 0;
+      font-size: 12px;
+      color: #174ea6;
+      line-height: 1.5;
+    }
+    .privacy-notice strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #1a73e8;
+    }
+
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
     .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
     .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
@@ -167,6 +186,14 @@
         <input type="text" id="contact" placeholder="例: @tpop_tsukuba" required>
 
         <label>気になった相手を選択（複数選択OK）</label>
+        
+        <!-- 🌟 プライバシー保護の注記エリア -->
+        <div class="privacy-notice">
+          <strong>🔒 プライバシー完全保護</strong>
+          誰に投票したかは<b>運営も含め誰にもわかりません</b>。<br>
+          お互いに選び合ってマッチングが成立した際のみ、お相手に連絡先が伝わります。
+        </div>
+
         <div class="grid">
           <label class="checkbox-card"><input type="checkbox" name="target" value="M-1"> M-1</label>
           <label class="checkbox-card"><input type="checkbox" name="target" value="M-2"> M-2</label>
@@ -317,14 +344,12 @@
       document.getElementById('vote-tab').style.display = 'block';
     }
 
-    // 震動（バイブレーション）発火用関数
     function vibratePulse() {
       if ("vibrate" in navigator) {
-        navigator.vibrate([100, 50, 100]); // ドクン、ドクンと手に響くバイブ
+        navigator.vibrate([100, 50, 100]);
       }
     }
 
-    // 🌟 全面暗転＆ネオン発光カウントダウン関数
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
@@ -334,14 +359,12 @@
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
-      // 裏でAPIリクエストを開始
       const resPromise = fetch('/api/result', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ my_id, pin })
       });
 
-      // 1. 暗転レイヤーの表示
       layer.innerHTML = `
         <div class="dark-overlay">
           <div class="countdown-title">MATCHING CHECK</div>
@@ -349,7 +372,6 @@
         </div>
       `;
 
-      // 3の振動
       vibratePulse();
 
       const countEl = document.getElementById('count-num');
@@ -358,18 +380,17 @@
       if(countEl) {
         countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null;
         countEl.innerText = "2";
-        vibratePulse(); // 2の振動
+        vibratePulse();
       }
       await new Promise(r => setTimeout(r, 850));
 
       if(countEl) {
         countEl.style.animation = 'none'; countEl.offsetHeight; countEl.style.animation = null;
         countEl.innerText = "1";
-        vibratePulse(); // 1の振動
+        vibratePulse();
       }
       await new Promise(r => setTimeout(r, 850));
 
-      // 暗転解除
       layer.innerHTML = "";
 
       const res = await resPromise;
@@ -380,12 +401,9 @@
         return;
       }
 
-      // --------------------------------------------------
-      // 🎉 マッチング成功演出
-      // --------------------------------------------------
       if (data.matched) {
         body.classList.add('shake-screen');
-        if ("vibrate" in navigator) navigator.vibrate([200, 100, 200, 100, 400]); // 成功時の喜びのロングバイブ
+        if ("vibrate" in navigator) navigator.vibrate([200, 100, 200, 100, 400]);
         setTimeout(() => body.classList.remove('shake-screen'), 500);
 
         let html = `
@@ -422,10 +440,7 @@
         fireConfettiSpecial();
 
       } else {
-        // --------------------------------------------------
-        // 🌧️ ノーマッチング：哀愁の降り注ぐ雨＆がっかり揺れ演出
-        // --------------------------------------------------
-        if ("vibrate" in navigator) navigator.vibrate(300); // 重い低音バイブ
+        if ("vibrate" in navigator) navigator.vibrate(300);
 
         let dropsHtml = '';
         for(let i=0; i<12; i++) {
@@ -450,7 +465,6 @@
       }
     }
 
-    // 🎊 豪華版紙吹雪エフェクト
     function fireConfettiSpecial() {
       const duration = 3 * 1000;
       const animationEnd = Date.now() + duration;
