@@ -16,7 +16,7 @@
     .tab-btn.active { background: #1a73e8; color: white; }
     label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
     select, input[type="text"], input[type="password"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-    textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+    textarea { resize: vertical; min-height: 60px; font-family: inherit; }
 
     /* 💡 連絡先補足ガイド */
     .contact-guide {
@@ -64,6 +64,12 @@
 
     .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
     .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
+    
+    /* 💬 複数選択時の個別メッセージ入力欄 */
+    .messages-container { margin-top: 20px; }
+    .single-msg-item { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+    .single-msg-item label { margin: 0 0 6px 0; color: #1a73e8; font-size: 13px; }
+
     button.submit-btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
     .complete-box { text-align: center; padding: 20px 10px; }
     .complete-icon { font-size: 48px; margin-bottom: 12px; }
@@ -96,7 +102,7 @@
     }
 
     /* ----------------------------------------------------
-       🎉 マッチング成功演出
+       🎉 マッチング成功演出＆SNS別ボタン
     ---------------------------------------------------- */
     .shake-screen { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
     @keyframes shake {
@@ -124,37 +130,47 @@
     }
     .match-title { font-size: 24px; font-weight: 900; color: #ff1744; margin: 6px 0; }
     
-    .partner-avatar {
-      font-size: 52px;
-      margin-top: 10px;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    .partner-block {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #ffccd5;
+      border-radius: 16px;
+      padding: 16px 12px;
+      margin-top: 14px;
     }
-    .partner-id { font-size: 28px; font-weight: 900; color: #333; margin: 4px 0 12px; }
+    .partner-id { font-size: 24px; font-weight: 900; color: #333; margin: 4px 0 10px; }
 
+    /* メッセージ吹出し */
     .message-box {
       background: #fff;
-      border: 1px solid #ffccd5;
+      border: 1px solid #ff80ab;
       border-radius: 12px;
       padding: 12px 14px;
-      margin: 12px 0;
+      margin: 10px 0 14px;
       text-align: left;
       position: relative;
-      box-shadow: 0 2px 8px rgba(255, 64, 129, 0.08);
+      box-shadow: 0 2px 8px rgba(255, 64, 129, 0.1);
     }
-    .message-box::before {
-      content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-      border-width: 0 8px 8px; border-style: solid; border-color: transparent transparent #ffccd5;
-    }
-    .message-title { font-size: 11px; font-weight: bold; color: #ff4081; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
-    .message-text { font-size: 13px; color: #444; line-height: 1.4; word-break: break-all; }
+    .message-title { font-size: 12px; font-weight: bold; color: #ff1744; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+    .message-text { font-size: 14px; color: #333; line-height: 1.4; word-break: break-all; font-weight: 500; }
 
-    .contact-badge-glow {
-      background: #1a73e8; color: white; padding: 12px 18px;
-      border-radius: 12px; font-size: 16px; font-weight: bold;
-      display: inline-block; margin-top: 10px;
-      box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4); word-break: break-all;
+    /* SNS特化ボタン */
+    .btn-contact {
+      display: inline-block;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      color: white !important;
       text-decoration: none;
+      box-sizing: border-box;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
     }
+    .btn-contact:active { transform: scale(0.98); }
+    .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+    .btn-line { background: #06C755; }
+    .btn-default { background: #1a73e8; }
 
     /* ----------------------------------------------------
        🌧️ ノーマッチング演出
@@ -222,81 +238,76 @@
           <div class="contact-guide-item">💬 <b>LINE:</b> マイQRコード ＞ リンクをコピー</div>
         </div>
 
-        <!-- 💡 より気軽に選べるニュアンスに変更 -->
         <label>「また話してみたい」「もう少し知りたい」と思った人を選択（複数選択OK）</label>
         
         <div class="privacy-notice">
           <strong>🔒 プライバシー完全保護</strong>
           恋愛に限らず、友達として気が合いそう・もう少し話してみたいと感じた方にも気軽にチェックしてみてください✨<br>
-          お互いに選び合ってマッチングが成立した際のみ、お相手に連絡先が伝わります。（運営も含め投票内容は非公開です）
+          お互いに選び合ってマッチングが成立した際のみ、お相手に連絡先が伝わります。（運営を含め他の誰にも投票内容はわかりません）
         </div>
 
         <div class="grid">
           <!-- 男性グループ見出し -->
           <div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>
           
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-1" onchange="updateMessageTargetOptions()"> M-1</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-2" onchange="updateMessageTargetOptions()"> M-2</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-3" onchange="updateMessageTargetOptions()"> M-3</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-4" onchange="updateMessageTargetOptions()"> M-4</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-5" onchange="updateMessageTargetOptions()"> M-5</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-6" onchange="updateMessageTargetOptions()"> M-6</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-7" onchange="updateMessageTargetOptions()"> M-7</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-8" onchange="updateMessageTargetOptions()"> M-8</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-9" onchange="updateMessageTargetOptions()"> M-9</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-10" onchange="updateMessageTargetOptions()"> M-10</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-11" onchange="updateMessageTargetOptions()"> M-11</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-12" onchange="updateMessageTargetOptions()"> M-12</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-13" onchange="updateMessageTargetOptions()"> M-13</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-14" onchange="updateMessageTargetOptions()"> M-14</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-15" onchange="updateMessageTargetOptions()"> M-15</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-16" onchange="updateMessageTargetOptions()"> M-16</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-17" onchange="updateMessageTargetOptions()"> M-17</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-18" onchange="updateMessageTargetOptions()"> M-18</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-19" onchange="updateMessageTargetOptions()"> M-19</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-20" onchange="updateMessageTargetOptions()"> M-20</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-21" onchange="updateMessageTargetOptions()"> M-21</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-22" onchange="updateMessageTargetOptions()"> M-22</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-23" onchange="updateMessageTargetOptions()"> M-23</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-24" onchange="updateMessageTargetOptions()"> M-24</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="M-25" onchange="updateMessageTargetOptions()"> M-25</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-1" onchange="renderMessageInputs()"> M-1</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-2" onchange="renderMessageInputs()"> M-2</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-3" onchange="renderMessageInputs()"> M-3</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-4" onchange="renderMessageInputs()"> M-4</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-5" onchange="renderMessageInputs()"> M-5</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-6" onchange="renderMessageInputs()"> M-6</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-7" onchange="renderMessageInputs()"> M-7</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-8" onchange="renderMessageInputs()"> M-8</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-9" onchange="renderMessageInputs()"> M-9</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-10" onchange="renderMessageInputs()"> M-10</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-11" onchange="renderMessageInputs()"> M-11</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-12" onchange="renderMessageInputs()"> M-12</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-13" onchange="renderMessageInputs()"> M-13</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-14" onchange="renderMessageInputs()"> M-14</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-15" onchange="renderMessageInputs()"> M-15</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-16" onchange="renderMessageInputs()"> M-16</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-17" onchange="renderMessageInputs()"> M-17</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-18" onchange="renderMessageInputs()"> M-18</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-19" onchange="renderMessageInputs()"> M-19</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-20" onchange="renderMessageInputs()"> M-20</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-21" onchange="renderMessageInputs()"> M-21</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-22" onchange="renderMessageInputs()"> M-22</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-23" onchange="renderMessageInputs()"> M-23</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-24" onchange="renderMessageInputs()"> M-24</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="M-25" onchange="renderMessageInputs()"> M-25</label>
 
           <!-- 女性グループ見出し -->
           <div class="section-title" style="margin-top: 20px;">👩 女性メンバー（F-1 〜 F-25）</div>
 
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-1" onchange="updateMessageTargetOptions()"> F-1</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-2" onchange="updateMessageTargetOptions()"> F-2</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-3" onchange="updateMessageTargetOptions()"> F-3</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-4" onchange="updateMessageTargetOptions()"> F-4</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-5" onchange="updateMessageTargetOptions()"> F-5</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-6" onchange="updateMessageTargetOptions()"> F-6</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-7" onchange="updateMessageTargetOptions()"> F-7</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-8" onchange="updateMessageTargetOptions()"> F-8</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-9" onchange="updateMessageTargetOptions()"> F-9</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-10" onchange="updateMessageTargetOptions()"> F-10</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-11" onchange="updateMessageTargetOptions()"> F-11</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-12" onchange="updateMessageTargetOptions()"> F-12</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-13" onchange="updateMessageTargetOptions()"> F-13</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-14" onchange="updateMessageTargetOptions()"> F-14</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-15" onchange="updateMessageTargetOptions()"> F-15</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-16" onchange="updateMessageTargetOptions()"> F-16</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-17" onchange="updateMessageTargetOptions()"> F-17</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-18" onchange="updateMessageTargetOptions()"> F-18</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-19" onchange="updateMessageTargetOptions()"> F-19</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-20" onchange="updateMessageTargetOptions()"> F-20</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-21" onchange="updateMessageTargetOptions()"> F-21</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-22" onchange="updateMessageTargetOptions()"> F-22</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-23" onchange="updateMessageTargetOptions()"> F-23</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-24" onchange="updateMessageTargetOptions()"> F-24</label>
-          <label class="checkbox-card"><input type="checkbox" name="target" value="F-25" onchange="updateMessageTargetOptions()"> F-25</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-1" onchange="renderMessageInputs()"> F-1</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-2" onchange="renderMessageInputs()"> F-2</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-3" onchange="renderMessageInputs()"> F-3</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-4" onchange="renderMessageInputs()"> F-4</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-5" onchange="renderMessageInputs()"> F-5</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-6" onchange="renderMessageInputs()"> F-6</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-7" onchange="renderMessageInputs()"> F-7</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-8" onchange="renderMessageInputs()"> F-8</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-9" onchange="renderMessageInputs()"> F-9</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-10" onchange="renderMessageInputs()"> F-10</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-11" onchange="renderMessageInputs()"> F-11</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-12" onchange="renderMessageInputs()"> F-12</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-13" onchange="renderMessageInputs()"> F-13</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-14" onchange="renderMessageInputs()"> F-14</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-15" onchange="renderMessageInputs()"> F-15</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-16" onchange="renderMessageInputs()"> F-16</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-17" onchange="renderMessageInputs()"> F-17</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-18" onchange="renderMessageInputs()"> F-18</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-19" onchange="renderMessageInputs()"> F-19</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-20" onchange="renderMessageInputs()"> F-20</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-21" onchange="renderMessageInputs()"> F-21</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-22" onchange="renderMessageInputs()"> F-22</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-23" onchange="renderMessageInputs()"> F-23</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-24" onchange="renderMessageInputs()"> F-24</label>
+          <label class="checkbox-card"><input type="checkbox" name="target" value="F-25" onchange="renderMessageInputs()"> F-25</label>
         </div>
 
-        <!-- 💬 一言メッセージ入力エリア（選択した相手と連動） -->
-        <label style="margin-top:24px;">💬 相手へ一言メッセージを送る（任意）</label>
-        <select id="message_target">
-          <option value="">上のチェック一覧で選択した相手から選べます（なしでもOK）</option>
-        </select>
-        <textarea id="message_text" placeholder="例: 服装がとても素敵でした！またゆっくりお話ししたいです✨" maxlength="100"></textarea>
+        <!-- 💬 チェックされた相手ごとに個別メッセージエリアが動的生成される容器 -->
+        <div id="messages-container" class="messages-container"></div>
 
         <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
       </form>
@@ -343,28 +354,36 @@
   </div>
 
   <script>
-    // 🔄 チェックボックスで選んだ相手だけをメッセージ送信先ドロップダウンに連動反映させる関数
-    function updateMessageTargetOptions() {
+    // 🔄 チェックボックスで選択した人数分の個別メッセージ入力欄を生成
+    function renderMessageInputs() {
       const checkedBoxes = Array.from(document.querySelectorAll('input[name="target"]:checked'));
-      const msgSelect = document.getElementById('message_target');
-      const currentSelected = msgSelect.value;
+      const container = document.getElementById('messages-container');
+      
+      // 入力中のテキストを退避
+      const currentValues = {};
+      document.querySelectorAll('.individual-msg').forEach(ta => {
+        currentValues[ta.getAttribute('data-target')] = ta.value;
+      });
 
-      msgSelect.innerHTML = '<option value="">メッセージを送る相手を選択（なしでもOK）</option>';
+      container.innerHTML = '';
 
-      if (checkedBoxes.length === 0) {
-        msgSelect.innerHTML = '<option value="">上のチェック一覧で選択した相手から選べます（なしでもOK）</option>';
-        return;
-      }
+      if (checkedBoxes.length === 0) return;
+
+      const title = document.createElement('label');
+      title.innerHTML = '💬 一言メッセージ（任意・相手ごとに送れます）';
+      container.appendChild(title);
 
       checkedBoxes.forEach(box => {
         const val = box.value;
-        const opt = document.createElement('option');
-        opt.value = val;
-        opt.textContent = `${val} 宛てに送る`;
-        if (val === currentSelected) {
-          opt.selected = true;
-        }
-        msgSelect.appendChild(opt);
+        const div = document.createElement('div');
+        div.className = 'single-msg-item';
+        
+        const prevText = currentValues[val] || '';
+        div.innerHTML = `
+          <label>【 ${val} 】さんへのメッセージ</label>
+          <textarea class="individual-msg" data-target="${val}" placeholder="例: お話しできて楽しかったです！ぜひまた話しましょう✨" maxlength="100">${prevText}</textarea>
+        `;
+        container.appendChild(div);
       });
     }
 
@@ -393,8 +412,16 @@
       const pin = document.getElementById('pin').value;
       const contact = document.getElementById('contact').value;
       const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
-      const message_target = document.getElementById('message_target').value;
-      const message_text = document.getElementById('message_text').value;
+
+      // 各相手へのメッセージをオブジェクトでまとめる { "M-1": "メッセージ...", "M-2": "..." }
+      const messages = {};
+      document.querySelectorAll('.individual-msg').forEach(ta => {
+        const target = ta.getAttribute('data-target');
+        const text = ta.value.trim();
+        if (text) {
+          messages[target] = text;
+        }
+      });
 
       if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
       if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
@@ -402,7 +429,7 @@
       const res = await fetch('/api/vote', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ my_id, pin, contact, target_ids, message_target, message_text })
+        body: JSON.stringify({ my_id, pin, contact, target_ids, messages })
       });
       const data = await res.json();
       if (res.ok) {
@@ -410,7 +437,7 @@
         document.getElementById('complete-view').style.display = 'block';
         document.getElementById('complete-view').setAttribute('data-completed', 'true');
         document.getElementById('voteForm').reset();
-        updateMessageTargetOptions(); // リセット時にドロップダウンも更新
+        renderMessageInputs();
       } else {
         alert(data.message || "エラーが発生しました");
       }
@@ -490,19 +517,17 @@
               <div class="match-header-badge">T-POP MATCHED</div>
               <div class="match-title">🎉 MATCHING!</div>
               <p style="color:#666; font-size:12px; margin:0;">おめでとうございます！ペア成立です</p>
-              <hr style="border:none; border-top:1px dashed #ff80ab; margin: 14px 0;">
         `;
 
         data.matches.forEach(m => {
-          const avatarIcon = m.id.startsWith('M') ? '🤵‍♂️' : '💃';
-
           html += `
-            <div class="partner-avatar">${avatarIcon}</div>
-            <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">MATCHED PARTNER</div>
-            <div class="partner-id">【 ${m.id} 】</div>
+            <div class="partner-block">
+              <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">MATCHED PARTNER</div>
+              <div class="partner-id">【 ${m.id} 】</div>
           `;
 
-          if (m.message) {
+          // 一言メッセージの表示（APIからの応答メッセージ）
+          if (m.message && m.message.trim() !== "") {
             html += `
               <div class="message-box">
                 <div class="message-title">💌 相手からのメッセージ</div>
@@ -511,23 +536,28 @@
             `;
           }
 
-          if(m.contact) {
+          // SNS連絡先判定＆ブランドアイコンボタン
+          if (m.contact) {
+            const contactStr = m.contact.toLowerCase();
             const isUrl = m.contact.startsWith('http://') || m.contact.startsWith('https://');
-            if (isUrl) {
-              html += `
-                <a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="contact-badge-glow">🔗 相手を開く</a>
-              `;
+
+            if (contactStr.includes('instagram.com')) {
+              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く</a>`;
+            } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
+              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く</a>`;
+            } else if (isUrl) {
+              html += `<a href="${m.contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
             } else {
-              html += `
-                <div class="contact-badge-glow">${m.contact}</div>
-              `;
+              html += `<div style="font-size:14px; font-weight:bold; color:#1a73e8; word-break:break-all;">連絡先: ${m.contact}</div>`;
             }
           }
+
+          html += `</div>`;
         });
 
         html += `
               <p style="font-size:13px; font-weight:bold; color:#ff1744; margin-top:16px;">
-                💬 さっそく連絡を取ってみましょう！
+                さっそく連絡を取ってみましょう！✨
               </p>
             </div>
           </div>
