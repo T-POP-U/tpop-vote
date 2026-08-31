@@ -1,2 +1,4 @@
-flask
+Flask
+Flask-SQLAlchemy
 gunicorn
+canvas-confetti
