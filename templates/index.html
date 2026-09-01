@@ -176,7 +176,7 @@
       background: radial-gradient(circle at 50% 0%, #2a081a 0%, #0d0208 100%);
       border: 2px solid #ff007f;
       border-radius: 24px;
-      padding: 32px 20px;
+      padding: 32px 18px;
       text-align: center;
       box-shadow: 0 0 30px rgba(255, 0, 127, 0.4), inset 0 0 20px rgba(255, 0, 127, 0.2);
       margin-top: 10px;
@@ -208,7 +208,7 @@
       background: radial-gradient(circle at 50% 0%, #081a2d 0%, #020813 100%);
       border: 2px solid #00f0ff;
       border-radius: 24px;
-      padding: 32px 20px;
+      padding: 32px 18px;
       text-align: center;
       box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.2);
       margin-top: 10px;
@@ -319,25 +319,24 @@
       box-shadow: 0 0 20px rgba(26, 115, 232, 0.7);
     }
 
-    /* 🌧️ 狂気の雨×ネオン（ノーマッチング専用カード） */
+    /* 💜💙【青紫ネオン光枠】ノーマッチング専用カード */
     .neon-rain-card {
       position: relative;
-      background: #090a10;
+      background: radial-gradient(circle at 50% 0%, #110e2e 0%, #04030a 100%);
       color: white;
-      border-radius: 20px;
-      padding: 34px 20px;
+      border: 2px solid #7000ff;
+      border-radius: 24px;
+      padding: 32px 18px;
       text-align: center;
       margin-top: 10px;
-      border: 1px solid rgba(255, 0, 128, 0.3);
-      box-shadow: 0 0 25px rgba(255, 0, 128, 0.2), 0 0 50px rgba(0, 240, 255, 0.15);
+      box-shadow: 0 0 30px rgba(112, 0, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.2);
       overflow: hidden;
-      animation: neonFloat 5s ease-in-out infinite alternate;
+      animation: bluePurpleGlowPulse 2.5s ease-in-out infinite alternate;
     }
 
-    @keyframes neonFloat {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-6px) rotate(0.8deg); }
-      100% { transform: translateY(4px) rotate(-0.8deg); }
+    @keyframes bluePurpleGlowPulse {
+      0% { box-shadow: 0 0 25px rgba(112, 0, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2); }
+      100% { box-shadow: 0 0 45px rgba(112, 0, 255, 0.75), 0 0 20px rgba(0, 240, 255, 0.5), inset 0 0 30px rgba(112, 0, 255, 0.4); }
     }
 
     .rain-canvas {
@@ -354,7 +353,7 @@
 
     .moon-svg {
       width: 100%; height: 100%;
-      filter: drop-shadow(0 0 10px rgba(255, 220, 130, 0.6)) drop-shadow(0 0 20px rgba(255, 0, 128, 0.3));
+      filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 20px rgba(0, 240, 255, 0.3));
     }
 
     .star {
@@ -362,7 +361,7 @@
       animation: starTwinkle 2.5s ease-in-out infinite alternate;
     }
     .star-1 { top: 0px; left: 6px; width: 14px; animation-delay: 0s; }
-    .star-2 { bottom: 6px; right: 8px; width: 16px; animation-delay: 0.8s; fill: #ff007f; }
+    .star-2 { bottom: 6px; right: 8px; width: 16px; animation-delay: 0.8s; fill: #a855f7; }
     .star-3 { top: 10px; right: 2px; width: 10px; animation-delay: 1.4s; }
 
     @keyframes starTwinkle {
@@ -371,20 +370,38 @@
     }
 
     .neon-title {
-      font-size: 30px; font-weight: 900; margin: 8px 0 14px 0; color: #fff; letter-spacing: 2px;
-      text-shadow: 0 0 5px #fff, 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
-      animation: neonPulse 1.8s ease-in-out infinite alternate;
+      font-size: 28px; font-weight: 900; margin: 8px 0 14px 0; color: #fff; letter-spacing: 2px;
+      text-shadow: 0 0 5px #fff, 0 0 10px #7000ff, 0 0 20px #7000ff, 0 0 40px #00f0ff;
+      animation: neonPulsePurple 1.8s ease-in-out infinite alternate;
     }
 
-    @keyframes neonPulse {
-      0% { text-shadow: 0 0 5px #fff, 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f; }
-      100% { text-shadow: 0 0 8px #fff, 0 0 15px #ff007f, 0 0 30px #ff007f, 0 0 60px #00f0ff, 0 0 90px #00f0ff; }
+    @keyframes neonPulsePurple {
+      0% { text-shadow: 0 0 5px #fff, 0 0 10px #7000ff, 0 0 20px #7000ff; }
+      100% { text-shadow: 0 0 8px #fff, 0 0 15px #7000ff, 0 0 30px #a855f7, 0 0 50px #00f0ff; }
     }
 
     .unrequited-sent-box {
       background: rgba(0, 240, 255, 0.08); border: 1.5px solid rgba(0, 240, 255, 0.6);
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); border-radius: 14px;
       padding: 14px 16px; margin-top: 20px; text-align: left; color: #e0f2fe; font-size: 13px; line-height: 1.6;
+    }
+
+    /* 改行崩れ防止のための共通フッターテキストスタイル */
+    .call-action-matched {
+      font-size: 13.5px; font-weight: 900; color: #ffffff; margin-top: 20px;
+      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
+      line-height: 1.4; display: block;
+    }
+    
+    .call-action-approach {
+      font-size: 13.5px; font-weight: 900; color: #00f0ff; margin-top: 20px;
+      text-shadow: 0 0 10px #00f0ff;
+      line-height: 1.4; display: block;
+    }
+
+    .nowrap-phrase {
+      display: inline-block;
+      white-space: nowrap;
     }
 
     .thanks-footer {
@@ -436,7 +453,7 @@
           <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('pin', this)">👁️</button>
         </div>
 
-        <label>自分の連絡先（Instagram または LINE友達追加URL）</label>
+        <label>自分の連絡先（InstagramまたはLINEのURL）</label>
         <input type="text" id="contact" placeholder="例: InstagramのURL または LINEのURL" required>
         
         <div class="contact-guide">
@@ -674,15 +691,15 @@
       canvas.height = canvas.offsetHeight;
 
       const raindrops = [];
-      const numDrops = 45;
+      const numDrops = 40;
 
       for (let i = 0; i < numDrops; i++) {
         raindrops.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           length: Math.random() * 18 + 10,
-          speed: Math.random() * 6 + 4,
-          opacity: Math.random() * 0.4 + 0.15
+          speed: Math.random() * 5 + 3,
+          opacity: Math.random() * 0.35 + 0.15
         });
       }
 
@@ -693,7 +710,7 @@
         ctx.lineCap = 'round';
 
         raindrops.forEach(drop => {
-          ctx.strokeStyle = `rgba(0, 240, 255, ${drop.opacity})`;
+          ctx.strokeStyle = `rgba(112, 0, 255, ${drop.opacity})`;
           ctx.beginPath();
           ctx.moveTo(drop.x, drop.y);
           ctx.lineTo(drop.x - drop.length * 0.2, drop.y + drop.length);
@@ -806,10 +823,11 @@
           html += `</div>`;
         });
 
+        /* 💡 改行崩れ防止（画面幅が狭くても綺麗に表示） */
         html += `
-            <p style="font-size:14px; font-weight:900; color:#ffffff; margin-top:20px; text-shadow:0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 30px #ff007f;">
-              さっそく連絡を取ってみましょう！✨
-            </p>
+            <div class="call-action-matched">
+              <span class="nowrap-phrase">さっそく連絡を</span><span class="nowrap-phrase">取ってみましょう！✨</span>
+            </div>
             <div class="thanks-footer">
               ご参加いただきありがとうございました！<br>またのご参加を心よりお待ちしております🥂✨
             </div>
@@ -850,10 +868,11 @@
           html += `</div>`;
         });
 
+        /* 💡 改行崩れ防止（画面幅が狭くても綺麗に表示） */
         html += `
-            <p style="font-size:14px; font-weight:bold; color:#00f0ff; margin-top:20px; text-shadow:0 0 10px #00f0ff;">
-              気になったらぜひ連絡してみましょう！💬
-            </p>
+            <div class="call-action-approach">
+              <span class="nowrap-phrase">気になったらぜひ</span><span class="nowrap-phrase">連絡してみましょう！💬</span>
+            </div>
             <div class="thanks-footer">
               ご参加いただきありがとうございました！<br>またのご参加を心よりお待ちしております🥂✨
             </div>
@@ -864,7 +883,7 @@
         }
       }
 
-      // 3. ノーマッチング画面
+      // 3. 💜💙 ノーマッチング画面（青紫ネオン光枠）
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
         const mySentUnrequited = data.sent_unrequited || false;
@@ -882,20 +901,20 @@
                 <svg class="moon-svg" viewBox="0 0 100 100">
                   <defs>
                     <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#fff8d6" />
-                      <stop offset="60%" stop-color="#fde047" />
-                      <stop offset="100%" stop-color="#eab308" />
+                      <stop offset="0%" stop-color="#f3e8ff" />
+                      <stop offset="60%" stop-color="#c084fc" />
+                      <stop offset="100%" stop-color="#7e22ce" />
                     </linearGradient>
                   </defs>
                   <path d="M 65 10 A 40 40 0 1 0 90 65 A 32 32 0 1 1 65 10 Z" fill="url(#moonGrad)" />
-                  <circle cx="42" cy="38" r="3.5" fill="#ca8a04" opacity="0.25" />
-                  <circle cx="32" cy="55" r="5" fill="#ca8a04" opacity="0.2" />
-                  <circle cx="48" cy="68" r="3" fill="#ca8a04" opacity="0.25" />
+                  <circle cx="42" cy="38" r="3.5" fill="#581c87" opacity="0.25" />
+                  <circle cx="32" cy="55" r="5" fill="#581c87" opacity="0.2" />
+                  <circle cx="48" cy="68" r="3" fill="#581c87" opacity="0.25" />
                 </svg>
               </div>
 
               <div class="neon-title">ノーマッチング</div>
-              <p style="font-size:13px; color:#94a3b8; line-height:1.6; margin:0;">
+              <p style="font-size:13px; color:#cbd5e1; line-height:1.6; margin:0;">
                 惜しくも相互マッチングとはなりませんでした。
               </p>
 
