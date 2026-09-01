@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
-  <!-- 🎉 JSライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
@@ -371,7 +370,6 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
-    <!-- 投票画面 -->
     <div id="vote-tab" class="card">
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
@@ -414,17 +412,14 @@
         </div>
 
         <div class="grid" id="checkbox-grid">
-          <!-- JSで描画 -->
-        </div>
+          </div>
 
-        <!-- 選択した相手ごとの一言メッセージ＆送信設定 -->
         <div id="messages-container" class="messages-container"></div>
 
         <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
       </form>
     </div>
 
-    <!-- 投票完了表示 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
         <h2 style="color: #1a73e8;">投票完了✨</h2>
@@ -433,7 +428,6 @@
       </div>
     </div>
 
-    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -724,7 +718,7 @@
         data.matches.forEach(m => {
           html += `
             <div class="partner-block">
-              <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">MATCHED PARTNER</div>
+              <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">マッチング相手</div>
               <div class="partner-id">【 ${m.id} 】</div>
           `;
 
@@ -766,7 +760,7 @@
         data.unrequited_approaches.forEach(a => {
           html += `
             <div class="partner-block">
-              <div style="font-size:11px; color:#64748b; font-weight:bold; letter-spacing:1px;">SENDER</div>
+              <div style="font-size:11px; color:#64748b; font-weight:bold; letter-spacing:1px;">送信者</div>
               <div class="partner-id">【 ${a.id} 】</div>
           `;
 
@@ -807,16 +801,11 @@
             <canvas id="rainCanvas" class="rain-canvas"></canvas>
             <div class="neon-content">
               
-              <!-- 🌙 静止したリアルな三日月 ＆ 背景の星々 -->
               <div class="moon-container">
-                <!-- 星 1 -->
                 <svg class="star star-1" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
-                <!-- 星 2 -->
                 <svg class="star star-2" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
-                <!-- 星 3 -->
                 <svg class="star star-3" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
 
-                <!-- リアルな三日月 SVG -->
                 <svg class="moon-svg" viewBox="0 0 100 100">
                   <defs>
                     <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -825,9 +814,7 @@
                       <stop offset="100%" stop-color="#eab308" />
                     </linearGradient>
                   </defs>
-                  <!-- 月の本体 (三日月形状) -->
                   <path d="M 65 10 A 40 40 0 1 0 90 65 A 32 32 0 1 1 65 10 Z" fill="url(#moonGrad)" />
-                  <!-- クレーターのディテール (質感付け) -->
                   <circle cx="42" cy="38" r="3.5" fill="#ca8a04" opacity="0.25" />
                   <circle cx="32" cy="55" r="5" fill="#ca8a04" opacity="0.2" />
                   <circle cx="48" cy="68" r="3" fill="#ca8a04" opacity="0.25" />
