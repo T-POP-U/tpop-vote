@@ -91,147 +91,182 @@
       overflow: hidden;
     }
     
-    /* 画面シェイクアニメーションクラス */
     .screen-pulse {
       animation: screenPulseEffect 0.7s cubic-bezier(0.25, 1, 0.5, 1) infinite;
     }
 
     @keyframes screenPulseEffect {
-      0% {
-        transform: scale(1) translate(0, 0);
-        background-color: #050508;
-      }
-      10% {
-        transform: scale(1.05) translate(-4px, 3px);
-        background-color: #1a020d;
-      }
-      20% {
-        transform: scale(1.03) translate(4px, -3px);
-      }
-      35% {
-        transform: scale(1.08) translate(-2px, -2px);
-      }
-      100% {
-        transform: scale(1) translate(0, 0);
-        background-color: #050508;
-      }
+      0% { transform: scale(1) translate(0, 0); background-color: #050508; }
+      10% { transform: scale(1.05) translate(-4px, 3px); background-color: #1a020d; }
+      20% { transform: scale(1.03) translate(4px, -3px); }
+      35% { transform: scale(1.08) translate(-2px, -2px); }
+      100% { transform: scale(1) translate(0, 0); background-color: #050508; }
     }
 
     .countdown-title {
-      color: #ff007f;
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: 6px;
-      margin-bottom: 20px;
+      color: #ff007f; font-size: 16px; font-weight: 900; letter-spacing: 6px; margin-bottom: 20px;
       text-shadow: 0 0 10px #ff007f;
     }
 
-    /* 数字ポップ＆ハートビート */
     .countdown-num-glow {
-      font-size: 140px;
-      font-weight: 900;
-      color: #fff;
+      font-size: 140px; font-weight: 900; color: #fff;
       text-shadow: 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
-      display: inline-block;
-      line-height: 1;
+      display: inline-block; line-height: 1;
     }
 
-    /* 各カウント登場時のドックンドックン跳ね上がり */
     .beat-anim {
       animation: heartbeatBounce 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     @keyframes heartbeatBounce {
-      0% {
-        transform: scale(0.2) rotate(-8deg);
-        opacity: 0;
-      }
-      30% {
-        transform: scale(1.45) rotate(4deg);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(0.95) rotate(-2deg);
-      }
-      70% {
-        transform: scale(1.15) rotate(1deg);
-      }
-      100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-      }
+      0% { transform: scale(0.2) rotate(-8deg); opacity: 0; }
+      30% { transform: scale(1.45) rotate(4deg); opacity: 1; }
+      50% { transform: scale(0.95) rotate(-2deg); }
+      70% { transform: scale(1.15) rotate(1deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
     }
 
-    /* 🏷️ 結果確認トップ【結果】ヘッダー */
     .result-section-header {
-      text-align: center;
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: 4px;
-      color: #1e293b;
-      margin: 15px 0 10px 0;
-      position: relative;
+      text-align: center; font-size: 22px; font-weight: 900; letter-spacing: 4px; color: #1e293b;
+      margin: 15px 0 10px 0; position: relative;
     }
 
-    /* マッチング成功カードデザイン */
+    /* 💖【インスタ映え爆発】ネオン・マッチング成功カード */
     .result-card-success {
-      background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%);
-      border: 3px solid #ff4081; border-radius: 20px; padding: 24px 18px;
-      text-align: center; box-shadow: 0 10px 30px rgba(255, 64, 129, 0.3); margin-top: 10px;
+      position: relative;
+      background: radial-gradient(circle at 50% 0%, #2a081a 0%, #0d0208 100%);
+      border: 2px solid #ff007f;
+      border-radius: 24px;
+      padding: 32px 20px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.4), inset 0 0 20px rgba(255, 0, 127, 0.2);
+      margin-top: 10px;
+      overflow: hidden;
+      animation: neonGlowPulse 2.5s ease-in-out infinite alternate;
     }
+
+    @keyframes neonGlowPulse {
+      0% { box-shadow: 0 0 25px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.2); }
+      100% { box-shadow: 0 0 45px rgba(255, 0, 127, 0.7), 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 25px rgba(255, 0, 127, 0.4); }
+    }
+
     .match-header-badge {
-      background: linear-gradient(45deg, #ff4081, #ff80ab); color: white;
-      font-size: 13px; font-weight: bold; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 8px;
+      background: linear-gradient(90deg, #ff007f, #ff7700);
+      color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 2px;
+      padding: 6px 18px; border-radius: 50px; display: inline-block; margin-bottom: 12px;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
     }
-    .match-title { font-size: 24px; font-weight: 900; color: #ff1744; margin: 6px 0; }
 
-    /* 💌 アプローチ受領カードデザイン */
+    .match-title {
+      font-size: 32px; font-weight: 900; color: #fff; margin: 4px 0 8px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 60px #ffd700;
+    }
+
+    /* 💙【インスタ映え爆発】ネオン・アプローチ受領カード */
     .result-card-approach {
-      background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
-      border: 3px solid #3b82f6; border-radius: 20px; padding: 24px 18px;
-      text-align: center; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25); margin-top: 10px;
+      position: relative;
+      background: radial-gradient(circle at 50% 0%, #081a2d 0%, #020813 100%);
+      border: 2px solid #00f0ff;
+      border-radius: 24px;
+      padding: 32px 20px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.2);
+      margin-top: 10px;
+      overflow: hidden;
+      animation: approachGlowPulse 2.5s ease-in-out infinite alternate;
     }
-    .approach-header-badge {
-      background: linear-gradient(45deg, #3b82f6, #60a5fa); color: white;
-      font-size: 13px; font-weight: bold; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 8px;
-    }
-    .approach-title { font-size: 22px; font-weight: 900; color: #1d4ed8; margin: 6px 0; }
-    
-    .partner-block {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 18px 14px;
-      margin-top: 14px;
-    }
-    .partner-id { font-size: 26px; font-weight: 900; color: #111; margin: 4px 0 12px; }
 
-    /* 💌 メッセージ表示ボックス */
+    @keyframes approachGlowPulse {
+      0% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2); }
+      100% { box-shadow: 0 0 45px rgba(0, 240, 255, 0.7), 0 0 20px rgba(112, 0, 255, 0.5), inset 0 0 25px rgba(0, 240, 255, 0.4); }
+    }
+
+    .approach-header-badge {
+      background: linear-gradient(90deg, #00f0ff, #7000ff);
+      color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 2px;
+      padding: 6px 18px; border-radius: 50px; display: inline-block; margin-bottom: 12px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+    }
+
+    .approach-title {
+      font-size: 26px; font-weight: 900; color: #fff; margin: 4px 0 8px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #7000ff;
+    }
+
+    /* 🌌 共通：相手情報ネオンコンテナ */
+    .partner-block {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 20px 16px;
+      margin-top: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .partner-label-matched {
+      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #ffd700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+    }
+
+    .partner-label-approach {
+      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #00f0ff;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+    }
+
+    .partner-id-matched {
+      font-size: 32px; font-weight: 900; color: #a3e635; margin: 6px 0 14px;
+      text-shadow: 0 0 15px #a3e635, 0 0 30px #a3e635;
+    }
+
+    .partner-id-approach {
+      font-size: 32px; font-weight: 900; color: #fff; margin: 6px 0 14px;
+      text-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff;
+    }
+
+    /* 💬 メッセージ表示ボックス（ネオン仕様） */
     .message-box {
-      background: #f8fafc;
-      border: 1.5px solid #94a3b8;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin: 12px 0 16px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 14px 0 18px;
       text-align: left;
     }
+
     .message-box.matched-msg {
-      background: #fff0f5;
-      border-color: #ff80ab;
+      border: 1px solid rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
     }
-    .message-title { font-size: 12px; font-weight: bold; color: #475569; margin-bottom: 6px; }
-    .matched-msg .message-title { color: #d81b60; }
-    .message-text { font-size: 15px; color: #222; line-height: 1.5; font-weight: 600; word-break: break-all; white-space: pre-wrap; }
+
+    .message-box.approach-msg {
+      border: 1px solid rgba(0, 240, 255, 0.5);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+    }
+
+    .message-title-matched { font-size: 12px; font-weight: bold; color: #ff77aa; margin-bottom: 6px; }
+    .message-title-approach { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
+
+    .message-text { font-size: 15px; color: #f8fafc; line-height: 1.5; font-weight: 600; word-break: break-all; white-space: pre-wrap; }
 
     /* SNS特化ボタン */
     .btn-contact {
-      display: block; width: 100%; padding: 13px; border-radius: 12px;
-      font-size: 15px; font-weight: bold; color: white !important;
-      text-decoration: none; box-sizing: border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      display: block; width: 100%; padding: 14px; border-radius: 12px;
+      font-size: 16px; font-weight: 900; color: white !important;
+      text-decoration: none; box-sizing: border-box; letter-spacing: 1px;
     }
-    .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-    .btn-line { background: #06C755; }
-    .btn-default { background: #1a73e8; }
+    .btn-instagram {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      box-shadow: 0 0 20px rgba(220, 39, 67, 0.6);
+    }
+    .btn-line {
+      background: #06C755;
+      box-shadow: 0 0 20px rgba(6, 199, 85, 0.6);
+    }
+    .btn-default {
+      background: #1a73e8;
+      box-shadow: 0 0 20px rgba(26, 115, 232, 0.6);
+    }
 
     /* 🌧️ 狂気の雨×ネオン（ノーマッチング専用カード） */
     .neon-rain-card {
@@ -245,59 +280,34 @@
       border: 1px solid rgba(255, 0, 128, 0.3);
       box-shadow: 0 0 25px rgba(255, 0, 128, 0.2), 0 0 50px rgba(0, 240, 255, 0.15);
       overflow: hidden;
-
-      /* 🌊 画面がゆっくり揺れる（ゆったり浮遊）アニメーション */
       animation: neonFloat 5s ease-in-out infinite alternate;
     }
 
     @keyframes neonFloat {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      50% {
-        transform: translateY(-6px) rotate(0.8deg);
-      }
-      100% {
-        transform: translateY(4px) rotate(-0.8deg);
-      }
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(0.8deg); }
+      100% { transform: translateY(4px) rotate(-0.8deg); }
     }
 
-    /* 雨描画キャンバス */
     .rain-canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.6;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 1; opacity: 0.6;
     }
 
-    .neon-content {
-      position: relative;
-      z-index: 2;
-    }
+    .neon-content { position: relative; z-index: 2; }
 
-    /* 🌙 リアルな三日月SVGコンテナ */
     .moon-container {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative; width: 70px; height: 70px; margin: 0 auto 8px;
+      display: flex; align-items: center; justify-content: center;
     }
 
     .moon-svg {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       filter: drop-shadow(0 0 10px rgba(255, 220, 130, 0.6)) drop-shadow(0 0 20px rgba(255, 0, 128, 0.3));
     }
 
-    /* ✨ 背景の輝く星（スパークル） */
     .star {
-      position: absolute;
-      fill: #00f0ff;
+      position: absolute; fill: #00f0ff;
       animation: starTwinkle 2.5s ease-in-out infinite alternate;
     }
     .star-1 { top: 0px; left: 6px; width: 14px; animation-delay: 0s; }
@@ -309,19 +319,9 @@
       100% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* ネオンサイン文字（ネオンピンク×サファイアブルー） */
     .neon-title {
-      font-size: 30px;
-      font-weight: 900;
-      margin: 8px 0 14px 0;
-      color: #fff;
-      letter-spacing: 2px;
-      text-shadow: 
-        0 0 5px #fff,
-        0 0 10px #ff007f,
-        0 0 20px #ff007f,
-        0 0 40px #ff007f,
-        0 0 80px #00f0ff;
+      font-size: 30px; font-weight: 900; margin: 8px 0 14px 0; color: #fff; letter-spacing: 2px;
+      text-shadow: 0 0 5px #fff, 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
       animation: neonPulse 1.8s ease-in-out infinite alternate;
     }
 
@@ -330,32 +330,15 @@
       100% { text-shadow: 0 0 8px #fff, 0 0 15px #ff007f, 0 0 30px #ff007f, 0 0 60px #00f0ff, 0 0 90px #00f0ff; }
     }
 
-    /* 直接送信済みアナウンスボックス */
     .unrequited-sent-box {
-      background: rgba(0, 240, 255, 0.08);
-      border: 1.5px solid rgba(0, 240, 255, 0.6);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-top: 20px;
-      text-align: left;
-      color: #e0f2fe;
-      font-size: 13px;
-      line-height: 1.6;
+      background: rgba(0, 240, 255, 0.08); border: 1.5px solid rgba(0, 240, 255, 0.6);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); border-radius: 14px;
+      padding: 14px 16px; margin-top: 20px; text-align: left; color: #e0f2fe; font-size: 13px; line-height: 1.6;
     }
 
-    /* 🌟 全体共通の次回期待フッターメッセージ */
     .thanks-footer {
-      margin-top: 22px;
-      padding-top: 16px;
-      border-top: 1px dashed rgba(0, 0, 0, 0.1);
-      font-size: 12px;
-      color: #666;
-      line-height: 1.5;
-    }
-    .neon-rain-card .thanks-footer {
-      border-top-color: rgba(255, 255, 255, 0.15);
-      color: #94a3b8;
+      margin-top: 22px; padding-top: 16px; border-top: 1px dashed rgba(255, 255, 255, 0.2);
+      font-size: 12px; color: #94a3b8; line-height: 1.5;
     }
   </style>
 </head>
@@ -454,7 +437,6 @@
   </div>
 
   <script>
-    // ⚡ 初期表示を最速化するためのDOM一括生成
     document.addEventListener('DOMContentLoaded', () => {
       const grid = document.getElementById('checkbox-grid');
       let html = '<div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>';
@@ -468,7 +450,6 @@
       grid.innerHTML = html;
     });
 
-    // 📳 バイブレーション機能
     function triggerVibrate(pattern) {
       if ("vibrate" in navigator) {
         try { navigator.vibrate(pattern); } catch (e) {}
@@ -597,11 +578,10 @@
       } else if (isUrl) {
         return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
       } else {
-        return `<div style="font-size:14px; font-weight:bold; color:#1a73e8; word-break:break-all;">連絡先: ${contact}</div>`;
+        return `<div style="font-size:14px; font-weight:bold; color:#00f0ff; word-break:break-all; text-shadow:0 0 10px #00f0ff;">連絡先: ${contact}</div>`;
       }
     }
 
-    // 🌧️ 雨降るアニメーション描画関数
     let rainAnimationId = null;
     function startRainEffect(canvasId) {
       const canvas = document.getElementById(canvasId);
@@ -667,7 +647,6 @@
         body: JSON.stringify({ my_id, pin })
       });
 
-      // 💓 画面全体と数字がドックンドックン暴れるカウントダウン関数
       const updateBeat = (num) => {
         layer.innerHTML = `
           <div class="dark-overlay screen-pulse">
@@ -677,17 +656,14 @@
         `;
       };
 
-      // 3
       updateBeat("3");
       triggerVibrate([80, 40, 80]);
 
       await new Promise(r => setTimeout(r, 750));
-      // 2
       updateBeat("2");
       triggerVibrate([80, 40, 80]);
 
       await new Promise(r => setTimeout(r, 750));
-      // 1
       updateBeat("1");
       triggerVibrate([120, 40, 150]);
 
@@ -702,30 +678,31 @@
         return;
       }
 
-      // 🏷️ 結果の上部に【 結果 】タイトルを出力
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
-      // 1. マッチング成功
+      // 1. 💖 マッチング成功（サイバーピンク＆ネオンゴールド）
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
         html += `
           <div class="result-card-success">
-            <div class="match-header-badge">T-POP MATCHED</div>
-            <div class="match-title">🎉 MATCHING!</div>
-            <p style="color:#666; font-size:12px; margin:0;">おめでとうございます！ペア成立です</p>
+            <div class="match-header-badge">✨ T-POP MATCHED ✨</div>
+            <div class="match-title">🎉 MATCHED!</div>
+            <p style="color:#f472b6; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
+              おめでとうございます！相思相愛ペア成立です🥂
+            </p>
         `;
 
         data.matches.forEach(m => {
           html += `
             <div class="partner-block">
-              <div style="font-size:11px; color:#888; font-weight:bold; letter-spacing:1px;">マッチング相手</div>
-              <div class="partner-id">【 ${m.id} 】</div>
+              <div class="partner-label-matched">【 マッチング相手 】</div>
+              <div class="partner-id-matched">【 ${m.id} 】</div>
           `;
 
           if (m.message && m.message.trim() !== "") {
             html += `
               <div class="message-box matched-msg">
-                <div class="message-title">💌 相手からのメッセージ</div>
+                <div class="message-title-matched">💌 相手からのメッセージ</div>
                 <div class="message-text">${m.message}</div>
               </div>
             `;
@@ -736,7 +713,7 @@
         });
 
         html += `
-            <p style="font-size:13px; font-weight:bold; color:#ff1744; margin-top:16px;">
+            <p style="font-size:14px; font-weight:bold; color:#ffd700; margin-top:20px; text-shadow:0 0 10px #ffd700;">
               さっそく連絡を取ってみましょう！✨
             </p>
             <div class="thanks-footer">
@@ -744,30 +721,32 @@
             </div>
           </div>
         `;
-        if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
 
-      // 2. アプローチ受領
+      // 2. 💌 アプローチ受領（シアンブルー＆ネオンパープル）
       if (data.has_unrequited) {
         if (!data.matched) triggerVibrate([80, 80, 150]);
         html += `
           <div class="result-card-approach">
-            <div class="approach-header-badge">SPECIAL APPROACH</div>
-            <div class="approach-title">💌 アプローチが届いています！</div>
-            <p style="color:#666; font-size:12px; margin:0;">あなたに興味を持っている方から連絡先が届きました✨</p>
+            <div class="approach-header-badge">💌 SPECIAL APPROACH</div>
+            <div class="approach-title">アプローチが届いています！</div>
+            <p style="color:#38bdf8; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #00f0ff;">
+              あなたに興味を持っている方から連絡先が届きました✨
+            </p>
         `;
 
         data.unrequited_approaches.forEach(a => {
           html += `
             <div class="partner-block">
-              <div style="font-size:11px; color:#64748b; font-weight:bold; letter-spacing:1px;">送信者</div>
-              <div class="partner-id">【 ${a.id} 】</div>
+              <div class="partner-label-approach">【 送信者 】</div>
+              <div class="partner-id-approach">【 ${a.id} 】</div>
           `;
 
           if (a.message && a.message.trim() !== "") {
             html += `
-              <div class="message-box">
-                <div class="message-title">💬 相手からのメッセージ</div>
+              <div class="message-box approach-msg">
+                <div class="message-title-approach">💬 相手からのメッセージ</div>
                 <div class="message-text">${a.message}</div>
               </div>
             `;
@@ -778,7 +757,7 @@
         });
 
         html += `
-            <p style="font-size:13px; font-weight:bold; color:#1d4ed8; margin-top:16px;">
+            <p style="font-size:14px; font-weight:bold; color:#00f0ff; margin-top:20px; text-shadow:0 0 10px #00f0ff;">
               気になったらぜひ連絡してみましょう！💬
             </p>
             <div class="thanks-footer">
@@ -787,11 +766,11 @@
           </div>
         `;
         if (!data.matched && typeof confetti === 'function') {
-          confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
+          confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
         }
       }
 
-      // 3. マッチングもアプローチ受領も無い場合（ゆったり浮遊×静止リアル三日月×雨×ネオン）
+      // 3. ノーマッチング画面
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
         const mySentUnrequited = data.sent_unrequited || false;
@@ -846,7 +825,6 @@
 
       display.innerHTML = html;
 
-      // 雨エフェクトの始動
       if (!data.matched && !data.has_unrequited) {
         startRainEffect('rainCanvas');
       }
