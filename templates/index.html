@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
-  <!-- 🎉 JSライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
@@ -100,6 +99,12 @@
 
     .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
     .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
+    /* 自分自身のカードが無効化された時のスタイル */
+    .checkbox-card.disabled-card {
+      background: #e9ecef;
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     
     /* 💬 複数選択時の個別メッセージ＆直接送信設定 */
     .messages-container { margin-top: 20px; }
@@ -447,10 +452,8 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
-    <!-- 投票画面 -->
     <div id="vote-tab" class="card">
       
-      <!-- 📣 アプローチ受領についての案内ボックス -->
       <div class="vote-notice-box">
         <strong>💡 気になる人がいなくても登録だけでOK！</strong>
         「まだ気になる人がいない」という場合でも、自分のID・パスワード・連絡先を入力して送信しておくと、<b>相手からのアプローチやメッセージを受け取ることができます✨</b><br>
@@ -459,7 +462,7 @@
 
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
-        <select id="my_id" required>
+        <select id="my_id" required onchange="handleSelfIdChange()">
           <option value="">選択してください</option>
           <option value="M-1">男性 M-1</option><option value="M-2">男性 M-2</option><option value="M-3">男性 M-3</option><option value="M-4">男性 M-4</option><option value="M-5">男性 M-5</option>
           <option value="M-6">男性 M-6</option><option value="M-7">男性 M-7</option><option value="M-8">男性 M-8</option><option value="M-9">男性 M-9</option><option value="M-10">男性 M-10</option>
@@ -501,8 +504,7 @@
         </div>
 
         <div class="grid" id="checkbox-grid">
-          <!-- JSで描画 -->
-        </div>
+          </div>
 
         <div id="messages-container" class="messages-container"></div>
 
@@ -510,7 +512,6 @@
       </form>
     </div>
 
-    <!-- 投票完了表示 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
         <h2 style="color: #1a73e8;">投票完了✨</h2>
@@ -519,7 +520,6 @@
       </div>
     </div>
 
-    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -553,14 +553,34 @@
       const grid = document.getElementById('checkbox-grid');
       let html = '<div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>';
       for(let i=1; i<=25; i++) {
-        html += `<label class="checkbox-card"><input type="checkbox" name="target" value="M-${i}" onchange="renderMessageInputs()"> M-${i}</label>`;
+        html += `<label class="checkbox-card" id="card-M-${i}"><input type="checkbox" name="target" value="M-${i}" onchange="renderMessageInputs()"> M-${i}</label>`;
       }
       html += '<div class="section-title">👩 女性メンバー（F-1 〜 F-25）</div>';
       for(let i=1; i<=25; i++) {
-        html += `<label class="checkbox-card"><input type="checkbox" name="target" value="F-${i}" onchange="renderMessageInputs()"> F-${i}</label>`;
+        html += `<label class="checkbox-card" id="card-F-${i}"><input type="checkbox" name="target" value="F-${i}" onchange="renderMessageInputs()"> F-${i}</label>`;
       }
       grid.innerHTML = html;
     });
+
+    /* 🚫 自分自身へのチェック制御機能 */
+    function handleSelfIdChange() {
+      const myId = document.getElementById('my_id').value;
+      const checkboxes = document.querySelectorAll('input[name="target"]');
+
+      checkboxes.forEach(chk => {
+        const card = document.getElementById(`card-${chk.value}`);
+        if (chk.value === myId) {
+          chk.checked = false;
+          chk.disabled = true;
+          if (card) card.classList.add('disabled-card');
+        } else {
+          chk.disabled = false;
+          if (card) card.classList.remove('disabled-card');
+        }
+      });
+
+      renderMessageInputs();
+    }
 
     /* 👁 パスワード表示/非表示切り替え機能 */
     function togglePasswordVisibility(inputId, btn) {
@@ -647,6 +667,11 @@
       const contact = document.getElementById('contact').value;
       const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
 
+      /* 安全策: 送信直前にも自分自身への投票がないか最終確認 */
+      if (my_id && target_ids.includes(my_id)) {
+        return alert("自分自身を選択して投票することはできません。");
+      }
+
       const messages = {};
       document.querySelectorAll('.individual-msg').forEach(ta => {
         const target = ta.getAttribute('data-target');
@@ -676,7 +701,7 @@
         document.getElementById('complete-view').style.display = 'block';
         document.getElementById('complete-view').setAttribute('data-completed', 'true');
         document.getElementById('voteForm').reset();
-        renderMessageInputs();
+        handleSelfIdChange(); // フォームリセット後も状態を同期
       } else {
         alert(data.message || "エラーが発生しました");
       }
@@ -686,7 +711,7 @@
       document.getElementById('complete-view').style.display = 'none';
       document.getElementById('complete-view').removeAttribute('data-completed');
       document.getElementById('voteForm').reset();
-      renderMessageInputs();
+      handleSelfIdChange(); // リセット時にも制御状態を初期化
       document.getElementById('vote-tab').style.display = 'block';
     }
 
