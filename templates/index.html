@@ -164,27 +164,32 @@
       }
     }
 
-    .countdown-title {
-      color: #ffffff; font-size: 16px; font-weight: 900; letter-spacing: 6px; margin-bottom: 20px;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px var(--pulse-color, #ff007f);
-    }
-
     .countdown-num-glow {
-      font-size: 150px; font-weight: 900; line-height: 1; display: inline-block;
+      font-size: 160px; font-weight: 900; line-height: 1; display: inline-block;
+      color: #ffffff; /* 数字自体は白 */
     }
 
-    /* 🎨 数字ごとの個別カラー（ネオンネオン） */
+    /* 🎨 数字背後のネオン発光（カラーうっすら光） */
     .num-3 {
-      color: #00f0ff;
-      text-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff, 0 0 80px #00f0ff;
+      text-shadow: 
+        0 0 10px #ffffff,
+        0 0 25px rgba(0, 240, 255, 0.8),
+        0 0 50px rgba(0, 240, 255, 0.6),
+        0 0 90px rgba(0, 240, 255, 0.4);
     }
     .num-2 {
-      color: #ffea00;
-      text-shadow: 0 0 20px #ffea00, 0 0 40px #ffea00, 0 0 80px #ffea00;
+      text-shadow: 
+        0 0 10px #ffffff,
+        0 0 25px rgba(255, 234, 0, 0.8),
+        0 0 50px rgba(255, 234, 0, 0.6),
+        0 0 90px rgba(255, 234, 0, 0.4);
     }
     .num-1 {
-      color: #ff007f;
-      text-shadow: 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #ff007f;
+      text-shadow: 
+        0 0 10px #ffffff,
+        0 0 25px rgba(255, 0, 127, 0.8),
+        0 0 50px rgba(255, 0, 127, 0.6),
+        0 0 90px rgba(255, 0, 127, 0.4);
     }
 
     .beat-anim {
@@ -820,7 +825,6 @@
       const updateBeat = (num, colorClass, hexColor) => {
         layer.innerHTML = `
           <div class="dark-overlay screen-pulse-edges" style="--pulse-color: ${hexColor};">
-            <div class="countdown-title">MATCHING CHECK</div>
             <div class="countdown-num-glow ${colorClass} beat-anim">${num}</div>
           </div>
         `;
