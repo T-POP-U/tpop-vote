@@ -38,7 +38,7 @@
       user-select: none;
     }
 
-    /* 📣 「気になっている人がいなくても投票してね」案内ボックス */
+    /* 📣 案内ボックス */
     .vote-notice-box {
       background: linear-gradient(135deg, #fff3bf 0%, #ffec99 100%);
       border: 1px solid #ffe066;
@@ -301,8 +301,8 @@
 
     .btn-contact {
       display: block; width: 100%; padding: 15px; border-radius: 14px;
-      font-size: 16px; font-weight: 900; color: white !important;
-      text-decoration: none; box-sizing: border-box; letter-spacing: 1px;
+      font-size: 15px; font-weight: 900; color: white !important;
+      text-decoration: none; box-sizing: border-box; letter-spacing: 0.5px;
       animation: pulseShake 2.5s infinite ease-in-out;
     }
 
@@ -407,11 +407,11 @@
     <!-- 投票画面 -->
     <div id="vote-tab" class="card">
       
-      <!-- 📣 アプローチ受領についての重要案内 -->
+      <!-- 📣 アプローチ受領についての案内ボックス -->
       <div class="vote-notice-box">
-        <strong>💡 気になる人がいない場合でもご投票ください！</strong>
-        「気になる人がいない」という場合でも、自分のID・パスワード・連絡先を入力して投票を送信しておくことで、<b>相手から届いたアプローチやメッセージを受け取ることができます✨</b><br>
-        ※誰にもチェックを付けずにそのまま送信していただいて構いません。
+        <strong>💡 気になる人がいなくても登録だけでOK！</strong>
+        「まだ気になる人がいない」という場合でも、自分のID・パスワード・連絡先を入力して送信しておくと、<b>相手からのアプローチやメッセージを受け取ることができます✨</b><br>
+        ※お相手を選択せずに、そのまま送信ボタンを押してください。
       </div>
 
       <form id="voteForm">
@@ -647,17 +647,18 @@
       document.getElementById('vote-tab').style.display = 'block';
     }
 
+    /* 🔗 ボタン表示用ヘルパー関数 */
     function renderContactBtn(contact) {
       if (!contact) return '';
       const contactStr = contact.toLowerCase();
       const isUrl = contact.startsWith('http://') || contact.startsWith('https://');
 
       if (contactStr.includes('instagram.com')) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く（タップして連絡）</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く（タップして相手のプロフィールへ）</a>`;
       } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く（タップして追加）</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く（タップして友達追加へ）</a>`;
       } else if (isUrl) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く（タップして相手のページへ）</a>`;
       } else {
         return `<div style="font-size:14px; font-weight:bold; color:#ff80bf; word-break:break-all; text-shadow:0 0 10px #ff007f;">連絡先: ${contact}</div>`;
       }
@@ -780,8 +781,8 @@
           <div class="result-card-success">
             <div class="match-header-badge">✨ T-POP MATCHED ✨</div>
             <div class="match-title">🎉 MATCHED!</div>
-            <p style="color:#ffb3d9; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
-              おめでとうございます！相思相愛ペア成立です🥂
+            <p style="color:#ffb3d9; font-size:13.5px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
+              おめでとうございます！お互いに気になっているようです✨
             </p>
         `;
 
