@@ -83,7 +83,7 @@
     .complete-box { text-align: center; padding: 20px 10px; }
     .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
 
-    /* 💓 超絶ドックンドックン・カウントダウンオーバレイ */
+    /* 💓 カウントダウンオーバレイ */
     .dark-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: #050508; z-index: 9999; display: flex; flex-direction: column;
@@ -110,7 +110,7 @@
 
     .countdown-num-glow {
       font-size: 140px; font-weight: 900; color: #fff;
-      text-shadow: 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
+      text-shadow: 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #ff007f;
       display: inline-block; line-height: 1;
     }
 
@@ -131,7 +131,7 @@
       margin: 15px 0 10px 0; position: relative;
     }
 
-    /* 💖【インスタ映え爆発】ネオン・マッチング成功カード */
+    /* 💖【ピンク統一】ネオン・マッチング成功カード */
     .result-card-success {
       position: relative;
       background: radial-gradient(circle at 50% 0%, #2a081a 0%, #0d0208 100%);
@@ -147,11 +147,11 @@
 
     @keyframes neonGlowPulse {
       0% { box-shadow: 0 0 25px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.2); }
-      100% { box-shadow: 0 0 45px rgba(255, 0, 127, 0.7), 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 25px rgba(255, 0, 127, 0.4); }
+      100% { box-shadow: 0 0 45px rgba(255, 0, 127, 0.75), inset 0 0 30px rgba(255, 0, 127, 0.4); }
     }
 
     .match-header-badge {
-      background: linear-gradient(90deg, #ff007f, #ff7700);
+      background: linear-gradient(90deg, #ff007f, #ff4181);
       color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 2px;
       padding: 6px 18px; border-radius: 50px; display: inline-block; margin-bottom: 12px;
       box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
@@ -160,10 +160,10 @@
     .match-title {
       font-size: 32px; font-weight: 900; color: #fff; margin: 4px 0 8px;
       letter-spacing: 2px;
-      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 60px #ffd700;
+      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f;
     }
 
-    /* 💙【インスタ映え爆発】ネオン・アプローチ受領カード */
+    /* 💙 ネオン・アプローチ受領カード */
     .result-card-approach {
       position: relative;
       background: radial-gradient(circle at 50% 0%, #081a2d 0%, #020813 100%);
@@ -195,7 +195,7 @@
       text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #7000ff;
     }
 
-    /* 🌌 共通：相手情報ネオンコンテナ */
+    /* 🌌 相手情報ネオンコンテナ */
     .partner-block {
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -205,19 +205,21 @@
       backdrop-filter: blur(8px);
     }
 
+    /* マッチング相手（ピンク統一） */
     .partner-label-matched {
-      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #ffd700;
-      text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
-    }
-
-    .partner-label-approach {
-      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #00f0ff;
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #ff80bf;
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.8);
     }
 
     .partner-id-matched {
-      font-size: 32px; font-weight: 900; color: #a3e635; margin: 6px 0 14px;
-      text-shadow: 0 0 15px #a3e635, 0 0 30px #a3e635;
+      font-size: 32px; font-weight: 900; color: #fff; margin: 6px 0 14px;
+      text-shadow: 0 0 12px #ff007f, 0 0 25px #ff007f, 0 0 40px #ff007f;
+    }
+
+    /* 送信者（シアン統一） */
+    .partner-label-approach {
+      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #00f0ff;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
     }
 
     .partner-id-approach {
@@ -225,7 +227,7 @@
       text-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff;
     }
 
-    /* 💬 メッセージ表示ボックス（ネオン仕様） */
+    /* 💬 メッセージ表示ボックス */
     .message-box {
       background: rgba(0, 0, 0, 0.5);
       border-radius: 14px;
@@ -235,8 +237,8 @@
     }
 
     .message-box.matched-msg {
-      border: 1px solid rgba(255, 0, 127, 0.5);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
+      border: 1px solid rgba(255, 0, 127, 0.6);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.25);
     }
 
     .message-box.approach-msg {
@@ -244,7 +246,7 @@
       box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
     }
 
-    .message-title-matched { font-size: 12px; font-weight: bold; color: #ff77aa; margin-bottom: 6px; }
+    .message-title-matched { font-size: 12px; font-weight: bold; color: #ff80bf; margin-bottom: 6px; }
     .message-title-approach { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
 
     .message-text { font-size: 15px; color: #f8fafc; line-height: 1.5; font-weight: 600; word-break: break-all; white-space: pre-wrap; }
@@ -578,7 +580,7 @@
       } else if (isUrl) {
         return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
       } else {
-        return `<div style="font-size:14px; font-weight:bold; color:#00f0ff; word-break:break-all; text-shadow:0 0 10px #00f0ff;">連絡先: ${contact}</div>`;
+        return `<div style="font-size:14px; font-weight:bold; color:#ff80bf; word-break:break-all; text-shadow:0 0 10px #ff007f;">連絡先: ${contact}</div>`;
       }
     }
 
@@ -680,14 +682,14 @@
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
-      // 1. 💖 マッチング成功（サイバーピンク＆ネオンゴールド）
+      // 1. 💖 マッチング成功（洗練されたホットピンク単色トーン）
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">✨ T-POP MATCHED ✨</div>
             <div class="match-title">🎉 MATCHED!</div>
-            <p style="color:#f472b6; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
+            <p style="color:#ffb3d9; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
               おめでとうございます！相思相愛ペア成立です🥂
             </p>
         `;
@@ -713,7 +715,7 @@
         });
 
         html += `
-            <p style="font-size:14px; font-weight:bold; color:#ffd700; margin-top:20px; text-shadow:0 0 10px #ffd700;">
+            <p style="font-size:14px; font-weight:bold; color:#fff; margin-top:20px; text-shadow:0 0 10px #ff007f, 0 0 20px #ff007f;">
               さっそく連絡を取ってみましょう！✨
             </p>
             <div class="thanks-footer">
@@ -724,7 +726,7 @@
         if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
 
-      // 2. 💌 アプローチ受領（シアンブルー＆ネオンパープル）
+      // 2. 💌 アプローチ受領（シアンブルー統一）
       if (data.has_unrequited) {
         if (!data.matched) triggerVibrate([80, 80, 150]);
         html += `
