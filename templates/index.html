@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- 🎉 deferを付けて画面描画をブロックしないように修正 -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
     .container { max-width: 420px; margin: 0 auto; }
@@ -186,6 +187,7 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
+    <!-- 投票画面 -->
     <div id="vote-tab" class="card">
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
@@ -227,28 +229,18 @@
           <strong>（運営を含め他の誰にも投票内容はわかりません）</strong>
         </div>
 
-        <div class="grid">
-          <div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>
-          <script>
-            for(let i=1; i<=25; i++) {
-              document.write(`<label class="checkbox-card"><input type="checkbox" name="target" value="M-${i}" onchange="renderMessageInputs()"> M-${i}</label>`);
-            }
-          </script>
-
-          <div class="section-title">👩 女性メンバー（F-1 〜 F-25）</div>
-          <script>
-            for(let i=1; i<=25; i++) {
-              document.write(`<label class="checkbox-card"><input type="checkbox" name="target" value="F-${i}" onchange="renderMessageInputs()"> F-${i}</label>`);
-            }
-          </script>
+        <div class="grid" id="checkbox-grid">
+          <!-- JSで高速生成 -->
         </div>
 
+        <!-- 選択した相手ごとの一言メッセージ＆片思い送信設定 -->
         <div id="messages-container" class="messages-container"></div>
 
         <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
       </form>
     </div>
 
+    <!-- 投票完了表示 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
         <h2 style="color: #1a73e8;">投票完了✨</h2>
@@ -257,6 +249,7 @@
       </div>
     </div>
 
+    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -283,14 +276,24 @@
   </div>
 
   <script>
+    // ⚡ 初期表示を最速化するためのチェックボックス一括生成
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('checkbox-grid');
+      let html = '<div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>';
+      for(let i=1; i<=25; i++) {
+        html += `<label class="checkbox-card"><input type="checkbox" name="target" value="M-${i}" onchange="renderMessageInputs()"> M-${i}</label>`;
+      }
+      html += '<div class="section-title">👩 女性メンバー（F-1 〜 F-25）</div>';
+      for(let i=1; i<=25; i++) {
+        html += `<label class="checkbox-card"><input type="checkbox" name="target" value="F-${i}" onchange="renderMessageInputs()"> F-${i}</label>`;
+      }
+      grid.innerHTML = html;
+    });
+
     // 📳 バイブレーション補助関数
     function triggerVibrate(pattern) {
       if ("vibrate" in navigator) {
-        try {
-          navigator.vibrate(pattern);
-        } catch (e) {
-          console.log("Vibration not supported or user gesture required.");
-        }
+        try { navigator.vibrate(pattern); } catch (e) {}
       }
     }
 
@@ -365,9 +368,7 @@
       document.querySelectorAll('.individual-msg').forEach(ta => {
         const target = ta.getAttribute('data-target');
         const text = ta.value.trim();
-        if (text) {
-          messages[target] = text;
-        }
+        if (text) messages[target] = text;
       });
 
       const allow_unrequited = {};
@@ -379,7 +380,7 @@
       if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
       if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
 
-      triggerVibrate(50); // 送信時の軽いフィードバック
+      triggerVibrate(50);
 
       const res = await fetch('/api/vote', {
         method: 'POST',
@@ -428,14 +429,12 @@
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
-      // API問い合わせを裏で並行して開始
       const resPromise = fetch('/api/result', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ my_id, pin })
       });
 
-      // カウントダウン＆バイブレーション演出
       layer.innerHTML = `<div class="dark-overlay"><div class="countdown-title">MATCHING CHECK</div><div id="count-num" class="countdown-num-glow">3</div></div>`;
       triggerVibrate(60);
       
@@ -460,9 +459,8 @@
 
       let html = "";
 
-      // 1. 両思い（マッチング成功）がある場合
       if (data.matched) {
-        triggerVibrate([100, 50, 100, 50, 250]); // 祝福の振動リズム
+        triggerVibrate([100, 50, 100, 50, 250]);
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">T-POP MATCHED</div>
@@ -496,10 +494,9 @@
             </p>
           </div>
         `;
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       }
 
-      // 2. 片思いアプローチが届いている場合
       if (data.has_unrequited) {
         if (!data.matched) triggerVibrate([80, 80, 150]);
         html += `
@@ -535,16 +532,13 @@
             </p>
           </div>
         `;
-        if (!data.matched) {
+        if (!data.matched && typeof confetti === 'function') {
           confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
         }
       }
 
-      // 3. マッチングもアプローチ受領も無い場合
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
-        
-        // 自分が「片思い送信」を行っていたかチェック
         const mySentUnrequited = data.sent_unrequited || false;
 
         html = `
