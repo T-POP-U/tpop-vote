@@ -461,16 +461,17 @@
         body: JSON.stringify({ my_id, pin })
       });
 
+      // 📳 カウントダウン表示 ＆ 各カウントで振動を発生
       layer.innerHTML = `<div class="dark-overlay"><div class="countdown-title">MATCHING CHECK</div><div id="count-num" class="countdown-num-glow">3</div></div>`;
-      triggerVibrate(60);
+      triggerVibrate(80); // 「3」で振動
       
       await new Promise(r => setTimeout(r, 700));
       document.getElementById('count-num').innerText = "2";
-      triggerVibrate(60);
+      triggerVibrate(80); // 「2」で振動
 
       await new Promise(r => setTimeout(r, 700));
       document.getElementById('count-num').innerText = "1";
-      triggerVibrate(100);
+      triggerVibrate(120); // 「1」で少し長めに振動
 
       await new Promise(r => setTimeout(r, 700));
       layer.innerHTML = "";
@@ -487,7 +488,7 @@
 
       // 1. マッチング成功
       if (data.matched) {
-        triggerVibrate([100, 50, 100, 50, 250]);
+        triggerVibrate([100, 50, 100, 50, 250]); // 歓喜の振動パターン
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">T-POP MATCHED</div>
