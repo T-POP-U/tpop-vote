@@ -348,7 +348,7 @@
       box-shadow: 0 0 20px rgba(26, 115, 232, 0.7);
     }
 
-    /* 💜💙【青紫ネオン光枠】ノーマッチング専用カード */
+    /* 💜💙【青紫ネオン光枠】ノーマッチング専用カード（枠は常時固定発光・ゆらゆら浮遊揺れアニメーション） */
     .neon-rain-card {
       position: relative;
       background: radial-gradient(circle at 50% 0%, #110e2e 0%, #04030a 100%);
@@ -358,14 +358,18 @@
       padding: 32px 18px;
       text-align: center;
       margin-top: 10px;
-      box-shadow: 0 0 30px rgba(112, 0, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 35px rgba(112, 0, 255, 0.6), 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 25px rgba(112, 0, 255, 0.3);
       overflow: hidden;
-      animation: bluePurpleGlowPulse 2.5s ease-in-out infinite alternate;
+      animation: slowSway 4s ease-in-out infinite;
     }
 
-    @keyframes bluePurpleGlowPulse {
-      0% { box-shadow: 0 0 25px rgba(112, 0, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2); }
-      100% { box-shadow: 0 0 45px rgba(112, 0, 255, 0.75), 0 0 20px rgba(0, 240, 255, 0.5), inset 0 0 30px rgba(112, 0, 255, 0.4); }
+    /* ゆっくり優しく揺れる（浮遊感）キーフレーム */
+    @keyframes slowSway {
+      0% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-4px) rotate(-0.8deg); }
+      50% { transform: translateY(0px) rotate(0deg); }
+      75% { transform: translateY(-4px) rotate(0.8deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
     }
 
     .rain-canvas {
@@ -415,22 +419,15 @@
       padding: 14px 16px; margin-top: 20px; text-align: left; color: #e0f2fe; font-size: 13px; line-height: 1.6;
     }
 
-    /* 改行崩れ防止のための共通フッターテキストスタイル */
+    /* アクション呼びかけテキストスタイル */
     .call-action-matched {
-      font-size: 13.5px; font-weight: 900; color: #ffffff; margin-top: 20px;
+      font-size: 14px; font-weight: 900; color: #ffffff; margin-top: 20px;
       text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
-      line-height: 1.4; display: block;
     }
     
     .call-action-approach {
-      font-size: 13.5px; font-weight: 900; color: #00f0ff; margin-top: 20px;
+      font-size: 14px; font-weight: 900; color: #00f0ff; margin-top: 20px;
       text-shadow: 0 0 10px #00f0ff;
-      line-height: 1.4; display: block;
-    }
-
-    .nowrap-phrase {
-      display: inline-block;
-      white-space: nowrap;
     }
 
     .thanks-footer {
@@ -857,7 +854,7 @@
 
         html += `
             <div class="call-action-matched">
-              <span class="nowrap-phrase">さっそく連絡を</span><span class="nowrap-phrase">取ってみましょう！✨</span>
+              さっそく連絡を取ってみましょう！✨
             </div>
             <div class="thanks-footer">
               ご参加いただきありがとうございました！<br>またのご参加を心よりお待ちしております🥂✨
@@ -901,7 +898,7 @@
 
         html += `
             <div class="call-action-approach">
-              <span class="nowrap-phrase">気になったらぜひ</span><span class="nowrap-phrase">連絡してみましょう！💬</span>
+              気になったらぜひ連絡してみましょう！💬
             </div>
             <div class="thanks-footer">
               ご参加いただきありがとうございました！<br>またのご参加を心よりお待ちしております🥂✨
@@ -913,7 +910,7 @@
         }
       }
 
-      // 3. 💜💙 ノーマッチング画面（青紫ネオン光枠）
+      // 3. 💜💙 ノーマッチング画面（青紫ネオン枠は常時発光 ＋ ゆらゆら浮遊アニメーション）
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
         const mySentUnrequited = data.sent_unrequited || false;
