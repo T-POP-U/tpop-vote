@@ -131,7 +131,7 @@
       margin: 15px 0 10px 0; position: relative;
     }
 
-    /* 💖【ピンク統一】ネオン・マッチング成功カード */
+    /* 💖【ピンク＆ホワイトネオン】マッチング成功カード */
     .result-card-success {
       position: relative;
       background: radial-gradient(circle at 50% 0%, #2a081a 0%, #0d0208 100%);
@@ -205,15 +205,16 @@
       backdrop-filter: blur(8px);
     }
 
-    /* マッチング相手（ピンク統一） */
+    /* マッチング相手（ピンクネオン） */
     .partner-label-matched {
       font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #ff80bf;
-      text-shadow: 0 0 8px rgba(255, 0, 127, 0.8);
+      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
     }
 
+    /* 相手ID：白文字×うっすらピンクネオン */
     .partner-id-matched {
-      font-size: 32px; font-weight: 900; color: #fff; margin: 6px 0 14px;
-      text-shadow: 0 0 12px #ff007f, 0 0 25px #ff007f, 0 0 40px #ff007f;
+      font-size: 32px; font-weight: 900; color: #ffffff; margin: 6px 0 14px;
+      text-shadow: 0 0 8px #ffffff, 0 0 15px rgba(255, 0, 127, 0.8), 0 0 25px rgba(255, 0, 127, 0.5);
     }
 
     /* 送信者（シアン統一） */
@@ -682,7 +683,7 @@
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
-      // 1. 💖 マッチング成功（洗練されたホットピンク単色トーン）
+      // 1. 💖 マッチング成功（完全ピンク＆ホワイトネオン）
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
         html += `
@@ -715,7 +716,7 @@
         });
 
         html += `
-            <p style="font-size:14px; font-weight:bold; color:#fff; margin-top:20px; text-shadow:0 0 10px #ff007f, 0 0 20px #ff007f;">
+            <p style="font-size:14px; font-weight:900; color:#ffffff; margin-top:20px; text-shadow:0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 30px #ff007f;">
               さっそく連絡を取ってみましょう！✨
             </p>
             <div class="thanks-footer">
