@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
+  <!-- 🎉 JSライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
@@ -16,6 +17,44 @@
     label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
     select, input[type="text"], input[type="password"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
     textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+
+    /* 👁 パスワード表示切替付きインプットコンテナ */
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .password-wrapper input {
+      padding-right: 45px;
+    }
+    .toggle-password-btn {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 6px;
+      user-select: none;
+    }
+
+    /* 📣 「気になっている人がいなくても投票してね」案内ボックス */
+    .vote-notice-box {
+      background: linear-gradient(135deg, #fff3bf 0%, #ffec99 100%);
+      border: 1px solid #ffe066;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      color: #856404;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .vote-notice-box strong {
+      color: #d9480f;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 4px;
+    }
 
     /* 💡 連絡先補足ガイド */
     .contact-guide {
@@ -205,19 +244,16 @@
       backdrop-filter: blur(8px);
     }
 
-    /* マッチング相手（ピンクネオン） */
     .partner-label-matched {
       font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #ff80bf;
       text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
     }
 
-    /* 相手ID：白文字×うっすらピンクネオン */
     .partner-id-matched {
       font-size: 32px; font-weight: 900; color: #ffffff; margin: 6px 0 14px;
       text-shadow: 0 0 8px #ffffff, 0 0 15px rgba(255, 0, 127, 0.8), 0 0 25px rgba(255, 0, 127, 0.5);
     }
 
-    /* 送信者（シアン統一） */
     .partner-label-approach {
       font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #00f0ff;
       text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
@@ -252,23 +288,35 @@
 
     .message-text { font-size: 15px; color: #f8fafc; line-height: 1.5; font-weight: 600; word-break: break-all; white-space: pre-wrap; }
 
-    /* SNS特化ボタン */
+    /* 震えてタップを促すアニメーション付きボタン */
+    @keyframes pulseShake {
+      0% { transform: scale(1); }
+      10% { transform: scale(1.04) rotate(-1.5deg); }
+      20% { transform: scale(1.04) rotate(1.5deg); }
+      30% { transform: scale(1.04) rotate(-1.5deg); }
+      40% { transform: scale(1.04) rotate(1.5deg); }
+      50% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
     .btn-contact {
-      display: block; width: 100%; padding: 14px; border-radius: 12px;
+      display: block; width: 100%; padding: 15px; border-radius: 14px;
       font-size: 16px; font-weight: 900; color: white !important;
       text-decoration: none; box-sizing: border-box; letter-spacing: 1px;
+      animation: pulseShake 2.5s infinite ease-in-out;
     }
+
     .btn-instagram {
       background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-      box-shadow: 0 0 20px rgba(220, 39, 67, 0.6);
+      box-shadow: 0 0 20px rgba(220, 39, 67, 0.7);
     }
     .btn-line {
       background: #06C755;
-      box-shadow: 0 0 20px rgba(6, 199, 85, 0.6);
+      box-shadow: 0 0 20px rgba(6, 199, 85, 0.7);
     }
     .btn-default {
       background: #1a73e8;
-      box-shadow: 0 0 20px rgba(26, 115, 232, 0.6);
+      box-shadow: 0 0 20px rgba(26, 115, 232, 0.7);
     }
 
     /* 🌧️ 狂気の雨×ネオン（ノーマッチング専用カード） */
@@ -356,7 +404,16 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
+    <!-- 投票画面 -->
     <div id="vote-tab" class="card">
+      
+      <!-- 📣 アプローチ受領についての重要案内 -->
+      <div class="vote-notice-box">
+        <strong>💡 気になる人がいない場合でもご投票ください！</strong>
+        「気になる人がいない」という場合でも、自分のID・パスワード・連絡先を入力して投票を送信しておくことで、<b>相手から届いたアプローチやメッセージを受け取ることができます✨</b><br>
+        ※誰にもチェックを付けずにそのまま送信していただいて構いません。
+      </div>
+
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
         <select id="my_id" required>
@@ -374,7 +431,10 @@
         </select>
 
         <label>パスワード（数字4桁）※自分で決める</label>
-        <input type="password" id="pin" placeholder="例: 1234" maxlength="4" required>
+        <div class="password-wrapper">
+          <input type="password" id="pin" placeholder="例: 1234" maxlength="4" required>
+          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('pin', this)">👁️</button>
+        </div>
 
         <label>自分の連絡先（Instagram または LINE友達追加URL）</label>
         <input type="text" id="contact" placeholder="例: InstagramのURL または LINEのURL" required>
@@ -384,7 +444,7 @@
           <div class="contact-guide-item">💬 <b>LINE:</b> マイQRコード ＞ 「リンクをコピー」で取得したURL</div>
         </div>
 
-        <label>気になった相手を選択（複数選択OK）</label>
+        <label>気になった相手を選択（複数選択OK・居ない場合は未選択でOK）</label>
         
         <div class="privacy-notice">
           <strong>🔒 プライバシー完全保護</strong>
@@ -398,7 +458,8 @@
         </div>
 
         <div class="grid" id="checkbox-grid">
-          </div>
+          <!-- JSで描画 -->
+        </div>
 
         <div id="messages-container" class="messages-container"></div>
 
@@ -406,6 +467,7 @@
       </form>
     </div>
 
+    <!-- 投票完了表示 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
         <h2 style="color: #1a73e8;">投票完了✨</h2>
@@ -414,6 +476,7 @@
       </div>
     </div>
 
+    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -431,7 +494,10 @@
       </select>
 
       <label>設定したパスワード（4桁）</label>
-      <input type="password" id="res_pin" placeholder="4桁の数字" maxlength="4">
+      <div class="password-wrapper">
+        <input type="password" id="res_pin" placeholder="4桁の数字" maxlength="4">
+        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('res_pin', this)">👁️</button>
+      </div>
 
       <button type="button" class="submit-btn" onclick="checkResultWithAnimation()">結果を見る 🔍</button>
 
@@ -452,6 +518,18 @@
       }
       grid.innerHTML = html;
     });
+
+    /* 👁 パスワード表示/非表示切り替え機能 */
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "🙈";
+      } else {
+        input.type = "password";
+        btn.textContent = "👁️";
+      }
+    }
 
     function triggerVibrate(pattern) {
       if ("vibrate" in navigator) {
@@ -575,9 +653,9 @@
       const isUrl = contact.startsWith('http://') || contact.startsWith('https://');
 
       if (contactStr.includes('instagram.com')) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く（タップして連絡）</a>`;
       } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く（タップして追加）</a>`;
       } else if (isUrl) {
         return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
       } else {
@@ -636,6 +714,7 @@
       draw();
     }
 
+    /* 🔍 事前認証チェック ＆ カウントダウン結果表示 */
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
@@ -644,12 +723,31 @@
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
-      const resPromise = fetch('/api/result', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ my_id, pin })
-      });
+      display.innerHTML = '<div style="text-align:center; padding:15px; color:#666; font-size:14px;">照合中...</div>';
 
+      // 1. カウントダウン前にAPIで認証（ID・パスワードが存在・一致するか確認）
+      let res;
+      let data;
+      try {
+        res = await fetch('/api/result', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ my_id, pin })
+        });
+        data = await res.json();
+      } catch (e) {
+        display.innerHTML = `<div style="color:red; text-align:center; padding:20px; font-weight:bold;">通信エラーが発生しました</div>`;
+        return;
+      }
+
+      // 2. 認証失敗（ID/パスワード不一致等）なら即座にエラーを出して演出スキップ
+      if (!res.ok) {
+        triggerVibrate([100, 100, 100]);
+        display.innerHTML = `<div style="color:red; text-align:center; padding:15px; font-weight:bold; background:#fee2e2; border-radius:10px; margin-top:15px;">⚠️ ${data.message || 'IDまたはパスワードが間違っています'}</div>`;
+        return;
+      }
+
+      // 3. 認証OKの時だけカウントダウン演出を開始！
       const updateBeat = (num) => {
         layer.innerHTML = `
           <div class="dark-overlay screen-pulse">
@@ -672,14 +770,6 @@
 
       await new Promise(r => setTimeout(r, 750));
       layer.innerHTML = "";
-
-      const res = await resPromise;
-      const data = await res.json();
-
-      if (!res.ok) {
-        display.innerHTML = `<div style="color:red; text-align:center; padding:20px; font-weight:bold;">${data.message}</div>`;
-        return;
-      }
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
