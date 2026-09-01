@@ -122,45 +122,74 @@
     .complete-box { text-align: center; padding: 20px 10px; }
     .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
 
-    /* 💓 カウントダウンオーバレイ */
+    /* 💓 カウントダウンオーバレイ ＆ 四辺ドクドク演出 */
     .dark-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: #050508; z-index: 9999; display: flex; flex-direction: column;
       justify-content: center; align-items: center;
       overflow: hidden;
-    }
-    
-    .screen-pulse {
-      animation: screenPulseEffect 0.7s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+      box-sizing: border-box;
     }
 
-    @keyframes screenPulseEffect {
-      0% { transform: scale(1) translate(0, 0); background-color: #050508; }
-      10% { transform: scale(1.05) translate(-4px, 3px); background-color: #1a020d; }
-      20% { transform: scale(1.03) translate(4px, -3px); }
-      35% { transform: scale(1.08) translate(-2px, -2px); }
-      100% { transform: scale(1) translate(0, 0); background-color: #050508; }
+    /* 💓 四辺ドクドク発光・脈動アニメーション */
+    .screen-pulse-edges {
+      animation: edgeDokudokuPulse 0.75s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+    }
+
+    @keyframes edgeDokudokuPulse {
+      0% {
+        box-shadow: inset 0 0 15px rgba(255, 0, 127, 0.3), 0 0 10px rgba(255, 0, 127, 0.2);
+        transform: scale(1);
+      }
+      25% {
+        box-shadow: inset 0 0 60px var(--pulse-color, #ff007f), 0 0 30px var(--pulse-color, #ff007f);
+        transform: scale(1.02);
+      }
+      45% {
+        box-shadow: inset 0 0 25px var(--pulse-color, #ff007f), 0 0 15px var(--pulse-color, #ff007f);
+        transform: scale(0.995);
+      }
+      65% {
+        box-shadow: inset 0 0 80px var(--pulse-color, #ff007f), 0 0 45px var(--pulse-color, #ff007f);
+        transform: scale(1.03);
+      }
+      100% {
+        box-shadow: inset 0 0 15px rgba(255, 0, 127, 0.3), 0 0 10px rgba(255, 0, 127, 0.2);
+        transform: scale(1);
+      }
     }
 
     .countdown-title {
-      color: #ff007f; font-size: 16px; font-weight: 900; letter-spacing: 6px; margin-bottom: 20px;
-      text-shadow: 0 0 10px #ff007f;
+      color: #ffffff; font-size: 16px; font-weight: 900; letter-spacing: 6px; margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px var(--pulse-color, #ff007f);
     }
 
     .countdown-num-glow {
-      font-size: 140px; font-weight: 900; color: #fff;
+      font-size: 150px; font-weight: 900; line-height: 1; display: inline-block;
+    }
+
+    /* 🎨 数字ごとの個別カラー（ネオンネオン） */
+    .num-3 {
+      color: #00f0ff;
+      text-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff, 0 0 80px #00f0ff;
+    }
+    .num-2 {
+      color: #ffea00;
+      text-shadow: 0 0 20px #ffea00, 0 0 40px #ffea00, 0 0 80px #ffea00;
+    }
+    .num-1 {
+      color: #ff007f;
       text-shadow: 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #ff007f;
-      display: inline-block; line-height: 1;
     }
 
     .beat-anim {
-      animation: heartbeatBounce 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation: heartbeatBounce 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     @keyframes heartbeatBounce {
-      0% { transform: scale(0.2) rotate(-8deg); opacity: 0; }
-      30% { transform: scale(1.45) rotate(4deg); opacity: 1; }
-      50% { transform: scale(0.95) rotate(-2deg); }
+      0% { transform: scale(0.1) rotate(-10deg); opacity: 0; }
+      30% { transform: scale(1.5) rotate(5deg); opacity: 1; }
+      50% { transform: scale(0.9) rotate(-2deg); }
       70% { transform: scale(1.15) rotate(1deg); }
       100% { transform: scale(1) rotate(0deg); opacity: 1; }
     }
@@ -732,7 +761,7 @@
       draw();
     }
 
-    /* 🔍 事前認証チェック ＆ カウントダウン結果表示 */
+    /* 🔍 事前認証チェック ＆ 四辺ドクドク＆マルチカラーカウントダウン演出 */
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
@@ -765,25 +794,28 @@
         return;
       }
 
-      // 3. 認証OKの時だけカウントダウン演出を開始！
-      const updateBeat = (num) => {
+      // 3. 認証OKの時だけカウントダウン＆四辺ドクドク演出を開始！
+      const updateBeat = (num, colorClass, hexColor) => {
         layer.innerHTML = `
-          <div class="dark-overlay screen-pulse">
+          <div class="dark-overlay screen-pulse-edges" style="--pulse-color: ${hexColor};">
             <div class="countdown-title">MATCHING CHECK</div>
-            <div class="countdown-num-glow beat-anim">${num}</div>
+            <div class="countdown-num-glow ${colorClass} beat-anim">${num}</div>
           </div>
         `;
       };
 
-      updateBeat("3");
+      // 3: シアンブルー（青系）
+      updateBeat("3", "num-3", "#00f0ff");
       triggerVibrate([80, 40, 80]);
 
       await new Promise(r => setTimeout(r, 750));
-      updateBeat("2");
+      // 2: ゴールドイエロー（黄系）
+      updateBeat("2", "num-2", "#ffea00");
       triggerVibrate([80, 40, 80]);
 
       await new Promise(r => setTimeout(r, 750));
-      updateBeat("1");
+      // 1: ネオンピンク（赤・ピンク系）
+      updateBeat("1", "num-1", "#ff007f");
       triggerVibrate([120, 40, 150]);
 
       await new Promise(r => setTimeout(r, 750));
@@ -823,7 +855,6 @@
           html += `</div>`;
         });
 
-        /* 💡 改行崩れ防止（画面幅が狭くても綺麗に表示） */
         html += `
             <div class="call-action-matched">
               <span class="nowrap-phrase">さっそく連絡を</span><span class="nowrap-phrase">取ってみましょう！✨</span>
@@ -868,7 +899,6 @@
           html += `</div>`;
         });
 
-        /* 💡 改行崩れ防止（画面幅が狭くても綺麗に表示） */
         html += `
             <div class="call-action-approach">
               <span class="nowrap-phrase">気になったらぜひ</span><span class="nowrap-phrase">連絡してみましょう！💬</span>
