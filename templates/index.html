@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>T-POP シークレット投票</title>
-  <!-- 🎉 紙吹雪（Confetti）ライブラリ -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
@@ -94,6 +93,12 @@
     .countdown-num-glow {
       font-size: 120px; font-weight: 900; color: #fff;
       text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #00f0ff;
+      animation: pulse 0.7s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); }
     }
 
     /* マッチング成功カードデザイン */
@@ -155,6 +160,19 @@
     .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
     .btn-line { background: #06C755; }
     .btn-default { background: #1a73e8; }
+
+    /* 片思い送信済みアナウンスボックス */
+    .unrequited-sent-box {
+      background: #f0fdf4;
+      border: 1.5px solid #4ade80;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 16px;
+      text-align: left;
+      color: #166534;
+      font-size: 13px;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body id="body">
@@ -168,7 +186,6 @@
       <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
     </div>
 
-    <!-- 投票画面 -->
     <div id="vote-tab" class="card">
       <form id="voteForm">
         <label>自分の番号札（ID）</label>
@@ -226,14 +243,12 @@
           </script>
         </div>
 
-        <!-- 選択した相手ごとの一言メッセージ＆片思い送信設定 -->
         <div id="messages-container" class="messages-container"></div>
 
         <button type="button" class="submit-btn" onclick="submitVote()">投票を送信する</button>
       </form>
     </div>
 
-    <!-- 投票完了表示 -->
     <div id="complete-view" class="card" style="display:none;">
       <div class="complete-box">
         <h2 style="color: #1a73e8;">投票完了✨</h2>
@@ -242,7 +257,6 @@
       </div>
     </div>
 
-    <!-- 結果確認画面 -->
     <div id="result-tab" class="card" style="display:none;">
       <label>自分の番号札（ID）</label>
       <select id="res_my_id">
@@ -269,6 +283,17 @@
   </div>
 
   <script>
+    // 📳 バイブレーション補助関数
+    function triggerVibrate(pattern) {
+      if ("vibrate" in navigator) {
+        try {
+          navigator.vibrate(pattern);
+        } catch (e) {
+          console.log("Vibration not supported or user gesture required.");
+        }
+      }
+    }
+
     function renderMessageInputs() {
       const checkedBoxes = Array.from(document.querySelectorAll('input[name="target"]:checked'));
       const container = document.getElementById('messages-container');
@@ -354,6 +379,8 @@
       if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
       if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
 
+      triggerVibrate(50); // 送信時の軽いフィードバック
+
       const res = await fetch('/api/vote', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -401,17 +428,25 @@
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
+      // API問い合わせを裏で並行して開始
       const resPromise = fetch('/api/result', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ my_id, pin })
       });
 
+      // カウントダウン＆バイブレーション演出
       layer.innerHTML = `<div class="dark-overlay"><div class="countdown-title">MATCHING CHECK</div><div id="count-num" class="countdown-num-glow">3</div></div>`;
+      triggerVibrate(60);
+      
       await new Promise(r => setTimeout(r, 700));
       document.getElementById('count-num').innerText = "2";
+      triggerVibrate(60);
+
       await new Promise(r => setTimeout(r, 700));
       document.getElementById('count-num').innerText = "1";
+      triggerVibrate(100);
+
       await new Promise(r => setTimeout(r, 700));
       layer.innerHTML = "";
 
@@ -427,6 +462,7 @@
 
       // 1. 両思い（マッチング成功）がある場合
       if (data.matched) {
+        triggerVibrate([100, 50, 100, 50, 250]); // 祝福の振動リズム
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">T-POP MATCHED</div>
@@ -465,6 +501,7 @@
 
       // 2. 片思いアプローチが届いている場合
       if (data.has_unrequited) {
+        if (!data.matched) triggerVibrate([80, 80, 150]);
         html += `
           <div class="result-card-approach">
             <div class="approach-header-badge">SPECIAL APPROACH</div>
@@ -503,15 +540,30 @@
         }
       }
 
-      // 3. マッチングもアプローチも無い場合
+      // 3. マッチングもアプローチ受領も無い場合
       if (!data.matched && !data.has_unrequited) {
+        triggerVibrate(80);
+        
+        // 自分が「片思い送信」を行っていたかチェック
+        const mySentUnrequited = data.sent_unrequited || false;
+
         html = `
-          <div style="background:#121212; color:white; border-radius:16px; padding:30px 20px; text-align:center; margin-top:20px;">
-            <div style="font-size:48px; margin-bottom:12px;">🌙</div>
-            <h3 style="margin:0 0 8px 0; font-size:20px;">今回はノーマッチング</h3>
-            <p style="font-size:13px; color:#ccc; line-height:1.6; margin:0;">
-              惜しくも今回はマッチングとなりませんでした。<br>またのご参加をお待ちしています🥂
+          <div style="background:#121212; color:white; border-radius:16px; padding:26px 18px; text-align:center; margin-top:20px;">
+            <div style="font-size:44px; margin-bottom:8px;">🌙</div>
+            <h3 style="margin:0 0 8px 0; font-size:19px;">今回は相互マッチングなし</h3>
+            <p style="font-size:12px; color:#ccc; line-height:1.6; margin:0;">
+              惜しくも相互マッチングとはなりませんでした。
             </p>
+
+            ${mySentUnrequited ? `
+              <div class="unrequited-sent-box">
+                <strong>💌 片思い送信を設定された方へ</strong><br>
+                設定されたお相手の画面には、<b>あなたの連絡先とメッセージがしっかり届いています！</b><br>
+                お相手からの連絡を楽しみにお待ちください✨
+              </div>
+            ` : `
+              <p style="font-size:11px; color:#888; margin-top:14px;">ご参加いただきありがとうございました！またのご参加をお待ちしております🥂</p>
+            `}
           </div>
         `;
       }
