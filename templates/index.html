@@ -41,6 +41,7 @@
       justify-content: center;
       min-height: 100vh;
       padding: 15px;
+      position: relative;
     }
 
     .app-container {
@@ -48,6 +49,20 @@
       max-width: 480px;
       margin: 0 auto;
       position: relative;
+      padding-bottom: 60px;
+    }
+
+    /* T-POP ロゴ固定表示 */
+    .tpop-corner-logo {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: contain;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      z-index: 100;
     }
 
     /* ==========================================================================
@@ -123,7 +138,7 @@
     }
 
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .form-group label {
@@ -133,6 +148,13 @@
       color: var(--neon-cyan);
       margin-bottom: 6px;
       text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+    }
+
+    .sub-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
     }
 
     .input-wrapper {
@@ -171,34 +193,111 @@
       padding: 4px;
     }
 
-    /* Select Targets Grid */
+    /* 連絡先URLのコピー方法アコーディオン/説明文 */
+    .url-guide-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 11.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .url-guide-box summary {
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--neon-cyan);
+    }
+
+    /* 選択の動機付け箇条書き */
+    .motto-reasons {
+      background: rgba(0, 240, 255, 0.05);
+      border-left: 3px solid var(--neon-cyan);
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .motto-reasons ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .motto-reasons li::before {
+      content: "・";
+      color: var(--neon-cyan);
+      font-weight: bold;
+    }
+
+    /* プライバシー保護カード */
+    .privacy-notice-box {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+
+    .privacy-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .privacy-text {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* 性別区切りの番号札選択 */
+    .gender-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+      margin: 12px 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .targets-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
     .target-checkbox-label {
       display: flex;
       align-items: center;
-      padding: 10px;
+      justify-content: center;
+      padding: 8px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
+      font-weight: bold;
       transition: all 0.2s ease;
     }
 
     .target-checkbox-label.disabled {
-      opacity: 0.3;
+      opacity: 0.25;
       cursor: not-allowed;
       pointer-events: none;
     }
 
     .target-checkbox-label input {
-      margin-right: 8px;
+      margin-right: 6px;
       accent-color: var(--neon-pink);
     }
 
@@ -337,7 +436,7 @@
     }
 
     /* ==========================================================================
-       6. Result Display Cards & Rain Animation
+       6. Result Display Cards & White Neon Highlighting
        ========================================================================== */
     .result-section-header {
       text-align: center;
@@ -346,6 +445,25 @@
       color: var(--text-muted);
       letter-spacing: 2px;
       margin-bottom: 15px;
+    }
+
+    /* 相手の番号札：白いネオンで強力に発光＆強調 */
+    .white-neon-id {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 
+        0 0 5px #ffffff,
+        0 0 10px #ffffff,
+        0 0 20px #ffffff,
+        0 0 40px rgba(255, 255, 255, 0.8);
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 8px;
+      margin: 6px 0;
     }
 
     .result-card-success {
@@ -384,11 +502,10 @@
       border-radius: 12px;
       padding: 14px;
       margin: 12px 0;
-      text-align: left;
+      text-align: center;
     }
 
     .partner-label-matched { font-size: 11px; color: var(--neon-pink); font-weight: bold; }
-    .partner-id-matched { font-size: 18px; color: #fff; font-weight: bold; margin-bottom: 6px; }
 
     .result-card-approach {
       background: rgba(0, 240, 255, 0.1);
@@ -419,7 +536,6 @@
     }
 
     .partner-label-approach { font-size: 11px; color: var(--neon-cyan); font-weight: bold; }
-    .partner-id-approach { font-size: 18px; color: #fff; font-weight: bold; margin-bottom: 6px; }
 
     .message-box {
       background: rgba(255, 255, 255, 0.05);
@@ -427,6 +543,7 @@
       padding: 10px;
       margin: 8px 0;
       font-size: 13px;
+      text-align: left;
     }
 
     .message-title-matched { color: var(--neon-pink); font-weight: bold; font-size: 11px; }
@@ -524,6 +641,9 @@
 <body>
 
   <div class="app-container">
+    <!-- T-POP ロゴ -->
+    <img src="56078.jpg" alt="T-POP" class="tpop-corner-logo">
+
     <header>
       <div class="brand-logo">motto</div>
       <div class="brand-tagline">More Connections, Motto Passion.</div>
@@ -531,28 +651,29 @@
 
     <!-- タブ切り替え -->
     <div class="tab-nav">
-      <button class="tab-btn active" onclick="showTab('vote')">💌 アプローチ選択</button>
-      <button class="tab-btn" onclick="showTab('result')">✨ 結果確認</button>
+      <button class="tab-btn active" onclick="showTab('vote')">✨ つながり選択</button>
+      <button class="tab-btn" onclick="showTab('result')">🔍 結果確認</button>
     </div>
 
-    <!-- 1. 投票（アプローチ）タブ -->
+    <!-- 1. 投票（つながり選択）タブ -->
     <div id="vote-tab" class="card">
       <form id="voteForm" onsubmit="event.preventDefault(); submitVote();">
+        
         <div class="form-group">
-          <label for="my_id">あなたのID</label>
+          <label for="my_id">あなたの番号札（ID）</label>
           <select id="my_id" onchange="handleSelfIdChange()">
             <option value="">選択してください</option>
-            <option value="A-01">A-01</option>
-            <option value="A-02">A-02</option>
-            <option value="A-03">A-03</option>
-            <option value="B-01">B-01</option>
-            <option value="B-02">B-02</option>
-            <option value="B-03">B-03</option>
+            <optgroup label="男性 (M)">
+              <!-- JavaScriptでM-1〜M-25が生成されます -->
+            </optgroup>
+            <optgroup label="女性 (F)">
+              <!-- JavaScriptでF-1〜F-25が生成されます -->
+            </optgroup>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="pin">4桁のパスワード（結果確認用）</label>
+          <label for="pin">結果確認用パスワード（数字4桁）※自分で決める</label>
           <div class="input-wrapper">
             <input type="password" id="pin" maxlength="4" placeholder="例: 1234">
             <button type="button" class="toggle-pwd-btn" onclick="togglePassword('pin', this)">👁️</button>
@@ -560,19 +681,52 @@
         </div>
 
         <div class="form-group">
-          <label for="contact">あなたの連絡先（LINE URL / Instagram IDなど）</label>
-          <input type="text" id="contact" placeholder="例: https://line.me/ti/p/... や @instagram_id">
+          <label for="contact">あなたの連絡先（InstagramまたはLINEのURL）</label>
+          <input type="text" id="contact" placeholder="例: https://instagram.com/xxx や https://line.me/ti/p/xxx">
+          
+          <details class="url-guide-box">
+            <summary>🔗 URLのコピー手順はこちら</summary>
+            <div style="margin-top: 6px;">
+              <strong>📸 Instagram:</strong><br>
+              プロフィール画面右上メニュー ＞「プロフィールをシェア」＞「リンクをコピー」<br><br>
+              <strong>💬 LINE:</strong><br>
+              「ホーム」右上人型アイコン ＞「QRコード」＞「マイQRコード」＞「リンクをコピー」
+            </div>
+          </details>
+        </div>
+
+        <!-- プライバシー完全保護 カード -->
+        <div class="privacy-notice-box">
+          <div class="privacy-title">🔒 プライバシー完全保護</div>
+          <div class="privacy-text">
+            お互いに選びあった場合、または「マッチしなくても届ける」にチェックを入れた場合のみ相手に連絡先が伝わります。<br>
+            <strong>周りの参加者や運営も含め、「誰が誰を選んだか」「誰とお互いに選びあったか」は一切わかりません。</strong>パスワードを知っているあなただけが結果を確認できます。
+          </div>
         </div>
 
         <div class="form-group">
-          <label>気になっているお相手（複数選択可）</label>
-          <div class="targets-grid">
-            <label class="target-checkbox-label" id="lbl-A-01"><input type="checkbox" name="target" value="A-01" onchange="renderMessageInputs()"> A-01</label>
-            <label class="target-checkbox-label" id="lbl-A-02"><input type="checkbox" name="target" value="A-02" onchange="renderMessageInputs()"> A-02</label>
-            <label class="target-checkbox-label" id="lbl-A-03"><input type="checkbox" name="target" value="A-03" onchange="renderMessageInputs()"> A-03</label>
-            <label class="target-checkbox-label" id="lbl-B-01"><input type="checkbox" name="target" value="B-01" onchange="renderMessageInputs()"> B-01</label>
-            <label class="target-checkbox-label" id="lbl-B-02"><input type="checkbox" name="target" value="B-02" onchange="renderMessageInputs()"> B-02</label>
-            <label class="target-checkbox-label" id="lbl-B-03"><input type="checkbox" name="target" value="B-03" onchange="renderMessageInputs()"> B-03</label>
+          <label>もっとつながりたい人（複数選択可）</label>
+          
+          <div class="motto-reasons">
+            <p style="font-weight:bold; color:#fff; margin-bottom:4px;">💡 こんな人を選んでみよう！</p>
+            <ul>
+              <li>話が面白くてもっと話を聞いてみたい人</li>
+              <li>雰囲気が素敵でもっと知りたいと思った人</li>
+              <li>共通の趣味があって話が盛り上がりそうな人</li>
+              <li>なんとなく気になって後から連絡をとってみたい人</li>
+            </ul>
+          </div>
+
+          <!-- 男性番号札グループ -->
+          <div class="gender-title">👨 男性番号札 (M-1 〜 M-25)</div>
+          <div class="targets-grid" id="male-targets-grid">
+            <!-- JavaScriptで動的生成 -->
+          </div>
+
+          <!-- 女性番号札グループ -->
+          <div class="gender-title" style="margin-top: 15px;">👩 女性番号札 (F-1 〜 F-25)</div>
+          <div class="targets-grid" id="female-targets-grid">
+            <!-- JavaScriptで動的生成 -->
           </div>
         </div>
 
@@ -587,7 +741,7 @@
     <div id="complete-view" class="card" style="display: none; text-align: center;">
       <h2 style="color: var(--neon-pink); font-size: 22px; margin-bottom: 10px;">送信が完了しました！🎉</h2>
       <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
-        あなたのアプローチを受け付けました。<br>
+        あなたからの「もっと」を受け付けました。<br>
         「結果確認」タブより、設定したパスワードで結果をご確認いただけます！
       </p>
       <button class="btn-submit" onclick="resetVoteForm()">内容を修正して再送信する</button>
@@ -596,20 +750,16 @@
     <!-- 2. 結果確認タブ -->
     <div id="result-tab" class="card" style="display: none;">
       <div class="form-group">
-        <label for="res_my_id">あなたのID</label>
+        <label for="res_my_id">あなたの番号札（ID）</label>
         <select id="res_my_id">
           <option value="">選択してください</option>
-          <option value="A-01">A-01</option>
-          <option value="A-02">A-02</option>
-          <option value="A-03">A-03</option>
-          <option value="B-01">B-01</option>
-          <option value="B-02">B-02</option>
-          <option value="B-03">B-03</option>
+          <optgroup label="男性 (M)" id="res-male-optgroup"></optgroup>
+          <optgroup label="女性 (F)" id="res-female-optgroup"></optgroup>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="res_pin">4桁のパスワード</label>
+        <label for="res_pin">結果確認用パスワード（数字4桁）</label>
         <div class="input-wrapper">
           <input type="password" id="res_pin" maxlength="4" placeholder="設定した4桁の数字">
           <button type="button" class="toggle-pwd-btn" onclick="togglePassword('res_pin', this)">👁️</button>
@@ -630,6 +780,46 @@
     /* ==========================================================================
        JavaScript Logic
        ========================================================================== */
+
+    // 1. M-1〜M-25, F-1〜F-25の選択肢・チェックボックス動的生成
+    function initOptionsAndGrid() {
+      const myIdSelect = document.getElementById('my_id');
+      const resMyIdSelect = document.getElementById('res_my_id');
+      const mGroup = myIdSelect.querySelector('optgroup[label="男性 (M)"]');
+      const fGroup = myIdSelect.querySelector('optgroup[label="女性 (F)"]');
+      const resMGroup = document.getElementById('res-male-optgroup');
+      const resFGroup = document.getElementById('res-female-optgroup');
+
+      const mGrid = document.getElementById('male-targets-grid');
+      const fGrid = document.getElementById('female-targets-grid');
+
+      for (let i = 1; i <= 25; i++) {
+        const mVal = `M-${i}`;
+        const fVal = `F-${i}`;
+
+        // Select Options
+        mGroup.appendChild(new Option(mVal, mVal));
+        fGroup.appendChild(new Option(fVal, fVal));
+        resMGroup.appendChild(new Option(mVal, mVal));
+        resFGroup.appendChild(new Option(fVal, fVal));
+
+        // Checkbox Grid (Male)
+        const mLabel = document.createElement('label');
+        mLabel.className = 'target-checkbox-label';
+        mLabel.id = `lbl-${mVal}`;
+        mLabel.innerHTML = `<input type="checkbox" name="target" value="${mVal}" onchange="renderMessageInputs()"> ${mVal}`;
+        mGrid.appendChild(mLabel);
+
+        // Checkbox Grid (Female)
+        const fLabel = document.createElement('label');
+        fLabel.className = 'target-checkbox-label';
+        fLabel.id = `lbl-${fVal}`;
+        fLabel.innerHTML = `<input type="checkbox" name="target" value="${fVal}" onchange="renderMessageInputs()"> ${fVal}`;
+        fGrid.appendChild(fLabel);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initOptionsAndGrid);
 
     function handleSelfIdChange() {
       const myId = document.getElementById('my_id').value;
@@ -695,12 +885,12 @@
         const prevUnreq = currentUnrequited[val] || false;
 
         div.innerHTML = `
-          <label>【 ${val} 】さんへの一言メッセージ</label>
-          <textarea class="individual-msg" data-target="${val}" placeholder="例: お話しできて楽しかったです！ぜひまた話しましょう✨" maxlength="100">${prevText}</textarea>
+          <label>【 ${val} 】さんへのメッセージ</label>
+          <textarea class="individual-msg" data-target="${val}" placeholder="例: お話しできて楽しかったです！ぜひもっと話しましょう✨" maxlength="100">${prevText}</textarea>
           
           <label class="unrequited-option">
             <input type="checkbox" class="unrequited-chk" data-target="${val}" ${prevUnreq ? 'checked' : ''}>
-            <span>💌 マッチングしなくても、この人に自分のID・メッセージ・連絡先を届ける</span>
+            <span>💌 マッチしなくても、この人に自分の番号札・メッセージ・連絡先を届ける</span>
           </label>
         `;
         container.appendChild(div);
@@ -733,7 +923,6 @@
       const contact = document.getElementById('contact').value;
       const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
 
-      /* 安全策: 送信直前にも自分自身への選択がないか最終確認 */
       if (my_id && target_ids.includes(my_id)) {
         return alert("自分自身を選択して送信することはできません。");
       }
@@ -752,7 +941,7 @@
       });
 
       if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
-      if (pin.length !== 4) return alert("パスワードは4桁で入力してください");
+      if (pin.length !== 4) return alert("パスワードは数字4桁で入力してください");
 
       triggerVibrate(50);
 
@@ -768,7 +957,7 @@
           document.getElementById('complete-view').style.display = 'block';
           document.getElementById('complete-view').setAttribute('data-completed', 'true');
           document.getElementById('voteForm').reset();
-          handleSelfIdChange(); // フォームリセット後も状態を同期
+          handleSelfIdChange();
         } else {
           alert(data.message || "エラーが発生しました");
         }
@@ -781,7 +970,7 @@
       document.getElementById('complete-view').style.display = 'none';
       document.getElementById('complete-view').removeAttribute('data-completed');
       document.getElementById('voteForm').reset();
-      handleSelfIdChange(); // リセット時にも制御状態を初期化
+      handleSelfIdChange();
       document.getElementById('vote-tab').style.display = 'block';
     }
 
@@ -792,11 +981,11 @@
       const isUrl = contact.startsWith('http://') || contact.startsWith('https://');
 
       if (contactStr.includes('instagram.com')) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く（タップして相手のプロフィールへ）</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-instagram">📸 Instagramを開く（相手のプロフィールへ）</a>`;
       } else if (contactStr.includes('line.me') || contactStr.includes('line.naver.jp')) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く（タップして友達追加へ）</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-line">💬 LINEを開く（友達追加へ）</a>`;
       } else if (isUrl) {
-        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く（タップして相手のページへ）</a>`;
+        return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く</a>`;
       } else {
         return `<div style="font-size:14px; font-weight:bold; color:#ff80bf; word-break:break-all; text-shadow:0 0 10px #ff007f; margin-top:8px;">連絡先: ${contact}</div>`;
       }
@@ -853,18 +1042,17 @@
       draw();
     }
 
-    /* 🔍 事前認証チェック ＆ 四辺ドクドク＆マルチカラーカウントダウン演出 */
+    /* 🔍 事前認証チェック ＆ カウントダウン演出 */
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
       const display = document.getElementById('result-display');
       const layer = document.getElementById('countdown-layer');
 
-      if (!my_id || !pin) return alert("IDとパスワードを入力してください");
+      if (!my_id || !pin) return alert("番号札とパスワードを入力してください");
 
       display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">照合中...</div>';
 
-      // 1. カウントダウン前にAPIで認証（ID・パスワードが存在・一致するか確認）
       let res;
       let data;
       try {
@@ -879,14 +1067,12 @@
         return;
       }
 
-      // 2. 認証失敗（ID/パスワード不一致等）なら即座にエラーを出して演出スキップ
       if (!res.ok) {
         triggerVibrate([100, 100, 100]);
-        display.innerHTML = `<div style="color:#ff4d4d; text-align:center; padding:15px; font-weight:bold; background:rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius:10px; margin-top:15px;">⚠️ ${data.message || 'IDまたはパスワードが間違っています'}</div>`;
+        display.innerHTML = `<div style="color:#ff4d4d; text-align:center; padding:15px; font-weight:bold; background:rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius:10px; margin-top:15px;">⚠️ ${data.message || '番号札またはパスワードが間違っています'}</div>`;
         return;
       }
 
-      // 3. 認証OKの時だけカウントダウン＆四辺ドクドク演出を開始！
       const updateBeat = (num, colorClass, hexColor) => {
         layer.innerHTML = `
           <div class="dark-overlay screen-pulse-edges" style="--pulse-color: ${hexColor};">
@@ -895,17 +1081,14 @@
         `;
       };
 
-      // 3: シアンブルー（青系）
       updateBeat("3", "num-3", "#00f0ff");
       triggerVibrate([80, 40, 80]);
 
       await new Promise(r => setTimeout(r, 750));
-      // 2: ゴールドイエロー（黄系）
       updateBeat("2", "num-2", "#ffea00");
       triggerVibrate([80, 40, 80]);
 
       await new Promise(r => setTimeout(r, 750));
-      // 1: ネオンピンク（赤・ピンク系）
       updateBeat("1", "num-1", "#ff007f");
       triggerVibrate([120, 40, 150]);
 
@@ -914,7 +1097,7 @@
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
-      // 1. 💖 マッチング成功（完全ピンク＆ホワイトネオン）
+      // 1. 💖 相互マッチ（「もっと話したい」の一致）
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
         html += `
@@ -922,20 +1105,20 @@
             <div class="match-header-badge">✨ motto MATCHED ✨</div>
             <div class="match-title">🎉 MATCHED!</div>
             <p style="color:#ffb3d9; font-size:13.5px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
-              おめでとうございます！お互いに気になっているようです✨
+              おめでとうございます！お互いに「もっと話したい」と思っているようです✨
             </p>
         `;
 
         data.matches.forEach(m => {
           html += `
             <div class="partner-block">
-              <div class="partner-label-matched">【 マッチング相手 】</div>
-              <div class="partner-id-matched">【 ${m.id} 】</div>
+              <div class="partner-label-matched">【 つながったお相手 】</div>
+              <div><span class="white-neon-id">${m.id}</span></div>
           `;
 
           if (m.message && m.message.trim() !== "") {
             html += `
-              <div class="message-box matched-msg">
+              <div class="message-box">
                 <div class="message-title-matched">💌 相手からのメッセージ</div>
                 <div class="message-text">${m.message}</div>
               </div>
@@ -948,7 +1131,7 @@
 
         html += `
             <div class="call-action-matched">
-              さっそく連絡を取ってみましょう！✨
+              さっそく連絡を取って、もっと話を深めましょう！✨
             </div>
             <div class="thanks-footer">
               ご参加いただきありがとうございました！<br>またのご参加を心よりお待ちしております🥂✨
@@ -958,15 +1141,15 @@
         if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
 
-      // 2. 💌 アプローチ受領（シアンブルー統一）
+      // 2. 💌 個別メッセージ受領（「ダイレクトメッセージ」）
       if (data.has_unrequited) {
         if (!data.matched) triggerVibrate([80, 80, 150]);
         html += `
           <div class="result-card-approach">
-            <div class="approach-header-badge">💌 SPECIAL APPROACH</div>
-            <div class="approach-title">アプローチが届いています！</div>
+            <div class="approach-header-badge">💌 SPECIAL MESSAGE</div>
+            <div class="approach-title">メッセージが届いています！</div>
             <p style="color:#38bdf8; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #00f0ff;">
-              あなたに興味を持っている方から連絡先が届きました✨
+              あなたと「もっと話したい」と思っている方から連絡先が届きました✨
             </p>
         `;
 
@@ -974,12 +1157,12 @@
           html += `
             <div class="partner-block">
               <div class="partner-label-approach">【 送信者 】</div>
-              <div class="partner-id-approach">【 ${a.id} 】</div>
+              <div><span class="white-neon-id">${a.id}</span></div>
           `;
 
           if (a.message && a.message.trim() !== "") {
             html += `
-              <div class="message-box approach-msg">
+              <div class="message-box">
                 <div class="message-title-approach">💬 相手からのメッセージ</div>
                 <div class="message-text">${a.message}</div>
               </div>
@@ -1004,7 +1187,7 @@
         }
       }
 
-      // 3. 💜💙 ノーマッチング画面（青紫ネオン枠は常時発光 ＋ ゆらゆら浮遊アニメーション）
+      // 3. 💜💙 ノーマッチ画面
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
         const mySentUnrequited = data.sent_unrequited || false;
@@ -1036,14 +1219,14 @@
 
               <div class="neon-title">NO MATCH</div>
               <p style="font-size:13px; color:#cbd5e1; line-height:1.6; margin:0;">
-                惜しくも相互マッチングとはなりませんでした。
+                今回は相互マッチングとはなりませんでした。
               </p>
 
               ${mySentUnrequited ? `
                 <div class="unrequited-sent-box">
                   <strong style="font-size:14px; color:#00f0ff;">💌 メッセージ送信済み</strong><br>
                   <span style="font-size:12.5px; display:block; margin-top:4px;">
-                    「マッチングしなくても届ける」を設定したお相手の画面には、<b>あなたの連絡先とメッセージが届いています！</b><br>
+                    「マッチしなくても届ける」を設定したお相手の画面には、<b>あなたの連絡先とメッセージが届いています！</b><br>
                     お相手からの連絡を楽しみにお待ちください✨
                   </span>
                 </div>
