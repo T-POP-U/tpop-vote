@@ -15,7 +15,7 @@
       --card-bg: rgba(22, 22, 38, 0.75);
       --card-border: rgba(255, 255, 255, 0.1);
       --neon-pink: #ff007f;
-      --neon-pink-glow: rgba(ff, 0, 127, 0.4);
+      --neon-pink-glow: rgba(255, 0, 127, 0.4);
       --neon-blue: #00f0ff;
       --neon-blue-glow: rgba(0, 240, 255, 0.4);
       --neon-purple: #7000ff;
@@ -27,6 +27,9 @@
       --male-bg: rgba(0, 240, 255, 0.05);
       --female-border: rgba(255, 0, 127, 0.3);
       --female-bg: rgba(255, 0, 127, 0.05);
+
+      /* 主要ラベル・統一見出しカラー（ネオンピンク） */
+      --unified-label-color: #ff007f;
     }
 
     * {
@@ -122,9 +125,9 @@
     label {
       display: block;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 8px;
-      color: #e2e8f0;
+      color: var(--unified-label-color);
     }
     select, input[type="text"], input[type="password"], textarea {
       width: 100%;
@@ -170,25 +173,60 @@
     }
     .url-guide-box summary {
       cursor: pointer;
-      color: var(--neon-blue);
-      font-weight: 600;
+      color: var(--unified-label-color);
+      font-weight: 700;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .url-guide-box summary::-webkit-details-marker {
+      display: none;
+    }
+    .url-guide-box summary::before {
+      content: "▼";
+      font-size: 10px;
+      transition: transform 0.2s ease;
+    }
+    .url-guide-box[open] summary::before {
+      transform: rotate(180deg);
     }
 
     /* プライバシー保護案内カード */
     .privacy-notice-box {
       background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(0, 240, 255, 0.2);
+      border: 1px solid rgba(255, 0, 127, 0.25);
       border-radius: 12px;
       padding: 12px 14px;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
     .privacy-title {
       font-size: 13px;
       font-weight: bold;
-      color: var(--neon-blue);
+      color: var(--unified-label-color);
       margin-bottom: 6px;
     }
     .privacy-text {
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* 誰も選ばない方向け案内カード */
+    .no-selection-box {
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+    }
+    .no-selection-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--neon-blue);
+      margin-bottom: 4px;
+    }
+    .no-selection-text {
       font-size: 12px;
       color: #cbd5e1;
       line-height: 1.5;
@@ -621,7 +659,7 @@
     <!-- ヘッダー -->
     <div class="header">
       <div class="header-logo">motto</div>
-      <div class="header-tagline">連絡先交換をもっと気軽に、スマートに。</div>
+      <div class="header-tagline">〜「もっと」知る、「もっと」つながる〜</div>
     </div>
 
     <!-- タブ切り替え -->
@@ -681,18 +719,26 @@
           </div>
         </div>
 
+        <!-- 誰も選ばない方向け 案内カード -->
+        <div class="no-selection-box">
+          <div class="no-selection-title">💡 「誰も選ばない」方へ</div>
+          <div class="no-selection-text">
+            誰も選ばない場合でも、誰かからあなたを選び、メッセージや連絡先が届くことがあります。自分の番号札、パスワード、連絡先を入力してそのまま送信しておきましょう！
+          </div>
+        </div>
+
         <div class="form-group">
-          <label>もっとつながりたい人（複数選択可）</label>
+          <label>もっとつながりたい人（複数選択OK）</label>
           
           <div class="motto-reasons">
             <p style="font-weight:bold; color:#fff; margin-bottom:4px;">💡 こんな人を選んでみよう！</p>
             <ul>
               <li>もっといろんな話を聞いてみたい！</li>
-              <li>純粋に話してて楽しかった人</li>
+              <li>純粋に話してて楽しかった！</li>
               <li>共通の趣味や学部で気が合いそう！</li>
-              <li>直感でなんとなく気になった人</li>
+              <li>何となく気になる！</li>
             </ul>
-            <div class="motto-reasons-footer">気軽に選んでね！</div>
+            <div class="motto-reasons-footer">性別年齢関係なく、気軽に選んでくださいね！</div>
           </div>
 
           <!-- 男性番号札グループ -->
@@ -863,7 +909,7 @@
           
           <label class="unrequited-option">
             <input type="checkbox" class="unrequited-chk" data-target="${val}" ${prevUnreq ? 'checked' : ''}>
-            <span>💌 マッチしなくても、この人に自分の番号札・メッセージ・連絡先を届ける</span>
+            <span>✉️ マッチしなくても、この人に自分の番号札・メッセージ・連絡先を届ける</span>
           </label>
         `;
         container.appendChild(div);
@@ -1089,7 +1135,7 @@
           if (m.message && m.message.trim() !== "") {
             html += `
               <div class="message-box">
-                <div class="message-title-matched">💌 相手からのメッセージ</div>
+                <div class="message-title-matched">💬 相手からのメッセージ</div>
                 <div class="message-text">${m.message}</div>
               </div>
             `;
@@ -1111,12 +1157,12 @@
         if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
 
-      // 2. 💌 個別メッセージ受領
+      // 2. ✉️ 個別メッセージ受領
       if (data.has_unrequited) {
         if (!data.matched) triggerVibrate([80, 80, 150]);
         html += `
           <div class="result-card-approach">
-            <div class="approach-header-badge">💌 SPECIAL MESSAGE</div>
+            <div class="approach-header-badge">✉️ SPECIAL MESSAGE</div>
             <div class="approach-title">メッセージが届いています！</div>
             <p style="color:#38bdf8; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #00f0ff;">
               あなたと「もっと話したい」と思っている方から連絡先が届きました✨
@@ -1194,7 +1240,7 @@
 
               ${mySentUnrequited ? `
                 <div class="unrequited-sent-box">
-                  <strong style="font-size:14px; color:#00f0ff;">💌 メッセージ送信済み</strong><br>
+                  <strong style="font-size:14px; color:#00f0ff;">✉️ メッセージ送信済み</strong><br>
                   <span style="font-size:12.5px; display:block; margin-top:4px;">
                     「マッチしなくても届ける」を設定したお相手の画面には、<b>あなたの連絡先とメッセージが届いています！</b><br>
                     お相手からの連絡を楽しみにお待ちください✨
@@ -1219,4 +1265,3 @@
   </script>
 </body>
 </html>
-  
