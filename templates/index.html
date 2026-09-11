@@ -43,7 +43,48 @@
       max-width: 480px;
     }
 
+    /* =========================================================
+       motto ロゴ
+       ========================================================= */
+
+    .motto-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .motto-logo {
+      display: inline-block;
+      font-size: 56px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(
+        90deg,
+        #00f0ff 0%,
+        #7000ff 45%,
+        #ff007f 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      filter:
+        drop-shadow(0 0 5px rgba(0, 240, 255, 0.9))
+        drop-shadow(0 0 12px rgba(112, 0, 255, 0.75))
+        drop-shadow(0 0 20px rgba(255, 0, 127, 0.55));
+    }
+
+    .motto-tagline {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #dbeafe;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.45);
+    }
+
     /* タブ切り替え */
+
     .nav-tabs {
       display: flex;
       gap: 10px;
@@ -70,6 +111,7 @@
     }
 
     /* カード・フォームスタイル */
+
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -90,9 +132,10 @@
       color: #e2e8f0;
     }
 
-    /* 青色テキストに変更 */
+    /* 青色テキスト */
+
     .neon-white-label {
-      color: #38bdf8 !important;
+      color: var(--neon-blue) !important;
       text-shadow: none;
     }
 
@@ -134,6 +177,7 @@
     }
 
     /* アコーディオン・注意書き */
+
     details {
       background: #0f172a;
       border: 1px solid var(--border-color);
@@ -149,6 +193,7 @@
     }
 
     /* 案内ボックス */
+
     .privacy-notice-box {
       background: rgba(0, 240, 255, 0.08);
       border: 1.5px solid var(--neon-blue);
@@ -188,6 +233,7 @@
     }
 
     /* 番号札ガイド */
+
     .motto-reasons {
       background: transparent;
       border: 1px solid var(--border-color);
@@ -207,7 +253,9 @@
       font-size: 12px;
       font-weight: bold;
       color: var(--neon-yellow);
-      text-shadow: 0 0 8px rgba(255, 234, 0, 0.7), 0 0 15px rgba(255, 234, 0, 0.4);
+      text-shadow:
+        0 0 8px rgba(255, 234, 0, 0.7),
+        0 0 15px rgba(255, 234, 0, 0.4);
     }
 
     .gender-title {
@@ -241,29 +289,30 @@
       font-size: 12px;
       cursor: pointer;
       user-select: none;
-      transition: all 0.2s ease;
     }
 
     .target-checkbox-label input {
       display: none;
     }
 
-    /* 男性：選択時は青＋少し発光 */
+    /* 男性：青 */
+
     .target-checkbox-label.target-m input:checked + span,
     .target-checkbox-label.target-m:has(input:checked) {
-      background: #075985;
-      border-color: #38bdf8;
+      background: #0284c7;
+      border-color: var(--neon-blue);
       color: #fff;
-      box-shadow: 0 0 7px rgba(0, 240, 255, 0.55);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
     }
 
-    /* 女性：選択時は赤＋少し発光 */
+    /* 女性：赤 */
+
     .target-checkbox-label.target-f input:checked + span,
     .target-checkbox-label.target-f:has(input:checked) {
-      background: #991b1b;
-      border-color: #ef4444;
+      background: #dc2626;
+      border-color: #ff4d4d;
       color: #fff;
-      box-shadow: 0 0 7px rgba(239, 68, 68, 0.55);
+      box-shadow: 0 0 8px rgba(255, 77, 77, 0.5);
     }
 
     .target-checkbox-label.disabled {
@@ -273,6 +322,7 @@
     }
 
     /* メッセージ領域 */
+
     .single-msg-item {
       background: #0f172a;
       border: 1px solid var(--border-color);
@@ -283,16 +333,15 @@
 
     .single-msg-item label {
       font-size: 13px;
+      color: var(--neon-blue);
     }
 
-    /* 男性メッセージラベル */
     .single-msg-item .message-label-m {
-      color: #38bdf8;
+      color: var(--neon-blue) !important;
     }
 
-    /* 女性メッセージラベル */
     .single-msg-item .message-label-f {
-      color: #ef4444;
+      color: #ff4d4d !important;
     }
 
     .unrequited-option {
@@ -310,6 +359,7 @@
     }
 
     /* ボタン */
+
     .btn-submit {
       width: 100%;
       padding: 14px;
@@ -328,27 +378,8 @@
       transform: scale(0.98);
     }
 
-    /* motto ネオングラデーション */
-    .motto-neon {
-      background: linear-gradient(
-        90deg,
-        #00f0ff 0%,
-        #7c3aed 45%,
-        #ff007f 100%
-      );
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      font-weight: 900;
-      text-shadow: none;
-      filter:
-        drop-shadow(0 0 4px rgba(0, 240, 255, 0.7))
-        drop-shadow(0 0 8px rgba(112, 0, 255, 0.6))
-        drop-shadow(0 0 12px rgba(255, 0, 127, 0.5));
-    }
-
     /* カウントダウン・演出 */
+
     #countdown-layer {
       position: fixed;
       top: 0;
@@ -413,6 +444,7 @@
     }
 
     /* 結果カード */
+
     .result-section-header {
       text-align: center;
       font-size: 18px;
@@ -569,6 +601,7 @@
     }
 
     /* 雨キャンバス */
+
     .rain-canvas {
       position: absolute;
       top: 0;
@@ -647,40 +680,67 @@
 
   <div class="container">
 
+    <!-- motto ロゴ -->
+    <div class="motto-header">
+      <div class="motto-logo">motto</div>
+      <div class="motto-tagline">～「もっと」知る、「もっと」つながる～</div>
+    </div>
+
     <!-- ナビゲーションタブ -->
+
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="showTab('vote', event)">
-        1. あなたの希望を送信
+      <button
+        class="tab-btn active"
+        onclick="showTab('vote', event)"
+      >
+        ✨ 選択
       </button>
 
-      <button class="tab-btn" onclick="showTab('result', event)">
+      <button
+        class="tab-btn"
+        onclick="showTab('result', event)"
+      >
         2. 結果確認
       </button>
     </div>
 
     <!-- 1. 希望送信タブ -->
+
     <div id="vote-tab" class="card">
 
       <form id="voteForm" onsubmit="submitVote(event)">
 
         <div class="form-group">
-          <label for="my_id" class="neon-white-label">
+
+          <label
+            for="my_id"
+            class="neon-white-label"
+          >
             あなたの番号札（ID）
           </label>
 
-          <select id="my_id" onchange="handleSelfIdChange()">
+          <select
+            id="my_id"
+            onchange="handleSelfIdChange()"
+          >
             <option value="">選択してください</option>
             <optgroup label="男性 (M)"></optgroup>
             <optgroup label="女性 (F)"></optgroup>
           </select>
+
         </div>
 
         <div class="form-group">
-          <label for="pin" class="neon-white-label">
+
+          <label
+            for="pin"
+            class="neon-white-label"
+          >
             結果確認用パスワード（数字4桁）※自分で決める
           </label>
 
           <div class="input-wrapper">
+
             <input
               type="password"
               id="pin"
@@ -695,12 +755,17 @@
             >
               👁️
             </button>
+
           </div>
+
         </div>
 
         <div class="form-group">
 
-          <label for="contact" class="neon-white-label">
+          <label
+            for="contact"
+            class="neon-white-label"
+          >
             あなたの連絡先（InstagramまたはLINEのURL）
           </label>
 
@@ -711,11 +776,13 @@
           >
 
           <details style="margin-top: 8px;">
+
             <summary class="neon-white-label">
               🔗 URLのコピー手順はこちら
             </summary>
 
             <div style="margin-top: 6px;">
+
               <strong>📸 Instagram:</strong><br>
               右下アイコン ＞ プロフィールをシェア ＞ リンクをコピー
 
@@ -723,12 +790,15 @@
 
               <strong>💬 LINE:</strong><br>
               ホームの右上歯車 ＞ プロフィール ＞ マイQRコード ＞ リンクをコピー
+
             </div>
+
           </details>
 
         </div>
 
         <!-- プライバシー完全保護 カード -->
+
         <div class="privacy-notice-box">
 
           <div class="privacy-title">
@@ -736,19 +806,27 @@
           </div>
 
           <div class="privacy-text">
+
             以下の場合のみ相手はあなたに選ばれたことがわかります。<br>
+
             ・お互いに選びあった場合<br>
-            ・「マッチしなくても届ける」にチェックを入れた場合<br><br>
+
+            ・「マッチしなくても届ける」にチェックを入れた場合
+
+            <br><br>
 
             <strong>
               「誰が誰を選んだか」「誰と誰がマッチしたか」は、運営や周りの参加者には一切わかりません。
             </strong>
+
             パスワードを知っている本人だけが結果を確認できます。
+
           </div>
 
         </div>
 
         <!-- 誰も選ばない方向け 案内カード -->
+
         <div class="no-selection-box">
 
           <div class="no-selection-title">
@@ -756,30 +834,47 @@
           </div>
 
           <div class="no-selection-text">
+
             誰も選ばない場合でも、誰かからあなたを選び、メッセージや連絡先が届くことがあります。
+
             自分の番号札、パスワード、連絡先を入力してそのまま送信しておきましょう！
+
           </div>
 
         </div>
 
         <div class="form-group">
 
-          <!-- 変更：「✨ 選択」 -->
           <label class="neon-white-label">
-            ✨ 選択
+            ✨選択
           </label>
 
           <div class="motto-reasons">
 
-            <p style="font-weight:bold; color:#fff; margin-bottom:4px;">
+            <p
+              style="font-weight:bold; color:#fff; margin-bottom:4px;"
+            >
               💡 こんな人を選んでみよう！
             </p>
 
             <ul>
-              <li>もっといろんな話を聞いてみたい！</li>
-              <li>純粋に話してて楽しかった！</li>
-              <li>共通の趣味や学部で気が合いそう！</li>
-              <li>何となく気になる！</li>
+
+              <li>
+                もっといろんな話を聞いてみたい！
+              </li>
+
+              <li>
+                純粋に話してて楽しかった！
+              </li>
+
+              <li>
+                共通の趣味や学部で気が合いそう！
+              </li>
+
+              <li>
+                何となく気になる！
+              </li>
+
             </ul>
 
             <div class="motto-reasons-footer">
@@ -789,13 +884,18 @@
           </div>
 
           <!-- 男性番号札グループ -->
+
           <div class="gender-title gender-title-m">
             👨 男性番号札 (M-1 〜 M-25)
           </div>
 
-          <div class="targets-grid" id="male-targets-grid"></div>
+          <div
+            class="targets-grid"
+            id="male-targets-grid"
+          ></div>
 
           <!-- 女性番号札グループ -->
+
           <div
             class="gender-title gender-title-f"
             style="margin-top: 15px;"
@@ -803,14 +903,24 @@
             👩 女性番号札 (F-1 〜 F-25)
           </div>
 
-          <div class="targets-grid" id="female-targets-grid"></div>
+          <div
+            class="targets-grid"
+            id="female-targets-grid"
+          ></div>
 
         </div>
 
         <!-- 個別メッセージ動的生成エリア -->
-        <div id="messages-container" class="form-group"></div>
 
-        <button type="submit" class="btn-submit">
+        <div
+          id="messages-container"
+          class="form-group"
+        ></div>
+
+        <button
+          type="submit"
+          class="btn-submit"
+        >
           送信する ✨
         </button>
 
@@ -818,7 +928,8 @@
 
     </div>
 
-    <!-- 送信完了ビュー -->
+    <!-- 送信完了ビュー（初期非表示） -->
+
     <div
       id="complete-view"
       class="card"
@@ -826,36 +937,58 @@
     >
 
       <h2
-        style="color: var(--neon-pink); font-size: 22px; margin-bottom: 10px;"
+        style="
+          color: var(--neon-pink);
+          font-size: 22px;
+          margin-bottom: 10px;
+        "
       >
         送信が完了しました！🎉
       </h2>
 
       <p
-        style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;"
+        style="
+          font-size: 13.5px;
+          color: var(--text-muted);
+          line-height: 1.6;
+          margin-bottom: 20px;
+        "
       >
         あなたからの「もっと」を受け付けました。<br>
         「結果確認」タブより、設定したパスワードで結果をご確認いただけます！
       </p>
 
-      <button class="btn-submit" onclick="resetVoteForm()">
+      <button
+        class="btn-submit"
+        onclick="resetVoteForm()"
+      >
         内容を修正して再送信する
       </button>
 
     </div>
 
     <!-- 2. 結果確認タブ -->
-    <div id="result-tab" class="card" style="display: none;">
+
+    <div
+      id="result-tab"
+      class="card"
+      style="display: none;"
+    >
 
       <div class="form-group">
 
-        <label for="res_my_id" class="neon-white-label">
+        <label
+          for="res_my_id"
+          class="neon-white-label"
+        >
           あなたの番号札（ID）
         </label>
 
         <select id="res_my_id">
 
-          <option value="">選択してください</option>
+          <option value="">
+            選択してください
+          </option>
 
           <optgroup
             label="男性 (M)"
@@ -873,7 +1006,10 @@
 
       <div class="form-group">
 
-        <label for="res_pin" class="neon-white-label">
+        <label
+          for="res_pin"
+          class="neon-white-label"
+        >
           結果確認用パスワード（数字4桁）※自分で決める
         </label>
 
@@ -906,6 +1042,7 @@
       </button>
 
       <!-- 結果表示エリア -->
+
       <div
         id="result-display"
         style="margin-top: 20px;"
@@ -916,88 +1053,122 @@
   </div>
 
   <!-- カウントダウン＆ドクドク演出用固定レイヤー -->
+
   <div id="countdown-layer"></div>
 
   <script>
+
     /* ==========================================================================
        JavaScript Logic (GAS Compatible)
        ========================================================================== */
 
     function initOptionsAndGrid() {
 
-      const myIdSelect = document.getElementById('my_id');
-      const resMyIdSelect = document.getElementById('res_my_id');
+      const myIdSelect =
+        document.getElementById('my_id');
+
+      const resMyIdSelect =
+        document.getElementById('res_my_id');
 
       const mGroup =
-        myIdSelect.querySelector('optgroup[label="男性 (M)"]');
+        myIdSelect.querySelector(
+          'optgroup[label="男性 (M)"]'
+        );
 
       const fGroup =
-        myIdSelect.querySelector('optgroup[label="女性 (F)"]');
+        myIdSelect.querySelector(
+          'optgroup[label="女性 (F)"]'
+        );
 
       const resMGroup =
-        document.getElementById('res-male-optgroup');
+        document.getElementById(
+          'res-male-optgroup'
+        );
 
       const resFGroup =
-        document.getElementById('res-female-optgroup');
+        document.getElementById(
+          'res-female-optgroup'
+        );
 
       const mGrid =
-        document.getElementById('male-targets-grid');
+        document.getElementById(
+          'male-targets-grid'
+        );
 
       const fGrid =
-        document.getElementById('female-targets-grid');
+        document.getElementById(
+          'female-targets-grid'
+        );
 
       for (let i = 1; i <= 25; i++) {
 
         const mVal = `M-${i}`;
         const fVal = `F-${i}`;
 
-        /* Select Options */
-        mGroup.appendChild(new Option(mVal, mVal));
-        fGroup.appendChild(new Option(fVal, fVal));
+        // Select Options
 
-        resMGroup.appendChild(new Option(mVal, mVal));
-        resFGroup.appendChild(new Option(fVal, fVal));
+        mGroup.appendChild(
+          new Option(mVal, mVal)
+        );
 
-        /* Checkbox Grid (Male) */
-        const mLabel = document.createElement('label');
+        fGroup.appendChild(
+          new Option(fVal, fVal)
+        );
+
+        resMGroup.appendChild(
+          new Option(mVal, mVal)
+        );
+
+        resFGroup.appendChild(
+          new Option(fVal, fVal)
+        );
+
+        // Checkbox Grid (Male)
+
+        const mLabel =
+          document.createElement('label');
 
         mLabel.className =
           'target-checkbox-label target-m';
 
-        mLabel.id = `lbl-${mVal}`;
+        mLabel.id =
+          `lbl-${mVal}`;
 
-        mLabel.innerHTML = `
-          <input
+        mLabel.innerHTML =
+          `<input
             type="checkbox"
             name="target"
             value="${mVal}"
             onchange="renderMessageInputs()"
           >
-          <span>${mVal}</span>
-        `;
+          <span>${mVal}</span>`;
 
         mGrid.appendChild(mLabel);
 
-        /* Checkbox Grid (Female) */
-        const fLabel = document.createElement('label');
+        // Checkbox Grid (Female)
+
+        const fLabel =
+          document.createElement('label');
 
         fLabel.className =
           'target-checkbox-label target-f';
 
-        fLabel.id = `lbl-${fVal}`;
+        fLabel.id =
+          `lbl-${fVal}`;
 
-        fLabel.innerHTML = `
-          <input
+        fLabel.innerHTML =
+          `<input
             type="checkbox"
             name="target"
             value="${fVal}"
             onchange="renderMessageInputs()"
           >
-          <span>${fVal}</span>
-        `;
+          <span>${fVal}</span>`;
 
         fGrid.appendChild(fLabel);
+
       }
+
     }
 
     window.addEventListener(
@@ -1005,19 +1176,22 @@
       initOptionsAndGrid
     );
 
-
     function handleSelfIdChange() {
 
       const myId =
         document.getElementById('my_id').value;
 
       const checkboxes =
-        document.querySelectorAll('input[name="target"]');
+        document.querySelectorAll(
+          'input[name="target"]'
+        );
 
       checkboxes.forEach(chk => {
 
         const lbl =
-          document.getElementById(`lbl-${chk.value}`);
+          document.getElementById(
+            `lbl-${chk.value}`
+          );
 
         if (chk.value === myId) {
 
@@ -1035,12 +1209,14 @@
           if (lbl) {
             lbl.classList.remove('disabled');
           }
+
         }
+
       });
 
       renderMessageInputs();
-    }
 
+    }
 
     function togglePassword(inputId, btn) {
 
@@ -1056,9 +1232,10 @@
 
         input.type = "password";
         btn.textContent = "👁️";
-      }
-    }
 
+      }
+
+    }
 
     function triggerVibrate(pattern) {
 
@@ -1069,8 +1246,8 @@
         } catch (e) {}
 
       }
-    }
 
+    }
 
     function renderMessageInputs() {
 
@@ -1082,7 +1259,9 @@
         );
 
       const container =
-        document.getElementById('messages-container');
+        document.getElementById(
+          'messages-container'
+        );
 
       const currentValues = {};
       const currentUnrequited = {};
@@ -1109,7 +1288,9 @@
 
       container.innerHTML = '';
 
-      if (checkedBoxes.length === 0) return;
+      if (checkedBoxes.length === 0) {
+        return;
+      }
 
       const title =
         document.createElement('label');
@@ -1121,7 +1302,6 @@
         '💬 一言メッセージ（任意）';
 
       container.appendChild(title);
-
 
       checkedBoxes.forEach(box => {
 
@@ -1139,13 +1319,12 @@
         const prevUnreq =
           currentUnrequited[val] || false;
 
-        const messageLabelClass =
-          val.startsWith('M-')
-            ? 'message-label-m'
-            : 'message-label-f';
-
         div.innerHTML = `
-          <label class="${messageLabelClass}">
+          <label class="${
+            val.startsWith('M-')
+              ? 'message-label-m'
+              : 'message-label-f'
+          }">
             【 ${val} 】さんへのメッセージ
           </label>
 
@@ -1173,15 +1352,18 @@
         `;
 
         container.appendChild(div);
-      });
-    }
 
+      });
+
+    }
 
     function showTab(tab, event) {
 
       document
         .querySelectorAll('.tab-btn')
-        .forEach(b => b.classList.remove('active'));
+        .forEach(b =>
+          b.classList.remove('active')
+        );
 
       if (event && event.target) {
         event.target.classList.add('active');
@@ -1189,8 +1371,9 @@
 
       if (tab === 'vote') {
 
-        document.getElementById('result-tab').style.display =
-          'none';
+        document.getElementById(
+          'result-tab'
+        ).style.display = 'none';
 
         if (
           document
@@ -1198,38 +1381,49 @@
             .getAttribute('data-completed') === 'true'
         ) {
 
-          document.getElementById('vote-tab').style.display =
-            'none';
+          document.getElementById(
+            'vote-tab'
+          ).style.display = 'none';
 
-          document.getElementById('complete-view').style.display =
-            'block';
+          document.getElementById(
+            'complete-view'
+          ).style.display = 'block';
 
         } else {
 
-          document.getElementById('vote-tab').style.display =
-            'block';
+          document.getElementById(
+            'vote-tab'
+          ).style.display = 'block';
 
-          document.getElementById('complete-view').style.display =
-            'none';
+          document.getElementById(
+            'complete-view'
+          ).style.display = 'none';
+
         }
 
       } else {
 
-        document.getElementById('vote-tab').style.display =
-          'none';
+        document.getElementById(
+          'vote-tab'
+        ).style.display = 'none';
 
-        document.getElementById('complete-view').style.display =
-          'none';
+        document.getElementById(
+          'complete-view'
+        ).style.display = 'none';
 
-        document.getElementById('result-tab').style.display =
-          'block';
+        document.getElementById(
+          'result-tab'
+        ).style.display = 'block';
+
       }
-    }
 
+    }
 
     function submitVote(e) {
 
-      if (e) e.preventDefault();
+      if (e) {
+        e.preventDefault();
+      }
 
       const my_id =
         document.getElementById('my_id').value;
@@ -1247,7 +1441,6 @@
           )
         ).map(c => c.value);
 
-
       if (
         my_id &&
         target_ids.includes(my_id)
@@ -1256,8 +1449,8 @@
         return alert(
           "自分自身を選択して送信することはできません。"
         );
-      }
 
+      }
 
       const messages = {};
 
@@ -1274,8 +1467,8 @@
           if (text) {
             messages[target] = text;
           }
-        });
 
+        });
 
       const allow_unrequited = {};
 
@@ -1291,23 +1484,23 @@
 
         });
 
-
       if (!my_id || !pin || !contact) {
+
         return alert(
           "すべての必須項目を入力してください"
         );
+
       }
 
-
       if (pin.length !== 4) {
+
         return alert(
           "パスワードは数字4桁で入力してください"
         );
+
       }
 
-
       triggerVibrate(50);
-
 
       const payload = {
         my_id,
@@ -1318,29 +1511,30 @@
         allow_unrequited
       };
 
-
       google.script.run
 
         .withSuccessHandler(function(data) {
 
           if (data.success) {
 
-            document.getElementById('vote-tab').style.display =
-              'none';
+            document.getElementById(
+              'vote-tab'
+            ).style.display = 'none';
 
-            document.getElementById('complete-view').style.display =
-              'block';
+            document.getElementById(
+              'complete-view'
+            ).style.display = 'block';
 
-            document
-              .getElementById('complete-view')
-              .setAttribute(
-                'data-completed',
-                'true'
-              );
+            document.getElementById(
+              'complete-view'
+            ).setAttribute(
+              'data-completed',
+              'true'
+            );
 
-            document
-              .getElementById('voteForm')
-              .reset();
+            document.getElementById(
+              'voteForm'
+            ).reset();
 
             handleSelfIdChange();
 
@@ -1350,7 +1544,9 @@
               data.message ||
               "エラーが発生しました"
             );
+
           }
+
         })
 
         .withFailureHandler(function(err) {
@@ -1363,33 +1559,38 @@
         })
 
         .processVote(payload);
-    }
 
+    }
 
     function resetVoteForm() {
 
-      document
-        .getElementById('complete-view')
-        .style.display = 'none';
+      document.getElementById(
+        'complete-view'
+      ).style.display = 'none';
 
-      document
-        .getElementById('complete-view')
-        .removeAttribute('data-completed');
+      document.getElementById(
+        'complete-view'
+      ).removeAttribute(
+        'data-completed'
+      );
 
-      document
-        .getElementById('voteForm')
-        .reset();
+      document.getElementById(
+        'voteForm'
+      ).reset();
 
       handleSelfIdChange();
 
-      document.getElementById('vote-tab').style.display =
-        'block';
-    }
+      document.getElementById(
+        'vote-tab'
+      ).style.display = 'block';
 
+    }
 
     function renderContactBtn(contact) {
 
-      if (!contact) return '';
+      if (!contact) {
+        return '';
+      }
 
       const contactStr =
         contact.toLowerCase();
@@ -1398,8 +1599,11 @@
         contact.startsWith('http://') ||
         contact.startsWith('https://');
 
-
-      if (contactStr.includes('instagram.com')) {
+      if (
+        contactStr.includes(
+          'instagram.com'
+        )
+      ) {
 
         return `
           <a
@@ -1457,9 +1661,10 @@
             連絡先: ${contact}
           </div>
         `;
-      }
-    }
 
+      }
+
+    }
 
     let rainAnimationId = null;
 
@@ -1468,7 +1673,9 @@
       const canvas =
         document.getElementById(canvasId);
 
-      if (!canvas) return;
+      if (!canvas) {
+        return;
+      }
 
       const ctx =
         canvas.getContext('2d');
@@ -1479,23 +1686,34 @@
       canvas.height =
         canvas.offsetHeight;
 
-
       const raindrops = [];
-      const numDrops = 40;
 
+      const numDrops = 40;
 
       for (let i = 0; i < numDrops; i++) {
 
         raindrops.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          length: Math.random() * 18 + 10,
-          speed: Math.random() * 5 + 3,
-          opacity: Math.random() * 0.35 + 0.15
+
+          x:
+            Math.random() *
+            canvas.width,
+
+          y:
+            Math.random() *
+            canvas.height,
+
+          length:
+            Math.random() * 18 + 10,
+
+          speed:
+            Math.random() * 5 + 3,
+
+          opacity:
+            Math.random() * 0.35 + 0.15
+
         });
 
       }
-
 
       function draw() {
 
@@ -1508,7 +1726,6 @@
 
         ctx.lineWidth = 1.2;
         ctx.lineCap = 'round';
-
 
         raindrops.forEach(drop => {
 
@@ -1523,64 +1740,79 @@
           );
 
           ctx.lineTo(
-            drop.x - drop.length * 0.2,
-            drop.y + drop.length
+            drop.x -
+              drop.length * 0.2,
+            drop.y +
+              drop.length
           );
 
           ctx.stroke();
 
-
           drop.y += drop.speed;
           drop.x -= drop.speed * 0.2;
 
+          if (
+            drop.y >
+            canvas.height
+          ) {
 
-          if (drop.y > canvas.height) {
-
-            drop.y = -drop.length;
+            drop.y =
+              -drop.length;
 
             drop.x =
-              Math.random() * canvas.width;
+              Math.random() *
+              canvas.width;
+
           }
 
         });
 
-
         rainAnimationId =
           requestAnimationFrame(draw);
+
       }
 
-
       if (rainAnimationId) {
+
         cancelAnimationFrame(
           rainAnimationId
         );
+
       }
 
       draw();
-    }
 
+    }
 
     async function checkResultWithAnimation() {
 
       const my_id =
-        document.getElementById('res_my_id').value;
+        document.getElementById(
+          'res_my_id'
+        ).value;
 
       const pin =
-        document.getElementById('res_pin').value;
+        document.getElementById(
+          'res_pin'
+        ).value;
 
       const display =
-        document.getElementById('result-display');
+        document.getElementById(
+          'result-display'
+        );
 
       const layer =
-        document.getElementById('countdown-layer');
-
+        document.getElementById(
+          'countdown-layer'
+        );
 
       if (!my_id || !pin) {
+
         return alert(
           "番号札とパスワードを入力してください"
         );
-      }
 
+      }
 
       display.innerHTML = `
         <div
@@ -1595,513 +1827,206 @@
         </div>
       `;
 
-
       google.script.run
 
-        .withSuccessHandler(async function(data) {
+        .withSuccessHandler(
+          async function(data) {
 
-          if (!data.success) {
+            if (!data.success) {
 
-            triggerVibrate(
-              [100, 100, 100]
-            );
-
-            display.innerHTML = `
-              <div
-                style="
-                  color:#ff4d4d;
-                  text-align:center;
-                  padding:15px;
-                  font-weight:bold;
-                  background:rgba(255, 0, 0, 0.1);
-                  border:1px solid rgba(255, 0, 0, 0.3);
-                  border-radius:10px;
-                  margin-top:15px;
-                "
-              >
-                ⚠️
-                ${
-                  data.message ||
-                  '番号札またはパスワードが間違っています'
-                }
-              </div>
-            `;
-
-            return;
-          }
-
-
-          const updateBeat =
-            (num, colorClass, hexColor) => {
-
-              layer.innerHTML = `
-                <div
-                  class="dark-overlay screen-pulse-edges"
-                  style="--pulse-color: ${hexColor};"
-                >
-                  <div
-                    class="countdown-num-glow ${colorClass} beat-anim"
-                  >
-                    ${num}
-                  </div>
-                </div>
-              `;
-            };
-
-
-          updateBeat(
-            "3",
-            "num-3",
-            "#00f0ff"
-          );
-
-          triggerVibrate(
-            [80, 40, 80]
-          );
-
-          await new Promise(
-            r => setTimeout(r, 750)
-          );
-
-
-          updateBeat(
-            "2",
-            "num-2",
-            "#ffea00"
-          );
-
-          triggerVibrate(
-            [80, 40, 80]
-          );
-
-          await new Promise(
-            r => setTimeout(r, 750)
-          );
-
-
-          updateBeat(
-            "1",
-            "num-1",
-            "#ff007f"
-          );
-
-          triggerVibrate(
-            [120, 40, 150]
-          );
-
-          await new Promise(
-            r => setTimeout(r, 750)
-          );
-
-
-          layer.innerHTML = "";
-
-
-          let html =
-            `<div class="result-section-header">【 結 果 】</div>`;
-
-
-          if (data.matched) {
-
-            triggerVibrate(
-              [100, 50, 100, 50, 250]
-            );
-
-
-            html += `
-
-              <div class="result-card-success">
-
-                <div class="match-header-badge">
-                  ✨ <span class="motto-neon">motto</span> MATCHED ✨
-                </div>
-
-                <div class="match-title">
-                  🎉 MATCHED!
-                </div>
-
-                <p
-                  style="
-                    color:#ffb3d9;
-                    font-size:13.5px;
-                    font-weight:bold;
-                    margin:0 0 10px;
-                    text-shadow:0 0 10px #ff007f;
-                  "
-                >
-                  おめでとうございます！
-                  お互いに「もっと話したい」と思っているようです✨
-                </p>
-            `;
-
-
-            data.matches.forEach(m => {
-
-              html += `
-
-                <div class="partner-block">
-
-                  <div class="partner-label-matched">
-                    【 つながったお相手 】
-                  </div>
-
-                  <div>
-                    <span class="white-neon-id">
-                      ${m.id}
-                    </span>
-                  </div>
-              `;
-
-
-              if (
-                m.message &&
-                m.message.trim() !== ""
-              ) {
-
-                html += `
-
-                  <div class="message-box">
-
-                    <div class="message-title-matched">
-                      💬 相手からのメッセージ
-                    </div>
-
-                    <div class="message-text">
-                      ${m.message}
-                    </div>
-
-                  </div>
-                `;
-              }
-
-
-              html +=
-                renderContactBtn(m.contact);
-
-              html += `</div>`;
-            });
-
-
-            html += `
-
-                <div class="call-action-matched">
-                  さっそく連絡を取って、もっと話を深めましょう！✨
-                </div>
-
-                <div class="thanks-footer">
-                  ご参加いただきありがとうございました！<br>
-                  またのご参加を心よりお待ちしております🥂✨
-                </div>
-
-              </div>
-            `;
-
-
-            if (
-              typeof confetti === 'function'
-            ) {
-
-              confetti({
-                particleCount: 120,
-                spread: 80,
-                origin: {
-                  y: 0.6
-                }
-              });
-            }
-          }
-
-
-          if (data.has_unrequited) {
-
-            if (!data.matched) {
               triggerVibrate(
-                [80, 80, 150]
+                [100, 100, 100]
               );
-            }
 
-
-            html += `
-
-              <div class="result-card-approach">
-
-                <div class="approach-header-badge">
-                  ✉️ SPECIAL MESSAGE
-                </div>
-
-                <div class="approach-title">
-                  メッセージが届いています！
-                </div>
-
-                <p
+              display.innerHTML = `
+                <div
                   style="
-                    color:#38bdf8;
-                    font-size:13px;
+                    color:#ff4d4d;
+                    text-align:center;
+                    padding:15px;
                     font-weight:bold;
-                    margin:0 0 10px;
-                    text-shadow:0 0 10px #00f0ff;
+                    background:rgba(255, 0, 0, 0.1);
+                    border:1px solid rgba(255, 0, 0, 0.3);
+                    border-radius:10px;
+                    margin-top:15px;
                   "
                 >
-                  あなたと「もっと話したい」と思っている方から
-                  連絡先が届きました✨
-                </p>
-            `;
-
-
-            data.unrequited_approaches.forEach(a => {
-
-              html += `
-
-                <div class="partner-block">
-
-                  <div class="partner-label-approach">
-                    【 送信者 】
-                  </div>
-
-                  <div>
-                    <span class="white-neon-id">
-                      ${a.id}
-                    </span>
-                  </div>
+                  ⚠️ ${
+                    data.message ||
+                    '番号札またはパスワードが間違っています'
+                  }
+                </div>
               `;
 
+              return;
 
-              if (
-                a.message &&
-                a.message.trim() !== ""
-              ) {
+            }
 
-                html += `
+            const updateBeat =
+              (
+                num,
+                colorClass,
+                hexColor
+              ) => {
 
-                  <div class="message-box">
+                layer.innerHTML = `
+                  <div
+                    class="dark-overlay screen-pulse-edges"
+                    style="--pulse-color:${hexColor};"
+                  >
 
-                    <div class="message-title-approach">
-                      💬 相手からのメッセージ
-                    </div>
-
-                    <div class="message-text">
-                      ${a.message}
+                    <div
+                      class="
+                        countdown-num-glow
+                        ${colorClass}
+                        beat-anim
+                      "
+                    >
+                      ${num}
                     </div>
 
                   </div>
                 `;
-              }
 
+              };
 
-              html +=
-                renderContactBtn(a.contact);
+            updateBeat(
+              "3",
+              "num-3",
+              "#00f0ff"
+            );
 
-              html += `</div>`;
-            });
+            triggerVibrate(
+              [80, 40, 80]
+            );
 
+            await new Promise(
+              r => setTimeout(r, 750)
+            );
 
-            html += `
+            updateBeat(
+              "2",
+              "num-2",
+              "#ffea00"
+            );
 
-                <div class="call-action-approach">
-                  気になったらぜひ連絡してみましょう！💬
-                </div>
+            triggerVibrate(
+              [80, 40, 80]
+            );
 
-                <div class="thanks-footer">
-                  ご参加いただきありがとうございました！<br>
-                  またのご参加を心よりお待ちしております🥂✨
-                </div>
+            await new Promise(
+              r => setTimeout(r, 750)
+            );
 
-              </div>
-            `;
+            updateBeat(
+              "1",
+              "num-1",
+              "#ff007f"
+            );
 
+            triggerVibrate(
+              [120, 40, 150]
+            );
 
-            if (
-              !data.matched &&
-              typeof confetti === 'function'
-            ) {
+            await new Promise(
+              r => setTimeout(r, 750)
+            );
 
-              confetti({
-                particleCount: 60,
-                spread: 60,
-                origin: {
-                  y: 0.6
-                }
-              });
-            }
-          }
+            layer.innerHTML = "";
 
+            let html =
+              `<div class="result-section-header">【 結 果 】</div>`;
 
-          if (
-            !data.matched &&
-            !data.has_unrequited
-          ) {
+            if (data.matched) {
 
-            triggerVibrate(80);
+              triggerVibrate(
+                [100, 50, 100, 50, 250]
+              );
 
-            const mySentUnrequited =
-              data.sent_unrequited || false;
+              html += `
 
+                <div class="result-card-success">
 
-            html += `
-
-              <div class="neon-rain-card">
-
-                <canvas
-                  id="rainCanvas"
-                  class="rain-canvas"
-                ></canvas>
-
-                <div class="neon-content">
-
-                  <div class="moon-container">
-
-                    <svg
-                      class="star star-1"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"
-                      />
-                    </svg>
-
-                    <svg
-                      class="star star-2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"
-                      />
-                    </svg>
-
-                    <svg
-                      class="star star-3"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"
-                      />
-                    </svg>
-
-
-                    <svg
-                      class="moon-svg"
-                      viewBox="0 0 100 100"
-                    >
-
-                      <defs>
-
-                        <linearGradient
-                          id="moonGrad"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="100%"
-                        >
-
-                          <stop
-                            offset="0%"
-                            stop-color="#f3e8ff"
-                          />
-
-                          <stop
-                            offset="60%"
-                            stop-color="#c084fc"
-                          />
-
-                          <stop
-                            offset="100%"
-                            stop-color="#7e22ce"
-                          />
-
-                        </linearGradient>
-
-                      </defs>
-
-
-                      <path
-                        d="M 65 10 A 40 40 0 1 0 90 65 A 32 32 0 1 1 65 10 Z"
-                        fill="url(#moonGrad)"
-                      />
-
-                      <circle
-                        cx="42"
-                        cy="38"
-                        r="3.5"
-                        fill="#581c87"
-                        opacity="0.25"
-                      />
-
-                      <circle
-                        cx="32"
-                        cy="55"
-                        r="5"
-                        fill="#581c87"
-                        opacity="0.2"
-                      />
-
-                      <circle
-                        cx="48"
-                        cy="68"
-                        r="3"
-                        fill="#581c87"
-                        opacity="0.25"
-                      />
-
-                    </svg>
-
+                  <div class="match-header-badge">
+                    ✨ motto MATCHED ✨
                   </div>
 
-
-                  <div class="neon-title">
-                    NO MATCH
+                  <div class="match-title">
+                    🎉 MATCHED!
                   </div>
 
                   <p
                     style="
-                      font-size:13px;
-                      color:#cbd5e1;
-                      line-height:1.6;
-                      margin:0;
+                      color:#ffb3d9;
+                      font-size:13.5px;
+                      font-weight:bold;
+                      margin:0 0 10px;
+                      text-shadow:0 0 10px #ff007f;
                     "
                   >
-                    今回は相互マッチングとはなりませんでした。
+                    おめでとうございます！
+                    お互いに「もっと話したい」と思っているようです✨
                   </p>
 
+              `;
 
-                  ${
-                    mySentUnrequited
-                      ? `
+              data.matches.forEach(m => {
 
-                        <div class="unrequited-sent-box">
+                html += `
 
-                          <strong
-                            style="
-                              font-size:14px;
-                              color:#00f0ff;
-                            "
-                          >
-                            ✉️ メッセージ送信済み
-                          </strong>
+                  <div class="partner-block">
 
-                          <br>
+                    <div class="partner-label-matched">
+                      【 つながったお相手 】
+                    </div>
 
-                          <span
-                            style="
-                              font-size:12.5px;
-                              display:block;
-                              margin-top:4px;
-                            "
-                          >
-                            「マッチしなくても届ける」を設定した
-                            お相手の画面には、
-                            <b>
-                              あなたの連絡先とメッセージが届いています！
-                            </b>
-                            <br>
-                            お相手からの連絡を楽しみにお待ちください✨
-                          </span>
+                    <div>
+                      <span class="white-neon-id">
+                        ${m.id}
+                      </span>
+                    </div>
 
-                        </div>
+                `;
 
-                      `
-                      : ''
-                  }
+                if (
+                  m.message &&
+                  m.message.trim() !== ""
+                ) {
 
+                  html += `
+
+                    <div class="message-box">
+
+                      <div class="message-title-matched">
+                        💬 相手からのメッセージ
+                      </div>
+
+                      <div class="message-text">
+                        ${m.message}
+                      </div>
+
+                    </div>
+
+                  `;
+
+                }
+
+                html +=
+                  renderContactBtn(
+                    m.contact
+                  );
+
+                html += `
+                  </div>
+                `;
+
+              });
+
+              html += `
+
+                  <div class="call-action-matched">
+                    さっそく連絡を取って、もっと話を深めましょう！✨
+                  </div>
 
                   <div class="thanks-footer">
                     ご参加いただきありがとうございました！<br>
@@ -2110,50 +2035,364 @@
 
                 </div>
 
+              `;
+
+              if (
+                typeof confetti ===
+                'function'
+              ) {
+
+                confetti({
+                  particleCount: 120,
+                  spread: 80,
+                  origin: { y: 0.6 }
+                });
+
+              }
+
+            }
+
+            if (data.has_unrequited) {
+
+              if (!data.matched) {
+
+                triggerVibrate(
+                  [80, 80, 150]
+                );
+
+              }
+
+              html += `
+
+                <div class="result-card-approach">
+
+                  <div class="approach-header-badge">
+                    ✉️ SPECIAL MESSAGE
+                  </div>
+
+                  <div class="approach-title">
+                    メッセージが届いています！
+                  </div>
+
+                  <p
+                    style="
+                      color:#38bdf8;
+                      font-size:13px;
+                      font-weight:bold;
+                      margin:0 0 10px;
+                      text-shadow:0 0 10px #00f0ff;
+                    "
+                  >
+                    あなたと「もっと話したい」と思っている方から連絡先が届きました✨
+                  </p>
+
+              `;
+
+              data.unrequited_approaches
+                .forEach(a => {
+
+                  html += `
+
+                    <div class="partner-block">
+
+                      <div class="partner-label-approach">
+                        【 送信者 】
+                      </div>
+
+                      <div>
+                        <span class="white-neon-id">
+                          ${a.id}
+                        </span>
+                      </div>
+
+                  `;
+
+                  if (
+                    a.message &&
+                    a.message.trim() !== ""
+                  ) {
+
+                    html += `
+
+                      <div class="message-box">
+
+                        <div class="message-title-approach">
+                          💬 相手からのメッセージ
+                        </div>
+
+                        <div class="message-text">
+                          ${a.message}
+                        </div>
+
+                      </div>
+
+                    `;
+
+                  }
+
+                  html +=
+                    renderContactBtn(
+                      a.contact
+                    );
+
+                  html += `
+                    </div>
+                  `;
+
+                });
+
+              html += `
+
+                    <div class="call-action-approach">
+                      気になったらぜひ連絡してみましょう！💬
+                    </div>
+
+                    <div class="thanks-footer">
+                      ご参加いただきありがとうございました！<br>
+                      またのご参加を心よりお待ちしております🥂✨
+                    </div>
+
+                  </div>
+
+              `;
+
+              if (
+                !data.matched &&
+                typeof confetti ===
+                'function'
+              ) {
+
+                confetti({
+                  particleCount: 60,
+                  spread: 60,
+                  origin: { y: 0.6 }
+                });
+
+              }
+
+            }
+
+            if (
+              !data.matched &&
+              !data.has_unrequited
+            ) {
+
+              triggerVibrate(80);
+
+              const mySentUnrequited =
+                data.sent_unrequited ||
+                false;
+
+              html += `
+
+                <div class="neon-rain-card">
+
+                  <canvas
+                    id="rainCanvas"
+                    class="rain-canvas"
+                  ></canvas>
+
+                  <div class="neon-content">
+
+                    <div class="moon-container">
+
+                      <svg
+                        class="star star-1"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/>
+                      </svg>
+
+                      <svg
+                        class="star star-2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/>
+                      </svg>
+
+                      <svg
+                        class="star star-3"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/>
+                      </svg>
+
+                      <svg
+                        class="moon-svg"
+                        viewBox="0 0 100 100"
+                      >
+
+                        <defs>
+
+                          <linearGradient
+                            id="moonGrad"
+                            x1="0%"
+                            y1="0%"
+                            x2="100%"
+                            y2="100%"
+                          >
+
+                            <stop
+                              offset="0%"
+                              stop-color="#f3e8ff"
+                            />
+
+                            <stop
+                              offset="60%"
+                              stop-color="#c084fc"
+                            />
+
+                            <stop
+                              offset="100%"
+                              stop-color="#7e22ce"
+                            />
+
+                          </linearGradient>
+
+                        </defs>
+
+                        <path
+                          d="M 65 10 A 40 40 0 1 0 90 65 A 32 32 0 1 1 65 10 Z"
+                          fill="url(#moonGrad)"
+                        />
+
+                        <circle
+                          cx="42"
+                          cy="38"
+                          r="3.5"
+                          fill="#581c87"
+                          opacity="0.25"
+                        />
+
+                        <circle
+                          cx="32"
+                          cy="55"
+                          r="5"
+                          fill="#581c87"
+                          opacity="0.2"
+                        />
+
+                        <circle
+                          cx="48"
+                          cy="68"
+                          r="3"
+                          fill="#581c87"
+                          opacity="0.25"
+                        />
+
+                      </svg>
+
+                    </div>
+
+                    <div class="neon-title">
+                      NO MATCH
+                    </div>
+
+                    <p
+                      style="
+                        font-size:13px;
+                        color:#cbd5e1;
+                        line-height:1.6;
+                        margin:0;
+                      "
+                    >
+                      今回は相互マッチングとはなりませんでした。
+                    </p>
+
+                    ${
+                      mySentUnrequited
+                        ? `
+
+                      <div class="unrequited-sent-box">
+
+                        <strong
+                          style="
+                            font-size:14px;
+                            color:#00f0ff;
+                          "
+                        >
+                          ✉️ メッセージ送信済み
+                        </strong>
+
+                        <br>
+
+                        <span
+                          style="
+                            font-size:12.5px;
+                            display:block;
+                            margin-top:4px;
+                          "
+                        >
+                          「マッチしなくても届ける」を設定したお相手の画面には、
+                          <b>
+                            あなたの連絡先とメッセージが届いています！
+                          </b>
+                          <br>
+                          お相手からの連絡を楽しみにお待ちください✨
+                        </span>
+
+                      </div>
+
+                    `
+                        : ''
+                    }
+
+                    <div class="thanks-footer">
+                      ご参加いただきありがとうございました！<br>
+                      またのご参加を心よりお待ちしております🥂✨
+                    </div>
+
+                  </div>
+
+                </div>
+
+              `;
+
+            }
+
+            display.innerHTML =
+              html;
+
+            if (
+              !data.matched &&
+              !data.has_unrequited
+            ) {
+
+              startRainEffect(
+                'rainCanvas'
+              );
+
+            }
+
+          }
+        )
+
+        .withFailureHandler(
+          function(err) {
+
+            display.innerHTML = `
+              <div
+                style="
+                  color:#ff4d4d;
+                  text-align:center;
+                  padding:20px;
+                  font-weight:bold;
+                "
+              >
+                通信エラーが発生しました
               </div>
             `;
+
           }
-
-
-          display.innerHTML = html;
-
-
-          if (
-            !data.matched &&
-            !data.has_unrequited
-          ) {
-
-            startRainEffect(
-              'rainCanvas'
-            );
-          }
-
-        })
-
-
-        .withFailureHandler(function(err) {
-
-          display.innerHTML = `
-            <div
-              style="
-                color:#ff4d4d;
-                text-align:center;
-                padding:20px;
-                font-weight:bold;
-              "
-            >
-              通信エラーが発生しました
-            </div>
-          `;
-
-        })
-
+        )
 
         .getResult({
           my_id,
           pin
         });
+
     }
+
   </script>
 
 </body>
