@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -175,7 +176,7 @@
       padding: 4px;
     }
 
-    /* 連絡先URLのコピー手順 */
+    /* 連絡先URLのコピー手順（矢印を常に下向きに修正） */
     .url-guide-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -190,6 +191,20 @@
     .url-guide-box summary {
       cursor: pointer;
       font-weight: bold;
+      color: var(--neon-cyan);
+      list-style: none; /* デフォルトの矢印を非表示 */
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .url-guide-box summary::-webkit-details-marker {
+      display: none; /* Safari向けデフォルト矢印消去 */
+    }
+
+    .url-guide-box summary::before {
+      content: "▼";
+      font-size: 10px;
       color: var(--neon-cyan);
     }
 
@@ -207,13 +222,19 @@
     .motto-reasons ul {
       list-style: none;
       padding-left: 0;
-      margin-top: 4px;
+      margin: 4px 0 8px;
     }
 
     .motto-reasons li::before {
       content: "・";
       color: var(--neon-cyan);
       font-weight: bold;
+    }
+
+    .motto-reasons-footer {
+      font-weight: bold;
+      color: var(--neon-yellow);
+      text-shadow: 0 0 8px rgba(255, 234, 0, 0.3);
     }
 
     /* プライバシー完全保護 カード */
@@ -692,10 +713,11 @@
             <p style="font-weight:bold; color:#fff; margin-bottom:4px;">💡 こんな人を選んでみよう！</p>
             <ul>
               <li>純粋に話してて楽しかった人</li>
-              <li>なんとなく気が合いそうな人</li>
-              <li>もう少し喋ってみたかった人</li>
+              <li>もっといろんな話を聞いてみたい！</li>
+              <li>共通の趣味や学部で気が合いそう！</li>
               <li>直感でなんとなく気になった人</li>
             </ul>
+            <div class="motto-reasons-footer">気軽に選んでね！</div>
           </div>
 
           <!-- 男性番号札グループ -->
@@ -1222,3 +1244,4 @@
   </script>
 </body>
 </html>
+
