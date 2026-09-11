@@ -1212,22 +1212,7 @@
         return;
       }
 
-      // GASへの通信は、元のgoogle.script.run形式をそのまま使う
-      let resultData = null;
-      let resultError = null;
-      let requestFinished = false;
-
-      google.script.run
-        .withSuccessHandler(function(data) {
-          resultData = data;
-          requestFinished = true;
-        })
-        .withFailureHandler(function(err) {
-          resultError = err;
-          requestFinished = true;
-        })
-        .getResult({ my_id, pin });
-
+      // ボタンを押した瞬間に必ずカウントダウンを開始
       const updateBeat = (num, colorClass, hexColor) => {
         layer.innerHTML = `
           <div class="dark-overlay screen-pulse-edges" style="--pulse-color: ${hexColor};">
@@ -1236,36 +1221,23 @@
         `;
       };
 
-      // 3：青
       updateBeat("3", "num-3", "#00f0ff");
       triggerVibrate([80, 40, 80]);
       await new Promise(r => setTimeout(r, 750));
 
-      // 2：黄色
       updateBeat("2", "num-2", "#ffea00");
       triggerVibrate([80, 40, 80]);
       await new Promise(r => setTimeout(r, 750));
 
-      // 1：濃いピンク
       updateBeat("1", "num-1", "#e60073");
       triggerVibrate([120, 40, 150]);
       await new Promise(r => setTimeout(r, 750));
 
       layer.innerHTML = "";
+      display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">結果を確認しています...</div>';
 
-      // 通信がまだ終わっていなければ少しだけ待つ
-      if (!requestFinished) {
-        display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">結果を確認しています...</div>';
-
-        const startedAt = Date.now();
-
-        while (!requestFinished && Date.now() - startedAt < 10000) {
-          await new Promise(r => setTimeout(r, 100));
-        }
-      }
-
-      // 10秒以上返ってこなかった場合
-      if (!requestFinished) {
+      // GAS環境でなければ、何も起きない状態にせず原因を表示
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
         display.innerHTML = `
           <div style="
             color:#ff4d4d;
@@ -1276,43 +1248,19 @@
             border:1px solid rgba(255,0,0,0.3);
             border-radius:10px;
           ">
-            結果の取得に時間がかかっています。もう一度お試しください。
-          </div>
-        `;
-        return;
-      }
-
-      // GAS側で通信エラーが起きた場合
-      if (resultError) {
-        const errText =
-          resultError && resultError.message
-            ? resultError.message
-            : String(resultError);
-
-        display.innerHTML = `
-          <div style="
-            color:#ff4d4d;
-            text-align:center;
-            padding:20px;
-            font-weight:bold;
-            background:rgba(255,0,0,0.08);
-            border:1px solid rgba(255,0,0,0.3);
-            border-radius:10px;
-          ">
-            通信エラーが発生しました<br>
+            結果確認機能に接続できませんでした。<br>
             <span style="font-size:11px; color:#fca5a5; font-weight:normal;">
-              ${errText}
+              Google Apps Script のWebアプリ上で開いているか確認してください。
             </span>
           </div>
         `;
         return;
       }
 
-      const data = resultData;
-
+      const renderResult = function(data) {
       if (!data || !data.success) {
         triggerVibrate([100, 100, 100]);
-
+      
         display.innerHTML = `
           <div style="
             color:#ff4d4d;
@@ -1329,12 +1277,12 @@
         `;
         return;
       }
-
+      
       let html = `<div class="result-section-header">【 結 果 】</div>`;
-
+      
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
-
+      
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">✨ motto MATCHED ✨</div>
@@ -1343,14 +1291,14 @@
               おめでとうございます！お互いに「もっと話したい」と思っているようです✨
             </p>
         `;
-
+      
         (data.matches || []).forEach(m => {
           html += `
             <div class="partner-block">
               <div class="partner-label-matched">【 つながったお相手 】</div>
               <div><span class="white-neon-id">${m.id || ''}</span></div>
           `;
-
+      
           if (m.message && m.message.trim() !== "") {
             html += `
               <div class="message-box">
@@ -1359,11 +1307,11 @@
               </div>
             `;
           }
-
+      
           html += renderContactBtn(m.contact);
           html += `</div>`;
         });
-
+      
         html += `
             <div class="call-action-matched">
               さっそく連絡を取って、もっと話を深めましょう！✨
@@ -1374,7 +1322,7 @@
             </div>
           </div>
         `;
-
+      
         if (typeof confetti === 'function') {
           confetti({
             particleCount: 120,
@@ -1383,12 +1331,12 @@
           });
         }
       }
-
+      
       if (data.has_unrequited) {
         if (!data.matched) {
           triggerVibrate([80, 80, 150]);
         }
-
+      
         html += `
           <div class="result-card-approach">
             <div class="approach-header-badge">✉️ SPECIAL MESSAGE</div>
@@ -1397,14 +1345,14 @@
               あなたを「もっと知りたい・もっと話したい」と思っている方から届いています✨
             </p>
         `;
-
+      
         (data.unrequited_approaches || []).forEach(a => {
           html += `
             <div class="partner-block">
               <div class="partner-label-approach">【 送信者 】</div>
               <div><span class="white-neon-id">${a.id || ''}</span></div>
           `;
-
+      
           if (a.message && a.message.trim() !== "") {
             html += `
               <div class="message-box">
@@ -1413,11 +1361,11 @@
               </div>
             `;
           }
-
+      
           html += renderContactBtn(a.contact);
           html += `</div>`;
         });
-
+      
         html += `
             <div class="call-action-approach">
               気になったらぜひ連絡してみましょう！💬
@@ -1428,7 +1376,7 @@
             </div>
           </div>
         `;
-
+      
         if (!data.matched && typeof confetti === 'function') {
           confetti({
             particleCount: 60,
@@ -1437,21 +1385,21 @@
           });
         }
       }
-
+      
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
         const mySentUnrequited = data.sent_unrequited || false;
-
+      
         html += `
           <div class="neon-rain-card">
             <canvas id="rainCanvas" class="rain-canvas"></canvas>
             <div class="neon-content">
-
+      
               <div class="moon-container">
                 <svg class="star star-1" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
                 <svg class="star star-2" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
                 <svg class="star star-3" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
-
+      
                 <svg class="moon-svg" viewBox="0 0 100 100">
                   <defs>
                     <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1466,12 +1414,12 @@
                   <circle cx="48" cy="68" r="3" fill="#581c87" opacity="0.25" />
                 </svg>
               </div>
-
+      
               <div class="neon-title">NO MATCH</div>
               <p style="font-size:13px; color:#cbd5e1; line-height:1.6; margin:0;">
                 今回は相互マッチングとはなりませんでした。
               </p>
-
+      
               ${mySentUnrequited ? `
                 <div class="unrequited-sent-box">
                   <strong style="font-size:14px; color:#00f0ff;">✉️ メッセージ送信済み</strong><br>
@@ -1482,7 +1430,7 @@
                   </span>
                 </div>
               ` : ''}
-
+      
               <div class="thanks-footer">
                 ご参加いただきありがとうございました！<br>
                 またのご参加を心よりお待ちしております🥂✨
@@ -1491,12 +1439,39 @@
           </div>
         `;
       }
-
+      
       display.innerHTML = html;
-
+      
       if (!data.matched && !data.has_unrequited) {
         startRainEffect('rainCanvas');
       }
+      };
+
+      // カウントダウン終了後に結果を取得
+      google.script.run
+        .withSuccessHandler(function(data) {
+          renderResult(data);
+        })
+        .withFailureHandler(function(err) {
+          const errText = err && err.message ? err.message : String(err);
+          display.innerHTML = `
+            <div style="
+              color:#ff4d4d;
+              text-align:center;
+              padding:20px;
+              font-weight:bold;
+              background:rgba(255,0,0,0.08);
+              border:1px solid rgba(255,0,0,0.3);
+              border-radius:10px;
+            ">
+              通信エラーが発生しました<br>
+              <span style="font-size:11px; color:#fca5a5; font-weight:normal;">
+                ${errText}
+              </span>
+            </div>
+          `;
+        })
+        .getResult({ my_id, pin });
     }
   </script>
 </body>
