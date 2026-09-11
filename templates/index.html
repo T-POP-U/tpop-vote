@@ -1,3 +1,10 @@
+ご提示いただいた5つの修正点、すべて反映したよ！ロゴは削除して、文言の修正・調整に特化させたよ！
+
+---
+
+### 📄 修正版 フルコード（HTML / CSS / JS 統合）
+
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -52,19 +59,6 @@
       padding-bottom: 60px;
     }
 
-    /* T-POP ロゴ固定表示 */
-    .tpop-corner-logo {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      object-fit: contain;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-      z-index: 100;
-    }
-
     /* ==========================================================================
        2. Header & Branding
        ========================================================================== */
@@ -85,10 +79,12 @@
     }
 
     .brand-tagline {
-      font-size: 12px;
-      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
       letter-spacing: 1px;
-      margin-top: 2px;
+      margin-top: 4px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
     }
 
     /* ==========================================================================
@@ -150,13 +146,6 @@
       text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
     }
 
-    .sub-note {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 4px;
-      line-height: 1.4;
-    }
-
     .input-wrapper {
       position: relative;
       display: flex;
@@ -193,7 +182,7 @@
       padding: 4px;
     }
 
-    /* 連絡先URLのコピー方法アコーディオン/説明文 */
+    /* 連絡先URLのコピー手順 */
     .url-guide-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -225,6 +214,7 @@
     .motto-reasons ul {
       list-style: none;
       padding-left: 0;
+      margin-top: 4px;
     }
 
     .motto-reasons li::before {
@@ -233,7 +223,7 @@
       font-weight: bold;
     }
 
-    /* プライバシー保護カード */
+    /* プライバシー完全保護 カード */
     .privacy-notice-box {
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(0, 240, 255, 0.4);
@@ -256,7 +246,7 @@
     .privacy-text {
       font-size: 11.5px;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     /* 性別区切りの番号札選択 */
@@ -447,7 +437,6 @@
       margin-bottom: 15px;
     }
 
-    /* 相手の番号札：白いネオンで強力に発光＆強調 */
     .white-neon-id {
       display: inline-block;
       font-size: 24px;
@@ -641,12 +630,9 @@
 <body>
 
   <div class="app-container">
-    <!-- T-POP ロゴ -->
-    <img src="56078.jpg" alt="T-POP" class="tpop-corner-logo">
-
     <header>
       <div class="brand-logo">motto</div>
-      <div class="brand-tagline">More Connections, Motto Passion.</div>
+      <div class="brand-tagline">「もっと」知る、「もっと」つながる</div>
     </header>
 
     <!-- タブ切り替え -->
@@ -664,10 +650,10 @@
           <select id="my_id" onchange="handleSelfIdChange()">
             <option value="">選択してください</option>
             <optgroup label="男性 (M)">
-              <!-- JavaScriptでM-1〜M-25が生成されます -->
+              <!-- M-1〜M-25 -->
             </optgroup>
             <optgroup label="女性 (F)">
-              <!-- JavaScriptでF-1〜F-25が生成されます -->
+              <!-- F-1〜F-25 -->
             </optgroup>
           </select>
         </div>
@@ -688,9 +674,9 @@
             <summary>🔗 URLのコピー手順はこちら</summary>
             <div style="margin-top: 6px;">
               <strong>📸 Instagram:</strong><br>
-              プロフィール画面右上メニュー ＞「プロフィールをシェア」＞「リンクをコピー」<br><br>
+              右下アイコン ＞ プロフィールをシェア ＞ リンクをコピー<br><br>
               <strong>💬 LINE:</strong><br>
-              「ホーム」右上人型アイコン ＞「QRコード」＞「マイQRコード」＞「リンクをコピー」
+              ホームの右上歯車 ＞ プロフィール ＞ マイQRコード ＞ リンクをコピー
             </div>
           </details>
         </div>
@@ -699,8 +685,10 @@
         <div class="privacy-notice-box">
           <div class="privacy-title">🔒 プライバシー完全保護</div>
           <div class="privacy-text">
-            お互いに選びあった場合、または「マッチしなくても届ける」にチェックを入れた場合のみ相手に連絡先が伝わります。<br>
-            <strong>周りの参加者や運営も含め、「誰が誰を選んだか」「誰とお互いに選びあったか」は一切わかりません。</strong>パスワードを知っているあなただけが結果を確認できます。
+            以下の場合のみ相手はあなたに選ばれたことがわかります。<br>
+            ・お互いに選びあった場合<br>
+            ・「マッチしなくても届ける」にチェックを入れた場合<br><br>
+            <strong>「誰が誰を選んだか」「誰と誰がマッチしたか」は、運営や周りの参加者には一切わかりません。</strong>パスワードを知っている本人だけが結果を確認できます。
           </div>
         </div>
 
@@ -710,24 +698,20 @@
           <div class="motto-reasons">
             <p style="font-weight:bold; color:#fff; margin-bottom:4px;">💡 こんな人を選んでみよう！</p>
             <ul>
-              <li>話が面白くてもっと話を聞いてみたい人</li>
-              <li>雰囲気が素敵でもっと知りたいと思った人</li>
-              <li>共通の趣味があって話が盛り上がりそうな人</li>
-              <li>なんとなく気になって後から連絡をとってみたい人</li>
+              <li>純粋に話してて楽しかった人</li>
+              <li>なんとなく気が合いそうな人</li>
+              <li>もう少し喋ってみたかった人</li>
+              <li>直感でなんとなく気になった人</li>
             </ul>
           </div>
 
           <!-- 男性番号札グループ -->
           <div class="gender-title">👨 男性番号札 (M-1 〜 M-25)</div>
-          <div class="targets-grid" id="male-targets-grid">
-            <!-- JavaScriptで動的生成 -->
-          </div>
+          <div class="targets-grid" id="male-targets-grid"></div>
 
           <!-- 女性番号札グループ -->
           <div class="gender-title" style="margin-top: 15px;">👩 女性番号札 (F-1 〜 F-25)</div>
-          <div class="targets-grid" id="female-targets-grid">
-            <!-- JavaScriptで動的生成 -->
-          </div>
+          <div class="targets-grid" id="female-targets-grid"></div>
         </div>
 
         <!-- 個別メッセージ動的生成エリア -->
@@ -781,7 +765,6 @@
        JavaScript Logic
        ========================================================================== */
 
-    // 1. M-1〜M-25, F-1〜F-25の選択肢・チェックボックス動的生成
     function initOptionsAndGrid() {
       const myIdSelect = document.getElementById('my_id');
       const resMyIdSelect = document.getElementById('res_my_id');
@@ -974,7 +957,6 @@
       document.getElementById('vote-tab').style.display = 'block';
     }
 
-    /* 🔗 ボタン表示用ヘルパー関数 */
     function renderContactBtn(contact) {
       if (!contact) return '';
       const contactStr = contact.toLowerCase();
@@ -1015,7 +997,6 @@
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
         ctx.lineWidth = 1.2;
         ctx.lineCap = 'round';
 
@@ -1042,7 +1023,6 @@
       draw();
     }
 
-    /* 🔍 事前認証チェック ＆ カウントダウン演出 */
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
@@ -1097,7 +1077,7 @@
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
-      // 1. 💖 相互マッチ（「もっと話したい」の一致）
+      // 1. 💖 相互マッチ
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
         html += `
@@ -1141,7 +1121,7 @@
         if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
 
-      // 2. 💌 個別メッセージ受領（「ダイレクトメッセージ」）
+      // 2. 💌 個別メッセージ受領
       if (data.has_unrequited) {
         if (!data.matched) triggerVibrate([80, 80, 150]);
         html += `
@@ -1249,3 +1229,5 @@
   </script>
 </body>
 </html>
+
+```
