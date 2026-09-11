@@ -3,598 +3,653 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T-POP SECRET MATCH</title>
-  <!-- 🎉 JSライブラリ -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+  <title>motto - Match & Connect</title>
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; overflow-x: hidden; }
-    .container { max-width: 420px; margin: 0 auto; }
-    .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; position: relative; }
-    h1 { font-size: 20px; margin-top: 0; text-align: center; color: #1a73e8; letter-spacing: 1px; }
-    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-    .tab-btn { flex: 1; padding: 12px; border: none; background: #e4e6eb; font-weight: bold; border-radius: 10px; cursor: pointer; font-size: 15px; }
-    .tab-btn.active { background: #1a73e8; color: white; }
-    label { display: block; font-weight: bold; margin: 14px 0 6px; font-size: 14px; }
-    select, input[type="text"], input[type="password"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-    textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+    /* ==========================================================================
+       1. Base Setup & Neon Theme Variables
+       ========================================================================== */
+    :root {
+      --bg-dark: #0b0c10;
+      --card-bg: rgba(20, 22, 34, 0.85);
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff007f;
+      --neon-purple: #7000ff;
+      --neon-yellow: #ffea00;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-glow: rgba(0, 240, 255, 0.3);
+    }
 
-    /* 👁 パスワード表示切替付きインプットコンテナ */
-    .password-wrapper {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(112, 0, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.12) 0%, transparent 40%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 15px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       2. Header & Branding
+       ========================================================================== */
+    header {
+      text-align: center;
+      padding: 20px 0 15px;
+    }
+
+    .brand-logo {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+      display: inline-block;
+    }
+
+    .brand-tagline {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* ==========================================================================
+       3. Navigation Tabs
+       ========================================================================== */
+    .tab-nav {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(255, 0, 127, 0.2));
+      color: #fff;
+      border: 1px solid var(--border-glow);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    /* ==========================================================================
+       4. Card & Form Components
+       ========================================================================== */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(12px);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--neon-cyan);
+      margin-bottom: 6px;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+    }
+
+    .input-wrapper {
       position: relative;
       display: flex;
       align-items: center;
     }
-    .password-wrapper input {
-      padding-right: 45px;
+
+    input[type="text"],
+    input[type="password"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
     }
-    .toggle-password-btn {
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    .toggle-pwd-btn {
       position: absolute;
       right: 10px;
       background: none;
       border: none;
-      font-size: 18px;
       cursor: pointer;
-      padding: 6px;
-      user-select: none;
+      font-size: 16px;
+      padding: 4px;
     }
 
-    /* 📣 案内ボックス */
-    .vote-notice-box {
-      background: linear-gradient(135deg, #fff3bf 0%, #ffec99 100%);
-      border: 1px solid #ffe066;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      color: #856404;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .vote-notice-box strong {
-      color: #d9480f;
-      font-size: 14px;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    /* 💡 連絡先補足ガイド */
-    .contact-guide {
-      font-size: 11px;
-      color: #555;
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 8px;
-      padding: 10px 12px;
+    /* Select Targets Grid */
+    .targets-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
       margin-top: 8px;
-      line-height: 1.5;
-    }
-    .contact-guide-item { margin-bottom: 6px; }
-    .contact-guide-item:last-child { margin-bottom: 0; }
-
-    /* 🔒 プライバシー注記ボックス */
-    .privacy-notice {
-      background: #e8f0fe;
-      border: 1px solid #aecbfa;
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin: 10px 0 16px 0;
-      font-size: 12px;
-      color: #174ea6;
-      line-height: 1.5;
-    }
-    .privacy-notice strong { font-size: 13px; color: #1a73e8; }
-    .privacy-notice > strong:first-child { display: block; margin-bottom: 4px; }
-
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
-    
-    .section-title {
-      grid-column: 1 / -1;
-      font-size: 14px;
-      font-weight: bold;
-      color: #1a73e8;
-      background: #f0f4f9;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-top: 14px;
-      margin-bottom: 4px;
     }
 
-    .checkbox-card { background: #f7f8fa; padding: 12px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid #e4e6eb; }
-    .checkbox-card input { margin-right: 10px; width: 18px; height: 18px; }
-    /* 自分自身のカードが無効化された時のスタイル */
-    .checkbox-card.disabled-card {
-      background: #e9ecef;
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    /* 💬 複数選択時の個別メッセージ＆直接送信設定 */
-    .messages-container { margin-top: 20px; }
-    .single-msg-item { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
-    .single-msg-item label { margin: 0 0 6px 0; color: #1a73e8; font-size: 13px; }
-    
-    .unrequited-option {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed #cbd5e1;
-      font-size: 12px;
-      color: #475569;
+    .target-checkbox-label {
       display: flex;
       align-items: center;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .target-checkbox-label.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .target-checkbox-label input {
+      margin-right: 8px;
+      accent-color: var(--neon-pink);
+    }
+
+    /* Messages Section */
+    .single-msg-item {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 0, 127, 0.2);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    .single-msg-item label {
+      color: var(--neon-pink);
+      font-size: 12px;
+    }
+
+    .unrequited-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
       cursor: pointer;
     }
-    .unrequited-option input { width: 16px; height: 16px; margin-right: 8px; cursor: pointer; }
 
-    button.submit-btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-    .complete-box { text-align: center; padding: 20px 10px; }
-    .re-vote-btn { background: #f0f2f5; color: #555; border: 1px solid #ccc; padding: 10px 16px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 14px; }
-
-    /* 💓 カウントダウンオーバレイ ＆ 四辺ドクドク演出 */
-    .dark-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #050508; z-index: 9999; display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      overflow: hidden;
-      box-sizing: border-box;
+    .unrequited-option input {
+      margin-top: 2px;
+      accent-color: var(--neon-cyan);
     }
 
-    /* 💓 四辺ドクドク発光・脈動アニメーション */
-    .screen-pulse-edges {
-      animation: edgeDokudokuPulse 0.75s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
-    }
-
-    @keyframes edgeDokudokuPulse {
-      0% {
-        box-shadow: inset 0 0 15px rgba(255, 0, 127, 0.3), 0 0 10px rgba(255, 0, 127, 0.2);
-        transform: scale(1);
-      }
-      25% {
-        box-shadow: inset 0 0 60px var(--pulse-color, #ff007f), 0 0 30px var(--pulse-color, #ff007f);
-        transform: scale(1.02);
-      }
-      45% {
-        box-shadow: inset 0 0 25px var(--pulse-color, #ff007f), 0 0 15px var(--pulse-color, #ff007f);
-        transform: scale(0.995);
-      }
-      65% {
-        box-shadow: inset 0 0 80px var(--pulse-color, #ff007f), 0 0 45px var(--pulse-color, #ff007f);
-        transform: scale(1.03);
-      }
-      100% {
-        box-shadow: inset 0 0 15px rgba(255, 0, 127, 0.3), 0 0 10px rgba(255, 0, 127, 0.2);
-        transform: scale(1);
-      }
-    }
-
-    .countdown-num-glow {
-      font-size: 160px; font-weight: 900; line-height: 1; display: inline-block;
-      color: #ffffff; /* 数字自体は白 */
-    }
-
-    /* 🎨 数字背後のネオン発光（カラーうっすら光） */
-    .num-3 {
-      text-shadow: 
-        0 0 10px #ffffff,
-        0 0 25px rgba(0, 240, 255, 0.8),
-        0 0 50px rgba(0, 240, 255, 0.6),
-        0 0 90px rgba(0, 240, 255, 0.4);
-    }
-    .num-2 {
-      text-shadow: 
-        0 0 10px #ffffff,
-        0 0 25px rgba(255, 234, 0, 0.8),
-        0 0 50px rgba(255, 234, 0, 0.6),
-        0 0 90px rgba(255, 234, 0, 0.4);
-    }
-    .num-1 {
-      text-shadow: 
-        0 0 10px #ffffff,
-        0 0 25px rgba(255, 0, 127, 0.8),
-        0 0 50px rgba(255, 0, 127, 0.6),
-        0 0 90px rgba(255, 0, 127, 0.4);
-    }
-
-    .beat-anim {
-      animation: heartbeatBounce 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    @keyframes heartbeatBounce {
-      0% { transform: scale(0.1) rotate(-10deg); opacity: 0; }
-      30% { transform: scale(1.5) rotate(5deg); opacity: 1; }
-      50% { transform: scale(0.9) rotate(-2deg); }
-      70% { transform: scale(1.15) rotate(1deg); }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    }
-
-    .result-section-header {
-      text-align: center; font-size: 22px; font-weight: 900; letter-spacing: 4px; color: #1e293b;
-      margin: 15px 0 10px 0; position: relative;
-    }
-
-    /* 💖【ピンク＆ホワイトネオン】マッチング成功カード */
-    .result-card-success {
-      position: relative;
-      background: radial-gradient(circle at 50% 0%, #2a081a 0%, #0d0208 100%);
-      border: 2px solid #ff007f;
-      border-radius: 24px;
-      padding: 32px 18px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(255, 0, 127, 0.4), inset 0 0 20px rgba(255, 0, 127, 0.2);
+    /* Primary Action Buttons */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+      transition: all 0.3s ease;
       margin-top: 10px;
-      overflow: hidden;
-      animation: neonGlowPulse 2.5s ease-in-out infinite alternate;
     }
 
-    @keyframes neonGlowPulse {
-      0% { box-shadow: 0 0 25px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.2); }
-      100% { box-shadow: 0 0 45px rgba(255, 0, 127, 0.75), inset 0 0 30px rgba(255, 0, 127, 0.4); }
+    .btn-submit:active {
+      transform: scale(0.98);
     }
 
-    .match-header-badge {
-      background: linear-gradient(90deg, #ff007f, #ff4181);
-      color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 2px;
-      padding: 6px 18px; border-radius: 50px; display: inline-block; margin-bottom: 12px;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
-    }
-
-    .match-title {
-      font-size: 32px; font-weight: 900; color: #fff; margin: 4px 0 8px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f;
-    }
-
-    /* 💙 ネオン・アプローチ受領カード */
-    .result-card-approach {
-      position: relative;
-      background: radial-gradient(circle at 50% 0%, #081a2d 0%, #020813 100%);
-      border: 2px solid #00f0ff;
-      border-radius: 24px;
-      padding: 32px 18px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.2);
-      margin-top: 10px;
-      overflow: hidden;
-      animation: approachGlowPulse 2.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes approachGlowPulse {
-      0% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2); }
-      100% { box-shadow: 0 0 45px rgba(0, 240, 255, 0.7), 0 0 20px rgba(112, 0, 255, 0.5), inset 0 0 25px rgba(0, 240, 255, 0.4); }
-    }
-
-    .approach-header-badge {
-      background: linear-gradient(90deg, #00f0ff, #7000ff);
-      color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 2px;
-      padding: 6px 18px; border-radius: 50px; display: inline-block; margin-bottom: 12px;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
-    }
-
-    .approach-title {
-      font-size: 26px; font-weight: 900; color: #fff; margin: 4px 0 8px;
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #7000ff;
-    }
-
-    /* 🌌 相手情報ネオンコンテナ */
-    .partner-block {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 18px;
-      padding: 20px 16px;
-      margin-top: 18px;
-      backdrop-filter: blur(8px);
-    }
-
-    .partner-label-matched {
-      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #ff80bf;
-      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
-    }
-
-    .partner-id-matched {
-      font-size: 32px; font-weight: 900; color: #ffffff; margin: 6px 0 14px;
-      text-shadow: 0 0 8px #ffffff, 0 0 15px rgba(255, 0, 127, 0.8), 0 0 25px rgba(255, 0, 127, 0.5);
-    }
-
-    .partner-label-approach {
-      font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #00f0ff;
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
-    }
-
-    .partner-id-approach {
-      font-size: 32px; font-weight: 900; color: #fff; margin: 6px 0 14px;
-      text-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff;
-    }
-
-    /* 💬 メッセージ表示ボックス */
-    .message-box {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin: 14px 0 18px;
-      text-align: left;
-    }
-
-    .message-box.matched-msg {
-      border: 1px solid rgba(255, 0, 127, 0.6);
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.25);
-    }
-
-    .message-box.approach-msg {
-      border: 1px solid rgba(0, 240, 255, 0.5);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
-    }
-
-    .message-title-matched { font-size: 12px; font-weight: bold; color: #ff80bf; margin-bottom: 6px; }
-    .message-title-approach { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
-
-    .message-text { font-size: 15px; color: #f8fafc; line-height: 1.5; font-weight: 600; word-break: break-all; white-space: pre-wrap; }
-
-    /* 震えてタップを促すアニメーション付きボタン */
-    @keyframes pulseShake {
-      0% { transform: scale(1); }
-      10% { transform: scale(1.04) rotate(-1.5deg); }
-      20% { transform: scale(1.04) rotate(1.5deg); }
-      30% { transform: scale(1.04) rotate(-1.5deg); }
-      40% { transform: scale(1.04) rotate(1.5deg); }
-      50% { transform: scale(1); }
-      100% { transform: scale(1); }
-    }
-
+    /* Contact Buttons */
     .btn-contact {
-      display: block; width: 100%; padding: 15px; border-radius: 14px;
-      font-size: 15px; font-weight: 900; color: white !important;
-      text-decoration: none; box-sizing: border-box; letter-spacing: 0.5px;
-      animation: pulseShake 2.5s infinite ease-in-out;
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      text-decoration: none;
+      margin-top: 10px;
+      transition: all 0.3s ease;
     }
 
     .btn-instagram {
       background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-      box-shadow: 0 0 20px rgba(220, 39, 67, 0.7);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(220, 39, 67, 0.4);
     }
+
     .btn-line {
-      background: #06C755;
-      box-shadow: 0 0 20px rgba(6, 199, 85, 0.7);
+      background: #06c755;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(6, 199, 85, 0.4);
     }
+
     .btn-default {
-      background: #1a73e8;
-      box-shadow: 0 0 20px rgba(26, 115, 232, 0.7);
+      background: linear-gradient(135deg, var(--neon-cyan), #0077ff);
+      color: #000;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
     }
 
-    /* 💜💙【青紫ネオン光枠】ノーマッチング専用カード（枠は常時固定発光・ゆらゆら浮遊揺れアニメーション） */
-    .neon-rain-card {
-      position: relative;
-      background: radial-gradient(circle at 50% 0%, #110e2e 0%, #04030a 100%);
-      color: white;
-      border: 2px solid #7000ff;
-      border-radius: 24px;
-      padding: 32px 18px;
+    /* ==========================================================================
+       5. Countdown Overlay & Animations
+       ========================================================================== */
+    #countdown-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .dark-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 5, 10, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screen-pulse-edges {
+      box-shadow: inset 0 0 60px var(--pulse-color, var(--neon-cyan));
+      animation: pulseEdge 0.75s ease-out infinite alternate;
+    }
+
+    @keyframes pulseEdge {
+      from { box-shadow: inset 0 0 30px var(--pulse-color, var(--neon-cyan)); }
+      to { box-shadow: inset 0 0 80px var(--pulse-color, var(--neon-cyan)); }
+    }
+
+    .countdown-num-glow {
+      font-size: 100px;
+      font-weight: 900;
+      font-family: 'Impact', sans-serif;
+    }
+
+    .num-3 { color: var(--neon-cyan); text-shadow: 0 0 30px var(--neon-cyan); }
+    .num-2 { color: var(--neon-yellow); text-shadow: 0 0 30px var(--neon-yellow); }
+    .num-1 { color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink); }
+
+    .beat-anim {
+      animation: beatScale 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes beatScale {
+      0% { transform: scale(0.2); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       6. Result Display Cards & Rain Animation
+       ========================================================================== */
+    .result-section-header {
       text-align: center;
-      margin-top: 10px;
-      box-shadow: 0 0 35px rgba(112, 0, 255, 0.6), 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 25px rgba(112, 0, 255, 0.3);
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+
+    .result-card-success {
+      background: rgba(255, 0, 127, 0.1);
+      border: 2px solid var(--neon-pink);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.3);
+      position: relative;
       overflow: hidden;
-      animation: slowSway 4s ease-in-out infinite;
     }
 
-    /* ゆっくり優しく揺れる（浮遊感）キーフレーム */
-    @keyframes slowSway {
-      0% { transform: translateY(0px) rotate(0deg); }
-      25% { transform: translateY(-4px) rotate(-0.8deg); }
-      50% { transform: translateY(0px) rotate(0deg); }
-      75% { transform: translateY(-4px) rotate(0.8deg); }
-      100% { transform: translateY(0px) rotate(0deg); }
+    .match-header-badge {
+      display: inline-block;
+      background: var(--neon-pink);
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
     }
 
-    .rain-canvas {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 1; opacity: 0.6;
+    .match-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-pink);
+      margin-bottom: 8px;
     }
 
-    .neon-content { position: relative; z-index: 2; }
-
-    .moon-container {
-      position: relative; width: 70px; height: 70px; margin: 0 auto 8px;
-      display: flex; align-items: center; justify-content: center;
+    .partner-block {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      padding: 14px;
+      margin: 12px 0;
+      text-align: left;
     }
 
-    .moon-svg {
-      width: 100%; height: 100%;
-      filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 20px rgba(0, 240, 255, 0.3));
+    .partner-label-matched { font-size: 11px; color: var(--neon-pink); font-weight: bold; }
+    .partner-id-matched { font-size: 18px; color: #fff; font-weight: bold; margin-bottom: 6px; }
+
+    .result-card-approach {
+      background: rgba(0, 240, 255, 0.1);
+      border: 2px solid var(--neon-cyan);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
     }
 
-    .star {
-      position: absolute; fill: #00f0ff;
-      animation: starTwinkle 2.5s ease-in-out infinite alternate;
-    }
-    .star-1 { top: 0px; left: 6px; width: 14px; animation-delay: 0s; }
-    .star-2 { bottom: 6px; right: 8px; width: 16px; animation-delay: 0.8s; fill: #a855f7; }
-    .star-3 { top: 10px; right: 2px; width: 10px; animation-delay: 1.4s; }
-
-    @keyframes starTwinkle {
-      0% { opacity: 0.3; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1.2); }
+    .approach-header-badge {
+      display: inline-block;
+      background: var(--neon-cyan);
+      color: #000;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
     }
 
-    .neon-title {
-      font-size: 28px; font-weight: 900; margin: 8px 0 14px 0; color: #fff; letter-spacing: 2px;
-      text-shadow: 0 0 5px #fff, 0 0 10px #7000ff, 0 0 20px #7000ff, 0 0 40px #00f0ff;
-      animation: neonPulsePurple 1.8s ease-in-out infinite alternate;
+    .approach-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-cyan);
+      margin-bottom: 8px;
     }
 
-    @keyframes neonPulsePurple {
-      0% { text-shadow: 0 0 5px #fff, 0 0 10px #7000ff, 0 0 20px #7000ff; }
-      100% { text-shadow: 0 0 8px #fff, 0 0 15px #7000ff, 0 0 30px #a855f7, 0 0 50px #00f0ff; }
+    .partner-label-approach { font-size: 11px; color: var(--neon-cyan); font-weight: bold; }
+    .partner-id-approach { font-size: 18px; color: #fff; font-weight: bold; margin-bottom: 6px; }
+
+    .message-box {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 13px;
     }
 
-    .unrequited-sent-box {
-      background: rgba(0, 240, 255, 0.08); border: 1.5px solid rgba(0, 240, 255, 0.6);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); border-radius: 14px;
-      padding: 14px 16px; margin-top: 20px; text-align: left; color: #e0f2fe; font-size: 13px; line-height: 1.6;
-    }
+    .message-title-matched { color: var(--neon-pink); font-weight: bold; font-size: 11px; }
+    .message-title-approach { color: var(--neon-cyan); font-weight: bold; font-size: 11px; }
+    .message-text { color: #f1f5f9; margin-top: 2px; }
 
-    /* アクション呼びかけテキストスタイル */
-    .call-action-matched {
-      font-size: 14px; font-weight: 900; color: #ffffff; margin-top: 20px;
-      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
-    }
-    
-    .call-action-approach {
-      font-size: 14px; font-weight: 900; color: #00f0ff; margin-top: 20px;
-      text-shadow: 0 0 10px #00f0ff;
+    .call-action-matched, .call-action-approach {
+      font-size: 13px;
+      font-weight: bold;
+      margin-top: 12px;
+      color: var(--text-main);
     }
 
     .thanks-footer {
-      margin-top: 22px; padding-top: 16px; border-top: 1px dashed rgba(255, 255, 255, 0.2);
-      font-size: 12px; color: #94a3b8; line-height: 1.5;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 15px;
+      line-height: 1.5;
+    }
+
+    /* No Match Rain & Floating Moon View */
+    .neon-rain-card {
+      position: relative;
+      background: rgba(15, 10, 30, 0.85);
+      border: 2px solid var(--neon-purple);
+      box-shadow: 0 0 25px rgba(112, 0, 255, 0.3);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .rain-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .neon-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .moon-container {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 12px;
+      animation: moonFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes moonFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .moon-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 12px rgba(192, 132, 252, 0.6)); }
+
+    .star {
+      position: absolute;
+      fill: var(--neon-cyan);
+      animation: starBlink 2s infinite alternate;
+    }
+    .star-1 { width: 10px; top: 0; left: 0; animation-delay: 0s; }
+    .star-2 { width: 8px; top: 10px; right: 2px; animation-delay: 0.7s; }
+    .star-3 { width: 12px; bottom: 0; left: 10px; animation-delay: 1.4s; }
+
+    @keyframes starBlink {
+      from { opacity: 0.2; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1.2); }
+    }
+
+    .neon-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #e9d5ff;
+      text-shadow: 0 0 12px var(--neon-purple);
+      margin-bottom: 8px;
+    }
+
+    .unrequited-sent-box {
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px dashed var(--neon-cyan);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 14px;
+      text-align: left;
     }
   </style>
 </head>
-<body id="body">
-  <div id="countdown-layer"></div>
+<body>
 
-  <div class="container">
-    <h1>T-POP SECRET MATCH 🥂</h1>
+  <div class="app-container">
+    <header>
+      <div class="brand-logo">motto</div>
+      <div class="brand-tagline">More Connections, Motto Passion.</div>
+    </header>
 
-    <div class="tabs">
-      <button class="tab-btn active" onclick="showTab('vote')">💌 エントリーする</button>
-      <button class="tab-btn" onclick="showTab('result')">🎉 結果確認</button>
+    <!-- タブ切り替え -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="showTab('vote')">💌 アプローチ選択</button>
+      <button class="tab-btn" onclick="showTab('result')">✨ 結果確認</button>
     </div>
 
-    <!-- エントリー画面 -->
+    <!-- 1. 投票（アプローチ）タブ -->
     <div id="vote-tab" class="card">
-      
-      <!-- 📣 アプローチ受領についての案内ボックス -->
-      <div class="vote-notice-box">
-        <strong>💡 気になる人がいなくても登録だけでOK！</strong>
-        「まだ気になる人がいない」という場合でも、自分のID・パスワード・連絡先を入力して送信しておくと、<b>相手からのアプローチやメッセージを受け取ることができます✨</b><br>
-        ※お相手を選択せずに、そのまま送信ボタンを押してください。
-      </div>
-
-      <form id="voteForm">
-        <label>自分の番号札（ID）</label>
-        <select id="my_id" required onchange="handleSelfIdChange()">
-          <option value="">選択してください</option>
-          <option value="M-1">男性 M-1</option><option value="M-2">男性 M-2</option><option value="M-3">男性 M-3</option><option value="M-4">男性 M-4</option><option value="M-5">男性 M-5</option>
-          <option value="M-6">男性 M-6</option><option value="M-7">男性 M-7</option><option value="M-8">男性 M-8</option><option value="M-9">男性 M-9</option><option value="M-10">男性 M-10</option>
-          <option value="M-11">男性 M-11</option><option value="M-12">男性 M-12</option><option value="M-13">男性 M-13</option><option value="M-14">男性 M-14</option><option value="M-15">男性 M-15</option>
-          <option value="M-16">男性 M-16</option><option value="M-17">男性 M-17</option><option value="M-18">男性 M-18</option><option value="M-19">男性 M-19</option><option value="M-20">男性 M-20</option>
-          <option value="M-21">男性 M-21</option><option value="M-22">男性 M-22</option><option value="M-23">男性 M-23</option><option value="M-24">男性 M-24</option><option value="M-25">男性 M-25</option>
-          <option value="F-1">女性 F-1</option><option value="F-2">女性 F-2</option><option value="F-3">女性 F-3</option><option value="F-4">女性 F-4</option><option value="F-5">女性 F-5</option>
-          <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
-          <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
-          <option value="F-16">女性 F-16</option><option value="F-17">女性 F-17</option><option value="F-18">女性 F-18</option><option value="F-19">女性 F-19</option><option value="F-20">女性 F-20</option>
-          <option value="F-21">女性 F-21</option><option value="F-22">女性 F-22</option><option value="F-23">女性 F-23</option><option value="F-24">女性 F-24</option><option value="F-25">女性 F-25</option>
-        </select>
-
-        <label>パスワード（数字4桁）※自分で決める</label>
-        <div class="password-wrapper">
-          <input type="password" id="pin" placeholder="例: 1234" maxlength="4" required>
-          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('pin', this)">👁️</button>
+      <form id="voteForm" onsubmit="event.preventDefault(); submitVote();">
+        <div class="form-group">
+          <label for="my_id">あなたのID</label>
+          <select id="my_id" onchange="handleSelfIdChange()">
+            <option value="">選択してください</option>
+            <option value="A-01">A-01</option>
+            <option value="A-02">A-02</option>
+            <option value="A-03">A-03</option>
+            <option value="B-01">B-01</option>
+            <option value="B-02">B-02</option>
+            <option value="B-03">B-03</option>
+          </select>
         </div>
 
-        <label>自分の連絡先（InstagramまたはLINEのURL）</label>
-        <input type="text" id="contact" placeholder="例: InstagramのURL または LINEのURL" required>
-        
-        <div class="contact-guide">
-          <div class="contact-guide-item">📸 <b>Instagram:</b> プロフィール ＞ シェア ＞ 「リンクをコピー」で取得したURL</div>
-          <div class="contact-guide-item">💬 <b>LINE:</b> マイQRコード ＞ 「リンクをコピー」で取得したURL</div>
+        <div class="form-group">
+          <label for="pin">4桁のパスワード（結果確認用）</label>
+          <div class="input-wrapper">
+            <input type="password" id="pin" maxlength="4" placeholder="例: 1234">
+            <button type="button" class="toggle-pwd-btn" onclick="togglePassword('pin', this)">👁️</button>
+          </div>
         </div>
 
-        <label>気になった相手を選択（複数選択OK・居ない場合は未選択でOK）</label>
-        
-        <div class="privacy-notice">
-          <strong>🔒 プライバシー完全保護</strong>
-          恋愛に限らず、友達として気が合いそう・もう少し話してみたいと感じた方にも気軽にチェックしてみてください✨<br>
-          <div style="margin: 8px 0 4px 0;">以下の場合のみ、お相手にあなたの【ID・連絡先・メッセージ】が伝わります：</div>
-          <ul style="margin: 4px 0 8px 0; padding-left: 20px;">
-            <li>お互いに選び合ってマッチングが成立した場合</li>
-            <li>「マッチングしなくても届ける」にチェックを入れた場合</li>
-          </ul>
-          <strong>（運営を含め他の誰にも選択内容はわかりません）</strong>
+        <div class="form-group">
+          <label for="contact">あなたの連絡先（LINE URL / Instagram IDなど）</label>
+          <input type="text" id="contact" placeholder="例: https://line.me/ti/p/... や @instagram_id">
         </div>
 
-        <div class="grid" id="checkbox-grid">
-          <!-- JSで描画 -->
+        <div class="form-group">
+          <label>気になっているお相手（複数選択可）</label>
+          <div class="targets-grid">
+            <label class="target-checkbox-label" id="lbl-A-01"><input type="checkbox" name="target" value="A-01" onchange="renderMessageInputs()"> A-01</label>
+            <label class="target-checkbox-label" id="lbl-A-02"><input type="checkbox" name="target" value="A-02" onchange="renderMessageInputs()"> A-02</label>
+            <label class="target-checkbox-label" id="lbl-A-03"><input type="checkbox" name="target" value="A-03" onchange="renderMessageInputs()"> A-03</label>
+            <label class="target-checkbox-label" id="lbl-B-01"><input type="checkbox" name="target" value="B-01" onchange="renderMessageInputs()"> B-01</label>
+            <label class="target-checkbox-label" id="lbl-B-02"><input type="checkbox" name="target" value="B-02" onchange="renderMessageInputs()"> B-02</label>
+            <label class="target-checkbox-label" id="lbl-B-03"><input type="checkbox" name="target" value="B-03" onchange="renderMessageInputs()"> B-03</label>
+          </div>
         </div>
 
-        <div id="messages-container" class="messages-container"></div>
+        <!-- 個別メッセージ動的生成エリア -->
+        <div id="messages-container" class="form-group"></div>
 
-        <button type="button" class="submit-btn" onclick="submitVote()">エントリーを送信する</button>
+        <button type="submit" class="btn-submit">送信する ✨</button>
       </form>
     </div>
 
-    <!-- エントリー完了表示 -->
-    <div id="complete-view" class="card" style="display:none;">
-      <div class="complete-box">
-        <h2 style="color: #1a73e8;">エントリー完了✨</h2>
-        <p style="color: #666; line-height: 1.6;">受付が完了しました。<br>イベント終了後に「🎉 結果確認」タブから結果をご確認ください！</p>
-        <button class="re-vote-btn" onclick="resetVoteForm()">内容を修正・やり直す</button>
-      </div>
+    <!-- 送信完了ビュー（初期非表示） -->
+    <div id="complete-view" class="card" style="display: none; text-align: center;">
+      <h2 style="color: var(--neon-pink); font-size: 22px; margin-bottom: 10px;">送信が完了しました！🎉</h2>
+      <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+        あなたのアプローチを受け付けました。<br>
+        「結果確認」タブより、設定したパスワードで結果をご確認いただけます！
+      </p>
+      <button class="btn-submit" onclick="resetVoteForm()">内容を修正して再送信する</button>
     </div>
 
-    <!-- 結果確認画面 -->
-    <div id="result-tab" class="card" style="display:none;">
-      <label>自分の番号札（ID）</label>
-      <select id="res_my_id">
-        <option value="">選択してください</option>
-        <option value="M-1">男性 M-1</option><option value="M-2">男性 M-2</option><option value="M-3">男性 M-3</option><option value="M-4">男性 M-4</option><option value="M-5">男性 M-5</option>
-        <option value="M-6">男性 M-6</option><option value="M-7">男性 M-7</option><option value="M-8">男性 M-8</option><option value="M-9">男性 M-9</option><option value="M-10">男性 M-10</option>
-        <option value="M-11">男性 M-11</option><option value="M-12">男性 M-12</option><option value="M-13">男性 M-13</option><option value="M-14">男性 M-14</option><option value="M-15">男性 M-15</option>
-        <option value="M-16">男性 M-16</option><option value="M-17">男性 M-17</option><option value="M-18">男性 M-18</option><option value="M-19">男性 M-19</option><option value="M-20">男性 M-20</option>
-        <option value="M-21">男性 M-21</option><option value="M-22">男性 M-22</option><option value="M-23">男性 M-23</option><option value="M-24">男性 M-24</option><option value="M-25">男性 M-25</option>
-        <option value="F-1">女性 F-1</option><option value="F-2">女性 F-2</option><option value="F-3">女性 F-3</option><option value="F-4">女性 F-4</option><option value="F-5">女性 F-5</option>
-        <option value="F-6">女性 F-6</option><option value="F-7">女性 F-7</option><option value="F-8">女性 F-8</option><option value="F-9">女性 F-9</option><option value="F-10">女性 F-10</option>
-        <option value="F-11">女性 F-11</option><option value="F-12">女性 F-12</option><option value="F-13">女性 F-13</option><option value="F-14">女性 F-14</option><option value="F-15">女性 F-15</option>
-        <option value="F-16">女性 F-16</option><option value="F-17">女性 F-17</option><option value="F-18">女性 F-18</option><option value="F-19">女性 F-19</option><option value="F-20">女性 F-20</option>
-        <option value="F-21">女性 F-21</option><option value="F-22">女性 F-22</option><option value="F-23">女性 F-23</option><option value="F-24">女性 F-24</option><option value="F-25">女性 F-25</option>
-      </select>
-
-      <label>設定したパスワード（4桁）</label>
-      <div class="password-wrapper">
-        <input type="password" id="res_pin" placeholder="4桁の数字" maxlength="4">
-        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('res_pin', this)">👁️</button>
+    <!-- 2. 結果確認タブ -->
+    <div id="result-tab" class="card" style="display: none;">
+      <div class="form-group">
+        <label for="res_my_id">あなたのID</label>
+        <select id="res_my_id">
+          <option value="">選択してください</option>
+          <option value="A-01">A-01</option>
+          <option value="A-02">A-02</option>
+          <option value="A-03">A-03</option>
+          <option value="B-01">B-01</option>
+          <option value="B-02">B-02</option>
+          <option value="B-03">B-03</option>
+        </select>
       </div>
 
-      <button type="button" class="submit-btn" onclick="checkResultWithAnimation()">結果を見る 🔍</button>
+      <div class="form-group">
+        <label for="res_pin">4桁のパスワード</label>
+        <div class="input-wrapper">
+          <input type="password" id="res_pin" maxlength="4" placeholder="設定した4桁の数字">
+          <button type="button" class="toggle-pwd-btn" onclick="togglePassword('res_pin', this)">👁️</button>
+        </div>
+      </div>
 
-      <div id="result-display"></div>
+      <button class="btn-submit" onclick="checkResultWithAnimation()">結果を確認する 🔍</button>
+
+      <!-- 結果表示エリア -->
+      <div id="result-display" style="margin-top: 20px;"></div>
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const grid = document.getElementById('checkbox-grid');
-      let html = '<div class="section-title">👨 男性メンバー（M-1 〜 M-25）</div>';
-      for(let i=1; i<=25; i++) {
-        html += `<label class="checkbox-card" id="card-M-${i}"><input type="checkbox" name="target" value="M-${i}" onchange="renderMessageInputs()"> M-${i}</label>`;
-      }
-      html += '<div class="section-title">👩 女性メンバー（F-1 〜 F-25）</div>';
-      for(let i=1; i<=25; i++) {
-        html += `<label class="checkbox-card" id="card-F-${i}"><input type="checkbox" name="target" value="F-${i}" onchange="renderMessageInputs()"> F-${i}</label>`;
-      }
-      grid.innerHTML = html;
-    });
+  <!-- カウントダウン＆ドクドク演出用固定レイヤー -->
+  <div id="countdown-layer"></div>
 
-    /* 🚫 自分自身へのチェック制御機能 */
+  <script>
+    /* ==========================================================================
+       JavaScript Logic
+       ========================================================================== */
+
     function handleSelfIdChange() {
       const myId = document.getElementById('my_id').value;
       const checkboxes = document.querySelectorAll('input[name="target"]');
-
+      
       checkboxes.forEach(chk => {
-        const card = document.getElementById(`card-${chk.value}`);
+        const lbl = document.getElementById(`lbl-${chk.value}`);
         if (chk.value === myId) {
           chk.checked = false;
           chk.disabled = true;
-          if (card) card.classList.add('disabled-card');
+          if (lbl) lbl.classList.add('disabled');
         } else {
           chk.disabled = false;
-          if (card) card.classList.remove('disabled-card');
+          if (lbl) lbl.classList.remove('disabled');
         }
       });
-
       renderMessageInputs();
     }
 
-    /* 👁 パスワード表示/非表示切り替え機能 */
-    function togglePasswordVisibility(inputId, btn) {
+    function togglePassword(inputId, btn) {
       const input = document.getElementById(inputId);
       if (input.type === "password") {
         input.type = "text";
@@ -701,20 +756,24 @@
 
       triggerVibrate(50);
 
-      const res = await fetch('/api/vote', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ my_id, pin, contact, target_ids, messages, allow_unrequited })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        document.getElementById('vote-tab').style.display = 'none';
-        document.getElementById('complete-view').style.display = 'block';
-        document.getElementById('complete-view').setAttribute('data-completed', 'true');
-        document.getElementById('voteForm').reset();
-        handleSelfIdChange(); // フォームリセット後も状態を同期
-      } else {
-        alert(data.message || "エラーが発生しました");
+      try {
+        const res = await fetch('/api/vote', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ my_id, pin, contact, target_ids, messages, allow_unrequited })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById('vote-tab').style.display = 'none';
+          document.getElementById('complete-view').style.display = 'block';
+          document.getElementById('complete-view').setAttribute('data-completed', 'true');
+          document.getElementById('voteForm').reset();
+          handleSelfIdChange(); // フォームリセット後も状態を同期
+        } else {
+          alert(data.message || "エラーが発生しました");
+        }
+      } catch (e) {
+        alert("通信エラーが発生しました。インターネット接続をご確認ください。");
       }
     }
 
@@ -739,7 +798,7 @@
       } else if (isUrl) {
         return `<a href="${contact}" target="_blank" rel="noopener noreferrer" class="btn-contact btn-default">🔗 連絡先を開く（タップして相手のページへ）</a>`;
       } else {
-        return `<div style="font-size:14px; font-weight:bold; color:#ff80bf; word-break:break-all; text-shadow:0 0 10px #ff007f;">連絡先: ${contact}</div>`;
+        return `<div style="font-size:14px; font-weight:bold; color:#ff80bf; word-break:break-all; text-shadow:0 0 10px #ff007f; margin-top:8px;">連絡先: ${contact}</div>`;
       }
     }
 
@@ -803,7 +862,7 @@
 
       if (!my_id || !pin) return alert("IDとパスワードを入力してください");
 
-      display.innerHTML = '<div style="text-align:center; padding:15px; color:#666; font-size:14px;">照合中...</div>';
+      display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">照合中...</div>';
 
       // 1. カウントダウン前にAPIで認証（ID・パスワードが存在・一致するか確認）
       let res;
@@ -816,14 +875,14 @@
         });
         data = await res.json();
       } catch (e) {
-        display.innerHTML = `<div style="color:red; text-align:center; padding:20px; font-weight:bold;">通信エラーが発生しました</div>`;
+        display.innerHTML = `<div style="color:#ff4d4d; text-align:center; padding:20px; font-weight:bold;">通信エラーが発生しました</div>`;
         return;
       }
 
       // 2. 認証失敗（ID/パスワード不一致等）なら即座にエラーを出して演出スキップ
       if (!res.ok) {
         triggerVibrate([100, 100, 100]);
-        display.innerHTML = `<div style="color:red; text-align:center; padding:15px; font-weight:bold; background:#fee2e2; border-radius:10px; margin-top:15px;">⚠️ ${data.message || 'IDまたはパスワードが間違っています'}</div>`;
+        display.innerHTML = `<div style="color:#ff4d4d; text-align:center; padding:15px; font-weight:bold; background:rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius:10px; margin-top:15px;">⚠️ ${data.message || 'IDまたはパスワードが間違っています'}</div>`;
         return;
       }
 
@@ -860,7 +919,7 @@
         triggerVibrate([100, 50, 100, 50, 250]);
         html += `
           <div class="result-card-success">
-            <div class="match-header-badge">✨ T-POP MATCHED ✨</div>
+            <div class="match-header-badge">✨ motto MATCHED ✨</div>
             <div class="match-title">🎉 MATCHED!</div>
             <p style="color:#ffb3d9; font-size:13.5px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
               おめでとうございます！お互いに気になっているようです✨
