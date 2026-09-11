@@ -1212,21 +1212,21 @@
         return;
       }
 
-      /*
-       * 先に3・2・1の演出を開始する。
-       * GASの返答を待ってから演出を始めるのではなく、
-       * ボタンを押した瞬間にカウントダウンが見えるようにする。
-       */
-      const resultPromise = new Promise((resolve, reject) => {
-        try {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)
-            .getResult({ my_id, pin });
-        } catch (err) {
-          reject(err);
-        }
-      });
+      // GASへの通信は、元のgoogle.script.run形式をそのまま使う
+      let resultData = null;
+      let resultError = null;
+      let requestFinished = false;
+
+      google.script.run
+        .withSuccessHandler(function(data) {
+          resultData = data;
+          requestFinished = true;
+        })
+        .withFailureHandler(function(err) {
+          resultError = err;
+          requestFinished = true;
+        })
+        .getResult({ my_id, pin });
 
       const updateBeat = (num, colorClass, hexColor) => {
         layer.innerHTML = `
@@ -1251,14 +1251,21 @@
       triggerVibrate([120, 40, 150]);
       await new Promise(r => setTimeout(r, 750));
 
-      // カウントダウンを消して結果取得を待つ
       layer.innerHTML = "";
-      display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">結果を確認しています...</div>';
 
-      let data;
-      try {
-        data = await resultPromise;
-      } catch (err) {
+      // 通信がまだ終わっていなければ少しだけ待つ
+      if (!requestFinished) {
+        display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">結果を確認しています...</div>';
+
+        const startedAt = Date.now();
+
+        while (!requestFinished && Date.now() - startedAt < 10000) {
+          await new Promise(r => setTimeout(r, 100));
+        }
+      }
+
+      // 10秒以上返ってこなかった場合
+      if (!requestFinished) {
         display.innerHTML = `
           <div style="
             color:#ff4d4d;
@@ -1269,14 +1276,43 @@
             border:1px solid rgba(255,0,0,0.3);
             border-radius:10px;
           ">
-            通信エラーが発生しました
+            結果の取得に時間がかかっています。もう一度お試しください。
           </div>
         `;
         return;
       }
 
+      // GAS側で通信エラーが起きた場合
+      if (resultError) {
+        const errText =
+          resultError && resultError.message
+            ? resultError.message
+            : String(resultError);
+
+        display.innerHTML = `
+          <div style="
+            color:#ff4d4d;
+            text-align:center;
+            padding:20px;
+            font-weight:bold;
+            background:rgba(255,0,0,0.08);
+            border:1px solid rgba(255,0,0,0.3);
+            border-radius:10px;
+          ">
+            通信エラーが発生しました<br>
+            <span style="font-size:11px; color:#fca5a5; font-weight:normal;">
+              ${errText}
+            </span>
+          </div>
+        `;
+        return;
+      }
+
+      const data = resultData;
+
       if (!data || !data.success) {
         triggerVibrate([100, 100, 100]);
+
         display.innerHTML = `
           <div style="
             color:#ff4d4d;
@@ -1296,9 +1332,6 @@
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
-      /* =========================================================
-         MATCHED
-         ========================================================= */
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
 
@@ -1351,9 +1384,6 @@
         }
       }
 
-      /* =========================================================
-         「マッチしなくても届ける」で届いたもっと
-         ========================================================= */
       if (data.has_unrequited) {
         if (!data.matched) {
           triggerVibrate([80, 80, 150]);
@@ -1408,9 +1438,6 @@
         }
       }
 
-      /* =========================================================
-         NO MATCH
-         ========================================================= */
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
         const mySentUnrequited = data.sent_unrequited || false;
