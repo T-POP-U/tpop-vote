@@ -965,6 +965,15 @@
         0 0 9px rgba(255,255,255,0.70) !important;
     }
 
+
+    /* 月の周りの点滅する小さな星：黄色系 */
+    .star {
+      fill: #ffe66d !important;
+      filter:
+        drop-shadow(0 0 3px rgba(255, 230, 109, 0.95))
+        drop-shadow(0 0 7px rgba(255, 214, 10, 0.55));
+    }
+
 </style>
 </head>
 <body>
@@ -1695,7 +1704,7 @@
                 margin:0;
                 text-align:center;
               ">
-                今回は相互マッチングとはなりませんでした。
+                今回はマッチングとはなりませんでした。
               </p>
 
               ${mySentUnrequited ? `
