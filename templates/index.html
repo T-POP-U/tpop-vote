@@ -869,6 +869,61 @@
       }
     }
 
+
+    /* ===== 今回の変更：結果タイトルを白ネオンに ===== */
+    .match-title,
+    .approach-title,
+    .neon-title {
+      color: #ffffff !important;
+      text-align: center !important;
+      text-shadow:
+        0 0 5px rgba(255,255,255,0.95),
+        0 0 12px rgba(255,255,255,0.75),
+        0 0 22px rgba(255,255,255,0.45) !important;
+    }
+
+    /* ✨ motto MATCHED ✨ / ✉️ SPECIAL MESSAGE を中央配置 */
+    .match-header-badge,
+    .approach-header-badge {
+      display: block !important;
+      width: fit-content !important;
+      margin: 0 auto 10px !important;
+      text-align: center !important;
+    }
+
+    /* 連絡先ボタン：一定間隔でしっかり揺れる */
+    .btn-contact {
+      animation: contactPeriodicShake 3.2s ease-in-out infinite !important;
+      transform-origin: center !important;
+    }
+
+    @keyframes contactPeriodicShake {
+      0%, 68%, 100% {
+        transform: translateX(0) rotate(0deg);
+      }
+      72% {
+        transform: translateX(-5px) rotate(-1deg);
+      }
+      76% {
+        transform: translateX(5px) rotate(1deg);
+      }
+      80% {
+        transform: translateX(-4px) rotate(-0.8deg);
+      }
+      84% {
+        transform: translateX(4px) rotate(0.8deg);
+      }
+      88% {
+        transform: translateX(-2px) rotate(-0.4deg);
+      }
+      92% {
+        transform: translateX(2px) rotate(0.4deg);
+      }
+      96% {
+        transform: translateX(0) rotate(0deg);
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -1438,7 +1493,7 @@
         (data.matches || []).forEach(m => {
           html += `
             <div class="partner-block">
-              <div class="partner-label-matched">【 つながったお相手 】</div>
+              <div class="partner-label-matched">【 お相手 】</div>
               <div><span class="white-neon-id">${m.id || ''}</span></div>
           `;
 
