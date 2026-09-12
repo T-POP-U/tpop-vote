@@ -780,6 +780,95 @@
       transform-origin: center;
     }
 
+
+    /* ===== 結果画面の演出・配置 ===== */
+
+    .match-title,
+    .approach-title,
+    .neon-title {
+      text-align: center;
+      width: 100%;
+      font-weight: 900;
+    }
+
+    .match-title {
+      color: #ff4fa3;
+      text-shadow:
+        0 0 6px rgba(255, 79, 163, 0.9),
+        0 0 14px rgba(255, 0, 127, 0.65);
+    }
+
+    .approach-title {
+      color: #00f0ff;
+      text-shadow:
+        0 0 6px rgba(0, 240, 255, 0.9),
+        0 0 14px rgba(0, 240, 255, 0.55);
+    }
+
+    .neon-title {
+      color: #c084fc;
+      text-shadow:
+        0 0 6px rgba(192, 132, 252, 0.9),
+        0 0 14px rgba(112, 0, 255, 0.65);
+    }
+
+    .partner-label-matched,
+    .partner-label-approach {
+      text-align: center;
+    }
+
+    .white-neon-id {
+      display: block;
+      text-align: center;
+      font-size: 24px;
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    .result-card-success .white-neon-id {
+      color: #ff7fbd;
+      text-shadow:
+        0 0 5px rgba(255, 127, 189, 0.9),
+        0 0 12px rgba(255, 0, 127, 0.7);
+    }
+
+    .result-card-approach .white-neon-id {
+      color: #67e8f9;
+      text-shadow:
+        0 0 5px rgba(103, 232, 249, 0.95),
+        0 0 12px rgba(0, 240, 255, 0.7);
+    }
+
+    /* 連絡先ボタン：細かくプルプル揺れる */
+    .btn-contact {
+      animation: contactShake 1.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes contactShake {
+      0%, 78%, 100% { transform: translateX(0) rotate(0deg); }
+      82% { transform: translateX(-2px) rotate(-0.4deg); }
+      86% { transform: translateX(2px) rotate(0.4deg); }
+      90% { transform: translateX(-1.5px) rotate(-0.3deg); }
+      94% { transform: translateX(1.5px) rotate(0.3deg); }
+      97% { transform: translateX(-0.5px) rotate(-0.1deg); }
+    }
+
+    /* NO MATCHカード：ゆったり揺れる */
+    .neon-rain-card {
+      animation: noMatchFloat 4.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes noMatchFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(-0.35deg);
+      }
+      50% {
+        transform: translateY(-7px) rotate(0.35deg);
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -1236,6 +1325,67 @@
         return;
       }
 
+      /*
+       * 先にID・パスワードを照合する。
+       * 間違っている場合はカウントダウンを一切出さない。
+       */
+      display.innerHTML = `
+        <div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">
+          照合中...
+        </div>
+      `;
+
+      let data;
+
+      try {
+        const response = await fetch('/api/result', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ my_id, pin })
+        });
+
+        data = await response.json();
+
+        if (!response.ok) {
+          display.innerHTML = `
+            <div style="
+              color:#ff4d4d;
+              text-align:center;
+              padding:15px;
+              font-weight:bold;
+              background:rgba(255,0,0,0.1);
+              border:1px solid rgba(255,0,0,0.3);
+              border-radius:10px;
+              margin-top:15px;
+            ">
+              ⚠️ ${data.message || 'IDまたはパスワードが正しくありません'}
+            </div>
+          `;
+          triggerVibrate([100, 100, 100]);
+          return;
+        }
+      } catch (err) {
+        display.innerHTML = `
+          <div style="
+            color:#ff4d4d;
+            text-align:center;
+            padding:20px;
+            font-weight:bold;
+            background:rgba(255,0,0,0.08);
+            border:1px solid rgba(255,0,0,0.3);
+            border-radius:10px;
+          ">
+            通信エラーが発生しました
+          </div>
+        `;
+        return;
+      }
+
+      /*
+       * 照合に成功した人だけ3・2・1へ。
+       */
       const updateBeat = (num, colorClass, hexColor) => {
         layer.innerHTML = `
           <div class="dark-overlay screen-pulse-edges" style="--pulse-color: ${hexColor};">
@@ -1243,6 +1393,8 @@
           </div>
         `;
       };
+
+      display.innerHTML = "";
 
       updateBeat("3", "num-3", "#00f0ff");
       triggerVibrate([80, 40, 80]);
@@ -1257,41 +1409,12 @@
       await new Promise(r => setTimeout(r, 750));
 
       layer.innerHTML = "";
-      display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">結果を確認しています...</div>';
-
-      let data;
-
-      try {
-        const response = await fetch('/api/result', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ my_id, pin })
-        });
-
-        data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || '結果の取得に失敗しました');
-        }
-      } catch (err) {
-        display.innerHTML = `
-          <div style="
-            color:#ff4d4d;
-            text-align:center;
-            padding:20px;
-            font-weight:bold;
-            background:rgba(255,0,0,0.08);
-            border:1px solid rgba(255,0,0,0.3);
-            border-radius:10px;
-          ">
-            ${err.message || '通信エラーが発生しました'}
-          </div>
-        `;
-        return;
-      }
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
+      /* =========================
+         MATCHED
+         ========================= */
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
 
@@ -1299,7 +1422,15 @@
           <div class="result-card-success">
             <div class="match-header-badge">✨ motto MATCHED ✨</div>
             <div class="match-title">🎉 MATCHED!</div>
-            <p style="color:#ffb3d9; font-size:13.5px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #ff007f;">
+
+            <p style="
+              color:#ffb3d9;
+              font-size:13.5px;
+              font-weight:bold;
+              margin:0 0 10px;
+              text-align:center;
+              text-shadow:0 0 10px #ff007f;
+            ">
               おめでとうございます！お互いに「もっと話したい」と思っているようです✨
             </p>
         `;
@@ -1328,6 +1459,7 @@
             <div class="call-action-matched">
               さっそく連絡を取って、もっと話を深めましょう！✨
             </div>
+
             <div class="thanks-footer">
               ご参加いただきありがとうございました！<br>
               またのご参加を心よりお待ちしております🥂✨
@@ -1344,6 +1476,9 @@
         }
       }
 
+      /* =========================
+         「もっと」が届いています
+         ========================= */
       if (data.has_unrequited) {
         if (!data.matched) {
           triggerVibrate([80, 80, 150]);
@@ -1353,7 +1488,15 @@
           <div class="result-card-approach">
             <div class="approach-header-badge">✉️ SPECIAL MESSAGE</div>
             <div class="approach-title">「もっと」が届いています！</div>
-            <p style="color:#38bdf8; font-size:13px; font-weight:bold; margin:0 0 10px; text-shadow:0 0 10px #00f0ff;">
+
+            <p style="
+              color:#38bdf8;
+              font-size:13px;
+              font-weight:bold;
+              margin:0 0 10px;
+              text-align:center;
+              text-shadow:0 0 10px #00f0ff;
+            ">
               あなたを「もっと知りたい・もっと話したい」と思っている方から届いています✨
             </p>
         `;
@@ -1382,6 +1525,7 @@
             <div class="call-action-approach">
               気になったらぜひ連絡してみましょう！💬
             </div>
+
             <div class="thanks-footer">
               ご参加いただきありがとうございました！<br>
               またのご参加を心よりお待ちしております🥂✨
@@ -1398,19 +1542,33 @@
         }
       }
 
+      /* =========================
+         NO MATCH
+         ========================= */
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
-        const mySentUnrequited = data.sent_unrequited || false;
+
+        const mySentUnrequited =
+          data.sent_unrequited || false;
 
         html += `
           <div class="neon-rain-card">
             <canvas id="rainCanvas" class="rain-canvas"></canvas>
+
             <div class="neon-content">
 
               <div class="moon-container">
-                <svg class="star star-1" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
-                <svg class="star star-2" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
-                <svg class="star star-3" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
+                <svg class="star star-1" viewBox="0 0 24 24">
+                  <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/>
+                </svg>
+
+                <svg class="star star-2" viewBox="0 0 24 24">
+                  <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/>
+                </svg>
+
+                <svg class="star star-3" viewBox="0 0 24 24">
+                  <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/>
+                </svg>
 
                 <svg class="moon-svg" viewBox="0 0 100 100">
                   <defs>
@@ -1420,7 +1578,12 @@
                       <stop offset="100%" stop-color="#7e22ce" />
                     </linearGradient>
                   </defs>
-                  <path d="M 65 10 A 40 40 0 1 0 90 65 A 32 32 0 1 1 65 10 Z" fill="url(#moonGrad)" />
+
+                  <path
+                    d="M 65 10 A 40 40 0 1 0 90 65 A 32 32 0 1 1 65 10 Z"
+                    fill="url(#moonGrad)"
+                  />
+
                   <circle cx="42" cy="38" r="3.5" fill="#581c87" opacity="0.25" />
                   <circle cx="32" cy="55" r="5" fill="#581c87" opacity="0.2" />
                   <circle cx="48" cy="68" r="3" fill="#581c87" opacity="0.25" />
@@ -1428,18 +1591,35 @@
               </div>
 
               <div class="neon-title">NO MATCH</div>
-              <p style="font-size:13px; color:#cbd5e1; line-height:1.6; margin:0;">
+
+              <p style="
+                font-size:13px;
+                color:#cbd5e1;
+                line-height:1.6;
+                margin:0;
+                text-align:center;
+              ">
                 今回は相互マッチングとはなりませんでした。
               </p>
 
               ${mySentUnrequited ? `
                 <div class="unrequited-sent-box">
-                  <strong style="font-size:14px; color:#00f0ff;">✉️ メッセージ送信済み</strong><br>
-                  <span style="font-size:12.5px; display:block; margin-top:4px;">
+
+                  <strong style="font-size:14px; color:#00f0ff;">
+                    ✉️ メッセージ送信済み
+                  </strong>
+                  <br>
+
+                  <span style="
+                    font-size:12.5px;
+                    display:block;
+                    margin-top:4px;
+                  ">
                     「マッチしなくても届ける」を設定したお相手の画面には、
                     <b>あなたの連絡先とメッセージが届いています！</b><br>
                     お相手からの連絡を楽しみにお待ちください✨
                   </span>
+
                 </div>
               ` : ''}
 
@@ -1447,6 +1627,7 @@
                 ご参加いただきありがとうございました！<br>
                 またのご参加を心よりお待ちしております🥂✨
               </div>
+
             </div>
           </div>
         `;
