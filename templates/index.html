@@ -924,6 +924,47 @@
       }
     }
 
+
+    /* ===== 今回の変更 ===== */
+
+    /* 結果画面の相手番号札：白ネオン */
+    .result-card-success .white-neon-id,
+    .result-card-approach .white-neon-id {
+      color: #ffffff !important;
+      text-shadow:
+        0 0 5px rgba(255,255,255,0.95),
+        0 0 12px rgba(255,255,255,0.75),
+        0 0 22px rgba(255,255,255,0.45) !important;
+    }
+
+    /* 結果カードの枠を発光 */
+    .result-card-success {
+      box-shadow:
+        0 0 8px rgba(255,0,127,0.45),
+        0 0 18px rgba(255,0,127,0.30) !important;
+    }
+
+    .result-card-approach {
+      box-shadow:
+        0 0 8px rgba(0,240,255,0.45),
+        0 0 18px rgba(0,240,255,0.28) !important;
+    }
+
+    .neon-rain-card {
+      box-shadow:
+        0 0 8px rgba(112,0,255,0.45),
+        0 0 18px rgba(112,0,255,0.30) !important;
+    }
+
+    /* 選択した番号札の文字を白ネオンに */
+    .target-checkbox-label.target-m:has(input:checked) span,
+    .target-checkbox-label.target-f:has(input:checked) span {
+      color: #ffffff !important;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.95),
+        0 0 9px rgba(255,255,255,0.70) !important;
+    }
+
 </style>
 </head>
 <body>
