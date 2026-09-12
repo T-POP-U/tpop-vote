@@ -1061,13 +1061,15 @@
       }
     }
 
-    function submitVote(e) {
+    async function submitVote(e) {
       if (e) e.preventDefault();
 
       const my_id = document.getElementById('my_id').value;
       const pin = document.getElementById('pin').value;
       const contact = document.getElementById('contact').value;
-      const target_ids = Array.from(document.querySelectorAll('input[name="target"]:checked')).map(c => c.value);
+      const target_ids = Array.from(
+        document.querySelectorAll('input[name="target"]:checked')
+      ).map(c => c.value);
 
       if (my_id && target_ids.includes(my_id)) {
         return alert("自分自身を選択して送信することはできません。");
@@ -1076,49 +1078,71 @@
       const messages = {};
       document.querySelectorAll('.individual-msg').forEach(ta => {
         const target = ta.getAttribute('data-target');
-        const text = ta.value.trim();
-        if (text) messages[target] = text;
+        const value = ta.value.trim();
+        if (value) messages[target] = value;
       });
 
       const allow_unrequited = {};
       document.querySelectorAll('.unrequited-chk').forEach(chk => {
-        const target = chk.getAttribute('data-target');
-        allow_unrequited[target] = chk.checked;
+        allow_unrequited[chk.getAttribute('data-target')] = chk.checked;
       });
 
-      if (!my_id || !pin || !contact) return alert("すべての必須項目を入力してください");
-      if (pin.length !== 4) return alert("パスワードは数字4桁で入力してください");
+      if (!my_id || !pin || !contact) {
+        return alert("すべての必須項目を入力してください");
+      }
+
+      if (!/^\d{4}$/.test(pin)) {
+        return alert("パスワードは数字4桁で入力してください");
+      }
 
       triggerVibrate(50);
 
-      const payload = { my_id, pin, contact, target_ids, messages, allow_unrequited };
+      const payload = {
+        my_id,
+        pin,
+        contact,
+        target_ids,
+        messages,
+        allow_unrequited
+      };
 
-      // ボタンを押した時点で、まず完了画面へ切り替える
-      document.getElementById('vote-tab').style.display = 'none';
-      document.getElementById('result-tab').style.display = 'none';
-      document.getElementById('complete-view').style.display = 'block';
-      document.getElementById('complete-view').setAttribute('data-completed', 'true');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const submitBtn = document.querySelector('#voteForm .btn-submit');
+      const originalText = submitBtn ? submitBtn.textContent : '';
 
-      // 裏側でGASへ送信
-      google.script.run
-        .withSuccessHandler(function(data) {
-          // GAS側が明示的に success:false を返した場合だけフォームへ戻す
-          if (data && data.success === false) {
-            document.getElementById('complete-view').style.display = 'none';
-            document.getElementById('complete-view').removeAttribute('data-completed');
-            document.getElementById('vote-tab').style.display = 'block';
-            alert(data.message || "エラーが発生しました");
-          }
-        })
-        .withFailureHandler(function(err) {
-          // 通信自体が失敗した場合もフォームへ戻す
-          document.getElementById('complete-view').style.display = 'none';
-          document.getElementById('complete-view').removeAttribute('data-completed');
-          document.getElementById('vote-tab').style.display = 'block';
-          alert("通信エラーが発生しました: " + err);
-        })
-        .processVote(payload);
+      try {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = '送信中...';
+          submitBtn.style.opacity = '0.7';
+        }
+
+        const response = await fetch('/api/vote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || '送信に失敗しました');
+        }
+
+        document.getElementById('vote-tab').style.display = 'none';
+        document.getElementById('result-tab').style.display = 'none';
+        document.getElementById('complete-view').style.display = 'block';
+        document.getElementById('complete-view').setAttribute('data-completed', 'true');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      } catch (err) {
+        alert(err.message || '通信エラーが発生しました');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText || '送信する ✨';
+          submitBtn.style.opacity = '';
+        }
+      }
     }
 
     function resetVoteForm() {
@@ -1212,7 +1236,6 @@
         return;
       }
 
-      // ボタンを押した瞬間に必ずカウントダウンを開始
       const updateBeat = (num, colorClass, hexColor) => {
         layer.innerHTML = `
           <div class="dark-overlay screen-pulse-edges" style="--pulse-color: ${hexColor};">
@@ -1236,8 +1259,21 @@
       layer.innerHTML = "";
       display.innerHTML = '<div style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">結果を確認しています...</div>';
 
-      // GAS環境でなければ、何も起きない状態にせず原因を表示
-      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      let data;
+
+      try {
+        const response = await fetch('/api/result', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ my_id, pin })
+        });
+
+        data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || '結果の取得に失敗しました');
+        }
+      } catch (err) {
         display.innerHTML = `
           <div style="
             color:#ff4d4d;
@@ -1248,41 +1284,17 @@
             border:1px solid rgba(255,0,0,0.3);
             border-radius:10px;
           ">
-            結果確認機能に接続できませんでした。<br>
-            <span style="font-size:11px; color:#fca5a5; font-weight:normal;">
-              Google Apps Script のWebアプリ上で開いているか確認してください。
-            </span>
+            ${err.message || '通信エラーが発生しました'}
           </div>
         `;
         return;
       }
 
-      const renderResult = function(data) {
-      if (!data || !data.success) {
-        triggerVibrate([100, 100, 100]);
-      
-        display.innerHTML = `
-          <div style="
-            color:#ff4d4d;
-            text-align:center;
-            padding:15px;
-            font-weight:bold;
-            background:rgba(255,0,0,0.1);
-            border:1px solid rgba(255,0,0,0.3);
-            border-radius:10px;
-            margin-top:15px;
-          ">
-            ⚠️ ${(data && data.message) || '番号札またはパスワードが間違っています'}
-          </div>
-        `;
-        return;
-      }
-      
       let html = `<div class="result-section-header">【 結 果 】</div>`;
-      
+
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
-      
+
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">✨ motto MATCHED ✨</div>
@@ -1291,14 +1303,14 @@
               おめでとうございます！お互いに「もっと話したい」と思っているようです✨
             </p>
         `;
-      
+
         (data.matches || []).forEach(m => {
           html += `
             <div class="partner-block">
               <div class="partner-label-matched">【 つながったお相手 】</div>
               <div><span class="white-neon-id">${m.id || ''}</span></div>
           `;
-      
+
           if (m.message && m.message.trim() !== "") {
             html += `
               <div class="message-box">
@@ -1307,11 +1319,11 @@
               </div>
             `;
           }
-      
+
           html += renderContactBtn(m.contact);
           html += `</div>`;
         });
-      
+
         html += `
             <div class="call-action-matched">
               さっそく連絡を取って、もっと話を深めましょう！✨
@@ -1322,7 +1334,7 @@
             </div>
           </div>
         `;
-      
+
         if (typeof confetti === 'function') {
           confetti({
             particleCount: 120,
@@ -1331,12 +1343,12 @@
           });
         }
       }
-      
+
       if (data.has_unrequited) {
         if (!data.matched) {
           triggerVibrate([80, 80, 150]);
         }
-      
+
         html += `
           <div class="result-card-approach">
             <div class="approach-header-badge">✉️ SPECIAL MESSAGE</div>
@@ -1345,14 +1357,14 @@
               あなたを「もっと知りたい・もっと話したい」と思っている方から届いています✨
             </p>
         `;
-      
+
         (data.unrequited_approaches || []).forEach(a => {
           html += `
             <div class="partner-block">
               <div class="partner-label-approach">【 送信者 】</div>
               <div><span class="white-neon-id">${a.id || ''}</span></div>
           `;
-      
+
           if (a.message && a.message.trim() !== "") {
             html += `
               <div class="message-box">
@@ -1361,11 +1373,11 @@
               </div>
             `;
           }
-      
+
           html += renderContactBtn(a.contact);
           html += `</div>`;
         });
-      
+
         html += `
             <div class="call-action-approach">
               気になったらぜひ連絡してみましょう！💬
@@ -1376,7 +1388,7 @@
             </div>
           </div>
         `;
-      
+
         if (!data.matched && typeof confetti === 'function') {
           confetti({
             particleCount: 60,
@@ -1385,21 +1397,21 @@
           });
         }
       }
-      
+
       if (!data.matched && !data.has_unrequited) {
         triggerVibrate(80);
         const mySentUnrequited = data.sent_unrequited || false;
-      
+
         html += `
           <div class="neon-rain-card">
             <canvas id="rainCanvas" class="rain-canvas"></canvas>
             <div class="neon-content">
-      
+
               <div class="moon-container">
                 <svg class="star star-1" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
                 <svg class="star star-2" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
                 <svg class="star star-3" viewBox="0 0 24 24"><path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"/></svg>
-      
+
                 <svg class="moon-svg" viewBox="0 0 100 100">
                   <defs>
                     <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1414,12 +1426,12 @@
                   <circle cx="48" cy="68" r="3" fill="#581c87" opacity="0.25" />
                 </svg>
               </div>
-      
+
               <div class="neon-title">NO MATCH</div>
               <p style="font-size:13px; color:#cbd5e1; line-height:1.6; margin:0;">
                 今回は相互マッチングとはなりませんでした。
               </p>
-      
+
               ${mySentUnrequited ? `
                 <div class="unrequited-sent-box">
                   <strong style="font-size:14px; color:#00f0ff;">✉️ メッセージ送信済み</strong><br>
@@ -1430,7 +1442,7 @@
                   </span>
                 </div>
               ` : ''}
-      
+
               <div class="thanks-footer">
                 ご参加いただきありがとうございました！<br>
                 またのご参加を心よりお待ちしております🥂✨
@@ -1439,39 +1451,12 @@
           </div>
         `;
       }
-      
+
       display.innerHTML = html;
-      
+
       if (!data.matched && !data.has_unrequited) {
         startRainEffect('rainCanvas');
       }
-      };
-
-      // カウントダウン終了後に結果を取得
-      google.script.run
-        .withSuccessHandler(function(data) {
-          renderResult(data);
-        })
-        .withFailureHandler(function(err) {
-          const errText = err && err.message ? err.message : String(err);
-          display.innerHTML = `
-            <div style="
-              color:#ff4d4d;
-              text-align:center;
-              padding:20px;
-              font-weight:bold;
-              background:rgba(255,0,0,0.08);
-              border:1px solid rgba(255,0,0,0.3);
-              border-radius:10px;
-            ">
-              通信エラーが発生しました<br>
-              <span style="font-size:11px; color:#fca5a5; font-weight:normal;">
-                ${errText}
-              </span>
-            </div>
-          `;
-        })
-        .getResult({ my_id, pin });
     }
   </script>
 </body>
