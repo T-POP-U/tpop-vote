@@ -867,7 +867,7 @@
       97% { transform: translateX(-0.5px) rotate(-0.1deg); }
     }
 
-    /* 今回は重なりませんでしたカード：ゆったり揺れる */
+    /* 今回はつながりませんでしたカード：ゆったり揺れる */
     .neon-rain-card {
       animation: noMatchFloat 4.8s ease-in-out infinite;
       transform-origin: center;
@@ -1540,7 +1540,7 @@
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
       /* =========================
-         また話したいが重なりました
+         「また話したい」が重なりました
          ========================= */
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
@@ -1548,7 +1548,7 @@
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">✨ matane ✨</div>
-            <div class="match-title">🎉 また話したいが重なりました!</div>
+            <div class="match-title">🎉 「また話したい」が重なりました!</div>
 
             <p style="
               color:#ffb3d9;
@@ -1604,7 +1604,7 @@
       }
 
       /* =========================
-         今回は重なりませんでした
+         今回はつながりませんでした
          ========================= */
       if (!data.matched) {
         triggerVibrate(80);
@@ -1648,7 +1648,7 @@
                 </svg>
               </div>
 
-              <div class="neon-title">今回は重なりませんでした</div>
+              <div class="neon-title">今回はつながりませんでした</div>
 
               <p style="
                 font-size:13px;
@@ -1657,7 +1657,7 @@
                 margin:0;
                 text-align:center;
               ">
-                今回は「また話したい」が重なりませんでした。
+                今回はお互いの選択が重なりませんでした。
               </p>
 
               <div class="thanks-footer">
