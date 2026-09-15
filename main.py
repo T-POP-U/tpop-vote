@@ -5,9 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///votes.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
-
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,165 +14,98 @@ class Vote(db.Model):
     contact = db.Column(db.Text, nullable=False)
     target_ids = db.Column(db.Text, nullable=True)
     messages = db.Column(db.Text, nullable=True)
-    allow_unrequited = db.Column(db.Text, nullable=True)
-
 
 with app.app_context():
     db.create_all()
 
+def is_opposite_sex(my_id, target_id):
+    return ((my_id.startswith('M-') and target_id.startswith('F-')) or
+            (my_id.startswith('F-') and target_id.startswith('M-')))
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
 @app.route('/api/vote', methods=['POST'])
 def vote():
     data = request.get_json(silent=True) or {}
-
-    my_id = data.get('my_id')
-    pin = data.get('pin')
-    contact = data.get('contact')
+    my_id = str(data.get('my_id', '')).strip()
+    pin = str(data.get('pin', '')).strip()
+    contact = str(data.get('contact', '')).strip()
     target_ids = data.get('target_ids', [])
     messages = data.get('messages', {})
-    allow_unrequited = data.get('allow_unrequited', {})
 
     if not my_id or not pin or not contact:
-        return jsonify({
-            'success': False,
-            'message': '必須項目が不足しています'
-        }), 400
+        return jsonify({'success': False, 'message': '必須項目が不足しています'}), 400
+    if not pin.isdigit() or len(pin) != 4:
+        return jsonify({'success': False, 'message': 'パスワードは数字4桁で入力してください'}), 400
 
-    if not isinstance(pin, str) or len(pin) != 4 or not pin.isdigit():
-        return jsonify({
-            'success': False,
-            'message': 'パスワードは数字4桁で入力してください'
-        }), 400
+    if not isinstance(target_ids, list):
+        target_ids = []
+    target_ids = list(dict.fromkeys(
+        x for x in target_ids
+        if isinstance(x, str) and x != my_id and is_opposite_sex(my_id, x)
+    ))
 
-    if my_id in target_ids:
-        return jsonify({
-            'success': False,
-            'message': '自分自身を選択して送信することはできません'
-        }), 400
+    if not isinstance(messages, dict):
+        messages = {}
+    clean_messages = {}
+    for target_id in target_ids:
+        msg = messages.get(target_id, '')
+        if isinstance(msg, str) and msg.strip():
+            clean_messages[target_id] = msg.strip()[:100]
 
-    existing_vote = Vote.query.filter_by(my_id=my_id).first()
-
-    if existing_vote:
-        existing_vote.pin = pin
-        existing_vote.contact = contact
-        existing_vote.target_ids = json.dumps(target_ids, ensure_ascii=False)
-        existing_vote.messages = json.dumps(messages, ensure_ascii=False)
-        existing_vote.allow_unrequited = json.dumps(
-            allow_unrequited,
-            ensure_ascii=False
-        )
+    row = Vote.query.filter_by(my_id=my_id).first()
+    if row:
+        row.pin = pin
+        row.contact = contact
+        row.target_ids = json.dumps(target_ids, ensure_ascii=False)
+        row.messages = json.dumps(clean_messages, ensure_ascii=False)
     else:
-        new_vote = Vote(
-            my_id=my_id,
-            pin=pin,
-            contact=contact,
+        db.session.add(Vote(
+            my_id=my_id, pin=pin, contact=contact,
             target_ids=json.dumps(target_ids, ensure_ascii=False),
-            messages=json.dumps(messages, ensure_ascii=False),
-            allow_unrequited=json.dumps(
-                allow_unrequited,
-                ensure_ascii=False
-            )
-        )
-        db.session.add(new_vote)
-
+            messages=json.dumps(clean_messages, ensure_ascii=False)
+        ))
     db.session.commit()
-
-    return jsonify({
-        'success': True,
-        'message': '投票が成功しました'
-    })
-
+    return jsonify({'success': True, 'message': '送信が完了しました'})
 
 @app.route('/api/result', methods=['POST'])
 def result():
     data = request.get_json(silent=True) or {}
-
-    my_id = data.get('my_id')
-    pin = data.get('pin')
-
-    if not my_id or not pin:
-        return jsonify({
-            'success': False,
-            'message': '番号札とパスワードを入力してください'
-        }), 400
-
+    my_id = str(data.get('my_id', '')).strip()
+    pin = str(data.get('pin', '')).strip()
     user = Vote.query.filter_by(my_id=my_id, pin=pin).first()
 
     if not user:
-        return jsonify({
-            'success': False,
-            'message': 'IDまたはパスワードが正しくありません'
-        }), 400
+        return jsonify({'success': False, 'message': 'IDまたはパスワードが正しくありません'}), 400
 
-    user_targets = json.loads(user.target_ids) if user.target_ids else []
-    all_votes = Vote.query.all()
+    try:
+        user_targets = json.loads(user.target_ids) if user.target_ids else []
+    except (TypeError, json.JSONDecodeError):
+        user_targets = []
 
-    # 1. 相互マッチング
     matches = []
-
-    for other in all_votes:
+    for other in Vote.query.all():
         if other.my_id == my_id:
             continue
-
-        other_targets = json.loads(other.target_ids) if other.target_ids else []
+        try:
+            other_targets = json.loads(other.target_ids) if other.target_ids else []
+        except (TypeError, json.JSONDecodeError):
+            other_targets = []
 
         if other.my_id in user_targets and my_id in other_targets:
-            other_messages = json.loads(other.messages) if other.messages else {}
-
+            try:
+                other_messages = json.loads(other.messages) if other.messages else {}
+            except (TypeError, json.JSONDecodeError):
+                other_messages = {}
             matches.append({
                 'id': other.my_id,
                 'contact': other.contact,
                 'message': other_messages.get(my_id, '')
             })
 
-    # 2. 「マッチしなくても届ける」で届いた相手
-    unrequited_approaches = []
-    matched_ids = {m['id'] for m in matches}
-
-    for other in all_votes:
-        if other.my_id == my_id or other.my_id in matched_ids:
-            continue
-
-        other_targets = json.loads(other.target_ids) if other.target_ids else []
-        other_unrequited = (
-            json.loads(other.allow_unrequited)
-            if other.allow_unrequited
-            else {}
-        )
-
-        if my_id in other_targets and other_unrequited.get(my_id, False):
-            other_messages = json.loads(other.messages) if other.messages else {}
-
-            unrequited_approaches.append({
-                'id': other.my_id,
-                'contact': other.contact,
-                'message': other_messages.get(my_id, '')
-            })
-
-    # 3. 自分が「マッチしなくても届ける」を設定済みか
-    sent_unrequited = False
-
-    if user.allow_unrequited:
-        try:
-            unreq_dict = json.loads(user.allow_unrequited)
-            sent_unrequited = any(bool(v) for v in unreq_dict.values())
-        except (TypeError, ValueError):
-            sent_unrequited = False
-
-    return jsonify({
-        'success': True,
-        'matched': len(matches) > 0,
-        'matches': matches,
-        'has_unrequited': len(unrequited_approaches) > 0,
-        'unrequited_approaches': unrequited_approaches,
-        'sent_unrequited': sent_unrequited
-    })
-
+    return jsonify({'success': True, 'matched': bool(matches), 'matches': matches})
 
 if __name__ == '__main__':
     app.run(debug=True)
