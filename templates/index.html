@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>matane - つながるマッチング</title>
+  <title>matane - また話したいをつなぐ</title>
   <!-- JS Canvas Confetti (紙吹雪ライブラリ) -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
@@ -867,7 +867,7 @@
       97% { transform: translateX(-0.5px) rotate(-0.1deg); }
     }
 
-    /* NO MATCHカード：ゆったり揺れる */
+    /* 今回は重なりませんでしたカード：ゆったり揺れる */
     .neon-rain-card {
       animation: noMatchFloat 4.8s ease-in-out infinite;
       transform-origin: center;
@@ -895,7 +895,7 @@
         0 0 22px rgba(255,255,255,0.45) !important;
     }
 
-    /* ✨ matane MATCHED ✨ / ✉️ SPECIAL MESSAGE を中央配置 */
+    /* ✨ matane ✨ / ✉️ SPECIAL MESSAGE を中央配置 */
     .match-header-badge,
     .approach-header-badge {
       display: block !important;
@@ -988,7 +988,7 @@
     }
 
 
-    /* ===== マッチのみ・異性のみ選択 ===== */
+    /* ===== 相互選択のみ・異性のみ選択 ===== */
     .risk-free-box {
       background: rgba(0,240,255,.05) !important;
       border-color: var(--neon-blue) !important;
@@ -1067,9 +1067,9 @@
         <div class="privacy-notice-box risk-free-box">
           <div class="privacy-title risk-free-title">🔒 完全ノーリスク</div>
           <div class="privacy-text">
-            <div class="risk-free-highlight">マッチしなければ、あなたが選んだことは100％相手にバレません</div>
+            <div class="risk-free-highlight">お互いに選びあわなければ、あなたが選んだことは100％相手にバレません</div>
             <br>
-            <strong>「誰が誰を選んだか」「誰と誰がマッチしたか」も運営や周りの参加者には一切わかりません。</strong><br>
+            <strong>「誰が誰を選んだか」「誰と誰がお互いに選びあったか」も運営や周りの参加者には一切わかりません。</strong><br>
             パスワードを知っている本人だけが結果を確認できます。
           </div>
         </div>
@@ -1086,7 +1086,7 @@
               <li>「なんとなく雰囲気が良かった！」</li>
               <div class="etc-text">などなど！</div>
             </ul>
-            <div class="motto-reasons-footer">マッチしたときしか相手にはわからないので、気軽に選んでくださいね！</div>
+            <div class="motto-reasons-footer">お互いに選びあったときしか相手にはわからないので、気軽に選んでくださいね！</div>
           </div>
 
           <!-- 男性番号札グループ -->
@@ -1531,15 +1531,15 @@
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
       /* =========================
-         MATCHED
+         また話したいが重なりました
          ========================= */
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
 
         html += `
           <div class="result-card-success">
-            <div class="match-header-badge">✨ matane MATCHED ✨</div>
-            <div class="match-title">🎉 MATCHED!</div>
+            <div class="match-header-badge">✨ matane ✨</div>
+            <div class="match-title">🎉 また話したいが重なりました!</div>
 
             <p style="
               color:#ffb3d9;
@@ -1595,7 +1595,7 @@
       }
 
       /* =========================
-         NO MATCH
+         今回は重なりませんでした
          ========================= */
       if (!data.matched) {
         triggerVibrate(80);
@@ -1639,7 +1639,7 @@
                 </svg>
               </div>
 
-              <div class="neon-title">NO MATCH</div>
+              <div class="neon-title">今回は重なりませんでした</div>
 
               <p style="
                 font-size:13px;
@@ -1648,7 +1648,7 @@
                 margin:0;
                 text-align:center;
               ">
-                今回はマッチングとはなりませんでした。
+                今回は「また話したい」が重なりませんでした。
               </p>
 
               <div class="thanks-footer">
