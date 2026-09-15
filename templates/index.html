@@ -1295,12 +1295,21 @@
         if (value) messages[target] = value;
       });
 
-      if (!my_id || !pin || !contact) {
-        return alert("すべての必須項目を入力してください");
+      const missingItems = [];
+      if (!my_id) missingItems.push("自分の番号札");
+      if (!pin) missingItems.push("結果確認用パスワード");
+      if (!contact.trim()) missingItems.push("連絡先");
+
+      if (missingItems.length > 0) {
+        return alert(
+          "以下の項目が入力されていません。\n\n・" +
+          missingItems.join("\n・") +
+          "\n\n入力してから送信してください。"
+        );
       }
 
       if (!/^\d{4}$/.test(pin)) {
-        return alert("パスワードは数字4桁で入力してください");
+        return alert("結果確認用パスワードは数字4桁で入力してください。");
       }
 
       triggerVibrate(50);
