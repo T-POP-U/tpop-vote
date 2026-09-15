@@ -974,6 +974,30 @@
         drop-shadow(0 0 7px rgba(255, 214, 10, 0.55));
     }
 
+
+    /* ===== マッチのみ・異性のみ選択 ===== */
+    .risk-free-box {
+      background: rgba(255,234,0,.035) !important;
+      border-color: rgba(255,234,0,.72) !important;
+      box-shadow: 0 0 10px rgba(255,234,0,.18) !important;
+    }
+    .risk-free-title {
+      color: #ffea00 !important;
+      text-shadow: 0 0 5px rgba(255,234,0,.85), 0 0 12px rgba(255,234,0,.4) !important;
+    }
+    .risk-free-highlight {
+      color: #ffea00;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.65;
+      text-shadow: 0 0 5px rgba(255,234,0,.9), 0 0 12px rgba(255,234,0,.45);
+    }
+    .target-checkbox-label.disabled {
+      opacity: .22 !important;
+      filter: grayscale(.8);
+      cursor: not-allowed !important;
+      pointer-events: none !important;
+    }
 </style>
 </head>
 <body>
@@ -1026,37 +1050,29 @@
           </details>
         </div>
 
-        <!-- 誰も選ばない方向け 案内カード -->
-        <div class="no-selection-box">
-          <div class="no-selection-title">💡 「誰も選ばない」方へ</div>
-          <div class="no-selection-text">
-            誰も選ばない場合でも、誰かからあなたを選び、メッセージや連絡先が届くことがあります。自分の番号札、パスワード、連絡先を入力してそのまま送信しておきましょう！
-          </div>
-        </div>
-
-        <!-- プライバシー完全保護 カード -->
-        <div class="privacy-notice-box">
-          <div class="privacy-title">🔒 プライバシー完全保護</div>
+        <!-- 完全ノーリスク カード -->
+        <div class="privacy-notice-box risk-free-box">
+          <div class="privacy-title risk-free-title">🔒 完全ノーリスク</div>
           <div class="privacy-text">
-            以下の場合のみ相手はあなたに選ばれたことがわかります。<br>
-            ・お互いに選びあった場合<br>
-            ・「マッチしなくても届ける」にチェックを入れた場合<br><br>
-            <strong>「誰が誰を選んだか」「誰と誰がマッチしたか」は、運営や周りの参加者には一切わかりません。</strong>パスワードを知っている本人だけが結果を確認できます。
+            <div class="risk-free-highlight">マッチしなければ、あなたが選んだことは100％相手にバレません</div>
+            <br>
+            <strong>「誰が誰を選んだか」「誰と誰がマッチしたか」は運営や周りの参加者には一切わかりません。</strong><br>
+            パスワードを知っている本人だけが結果を確認できます。
           </div>
         </div>
 
         <div class="form-group">
-          <label class="selection-title">もっと知りたい人、話したい人を選択！（複数OK）</label>
+          <label class="selection-title">番号札を選択！（複数OK）</label>
           
           <div class="motto-reasons">
             <p style="font-weight:bold; color:#fff; margin-bottom:4px;">💡 こんな人を選んでみよう！</p>
             <ul>
-              <li>また話したい！</li>
-              <li>もっといろんな話を聞きたい！</li>
-              <li>もっと仲良くなりたい！</li>
-              <li>どんな人なのかもっと知りたい！</li>
+              <li>また話したいかも</li>
+              <li>もっと仲良くなりたい</li>
+              <li>どんな人なのかもっと知りたい</li>
+              <li>純粋に話して楽しかった！</li>
             </ul>
-            <div class="motto-reasons-footer">気軽に選んでくださいね！</div>
+            <div class="motto-reasons-footer">マッチしたときしか相手にはわからないので、気軽に選んでくださいね！</div>
           </div>
 
           <!-- 男性番号札グループ -->
@@ -1160,11 +1176,13 @@
 
     function handleSelfIdChange() {
       const myId = document.getElementById('my_id').value;
-      const checkboxes = document.querySelectorAll('input[name="target"]');
-      
-      checkboxes.forEach(chk => {
+      document.querySelectorAll('input[name="target"]').forEach(chk => {
         const lbl = document.getElementById(`lbl-${chk.value}`);
-        if (chk.value === myId) {
+        const selectable =
+          (myId.startsWith('M-') && chk.value.startsWith('F-')) ||
+          (myId.startsWith('F-') && chk.value.startsWith('M-'));
+
+        if (!selectable) {
           chk.checked = false;
           chk.disabled = true;
           if (lbl) lbl.classList.add('disabled');
@@ -1196,15 +1214,10 @@
     function renderMessageInputs() {
       const checkedBoxes = Array.from(document.querySelectorAll('input[name="target"]:checked'));
       const container = document.getElementById('messages-container');
-      
       const currentValues = {};
-      const currentUnrequited = {};
 
       document.querySelectorAll('.individual-msg').forEach(ta => {
         currentValues[ta.getAttribute('data-target')] = ta.value;
-      });
-      document.querySelectorAll('.unrequited-chk').forEach(chk => {
-        currentUnrequited[chk.getAttribute('data-target')] = chk.checked;
       });
 
       container.innerHTML = '';
@@ -1219,17 +1232,9 @@
         const val = box.value;
         const div = document.createElement('div');
         div.className = 'single-msg-item';
-        const prevText = currentValues[val] || '';
-        const prevUnreq = currentUnrequited[val] || false;
-
         div.innerHTML = `
           <label class="${val.startsWith('M-') ? 'message-label-m' : 'message-label-f'}">【 ${val} 】さんへのメッセージ</label>
-          <textarea class="individual-msg" data-target="${val}" placeholder="例: お話しできて楽しかったです！ぜひもっと話しましょう✨" maxlength="100">${prevText}</textarea>
-          
-          <label class="unrequited-option">
-            <input type="checkbox" class="unrequited-chk" data-target="${val}" ${prevUnreq ? 'checked' : ''}>
-            <span>✉️ マッチしなくても、この人に自分の番号札・メッセージ・連絡先を届ける</span>
-          </label>
+          <textarea class="individual-msg" data-target="${val}" placeholder="例: お話しできて楽しかったです！ぜひもっと話しましょう✨" maxlength="100">${currentValues[val] || ''}</textarea>
         `;
         container.appendChild(div);
       });
@@ -1274,11 +1279,6 @@
         const target = ta.getAttribute('data-target');
         const value = ta.value.trim();
         if (value) messages[target] = value;
-      });
-
-      const allow_unrequited = {};
-      document.querySelectorAll('.unrequited-chk').forEach(chk => {
-        allow_unrequited[chk.getAttribute('data-target')] = chk.checked;
       });
 
       if (!my_id || !pin || !contact) {
@@ -1582,79 +1582,10 @@
       }
 
       /* =========================
-         「もっと」が届いています
-         ========================= */
-      if (data.has_unrequited) {
-        if (!data.matched) {
-          triggerVibrate([80, 80, 150]);
-        }
-
-        html += `
-          <div class="result-card-approach">
-            <div class="approach-header-badge">✉️ SPECIAL MESSAGE</div>
-            <div class="approach-title">「もっと」が届いています！</div>
-
-            <p style="
-              color:#38bdf8;
-              font-size:13px;
-              font-weight:bold;
-              margin:0 0 10px;
-              text-align:center;
-              text-shadow:0 0 10px #00f0ff;
-            ">
-              あなたを「もっと知りたい・もっと話したい」と思っている方から届いています✨
-            </p>
-        `;
-
-        (data.unrequited_approaches || []).forEach(a => {
-          html += `
-            <div class="partner-block">
-              <div class="partner-label-approach">【 送信者 】</div>
-              <div><span class="white-neon-id">${a.id || ''}</span></div>
-          `;
-
-          if (a.message && a.message.trim() !== "") {
-            html += `
-              <div class="message-box">
-                <div class="message-title-approach">💬 相手からのメッセージ</div>
-                <div class="message-text">${a.message}</div>
-              </div>
-            `;
-          }
-
-          html += renderContactBtn(a.contact);
-          html += `</div>`;
-        });
-
-        html += `
-            <div class="call-action-approach">
-              気になったらぜひ連絡してみましょう！💬
-            </div>
-
-            <div class="thanks-footer">
-              ご参加いただきありがとうございました！<br>
-              またのご参加を心よりお待ちしております🥂✨
-            </div>
-          </div>
-        `;
-
-        if (!data.matched && typeof confetti === 'function') {
-          confetti({
-            particleCount: 60,
-            spread: 60,
-            origin: { y: 0.6 }
-          });
-        }
-      }
-
-      /* =========================
          NO MATCH
          ========================= */
-      if (!data.matched && !data.has_unrequited) {
+      if (!data.matched) {
         triggerVibrate(80);
-
-        const mySentUnrequited =
-          data.sent_unrequited || false;
 
         html += `
           <div class="neon-rain-card">
@@ -1707,27 +1638,6 @@
                 今回はマッチングとはなりませんでした。
               </p>
 
-              ${mySentUnrequited ? `
-                <div class="unrequited-sent-box">
-
-                  <strong style="font-size:14px; color:#00f0ff;">
-                    ✉️ メッセージ送信済み
-                  </strong>
-                  <br>
-
-                  <span style="
-                    font-size:12.5px;
-                    display:block;
-                    margin-top:4px;
-                  ">
-                    「マッチしなくても届ける」を設定したお相手の画面には、
-                    <b>あなたの連絡先とメッセージが届いています！</b><br>
-                    お相手からの連絡を楽しみにお待ちください✨
-                  </span>
-
-                </div>
-              ` : ''}
-
               <div class="thanks-footer">
                 ご参加いただきありがとうございました！<br>
                 またのご参加を心よりお待ちしております🥂✨
@@ -1740,7 +1650,7 @@
 
       display.innerHTML = html;
 
-      if (!data.matched && !data.has_unrequited) {
+      if (!data.matched) {
         startRainEffect('rainCanvas');
       }
     }
