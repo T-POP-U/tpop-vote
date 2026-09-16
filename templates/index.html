@@ -1190,6 +1190,191 @@
       filter: none !important;
     }
 
+
+
+    /* ===== RESULT：ギリギリまで結果が分からないパズル演出 ===== */
+    .suspense-overlay {
+      background:
+        radial-gradient(circle at 50% 47%, rgba(255,255,255,.07), transparent 22%),
+        radial-gradient(circle at 25% 50%, rgba(255,0,127,.10), transparent 32%),
+        radial-gradient(circle at 75% 50%, rgba(0,240,255,.10), transparent 32%),
+        rgba(5, 8, 17, .975) !important;
+    }
+
+    .suspense-vignette {
+      position:absolute;
+      inset:0;
+      box-shadow: inset 0 0 110px rgba(0,0,0,.92);
+      animation: suspenseBreath .72s ease-in-out infinite;
+    }
+
+    @keyframes suspenseBreath {
+      0%,100% { opacity:.72; }
+      50% { opacity:1; }
+    }
+
+    .suspense-stage { height:340px; }
+
+    .suspense-copy {
+      position:absolute;
+      top:24px;
+      left:50%;
+      transform:translateX(-50%);
+      color:rgba(255,255,255,.92);
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.42em;
+      padding-left:.42em;
+      text-shadow:0 0 10px rgba(255,255,255,.55);
+      animation: resultWordPulse 1.05s ease-in-out infinite;
+    }
+
+    @keyframes resultWordPulse {
+      0%,100% { opacity:.35; }
+      50% { opacity:1; }
+    }
+
+    .suspense-dots {
+      position:absolute;
+      top:55px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:7px;
+    }
+    .suspense-dots span {
+      width:5px; height:5px; border-radius:50%; background:#fff; opacity:.25;
+      animation: suspenseDot .9s infinite;
+    }
+    .suspense-dots span:nth-child(2){ animation-delay:.15s; }
+    .suspense-dots span:nth-child(3){ animation-delay:.3s; }
+    @keyframes suspenseDot { 0%,100%{opacity:.18;transform:scale(.75)} 50%{opacity:1;transform:scale(1.25)} }
+
+    .jigsaw-piece {
+      position:absolute;
+      top:50%;
+      width:116px;
+      height:116px;
+      border-radius:8px;
+      will-change:transform,filter,opacity;
+    }
+
+    .jigsaw-left {
+      left:50%;
+      background:linear-gradient(135deg,#ff5a91 0%,#f00058 100%);
+      box-shadow:0 0 16px rgba(255,0,100,.75),0 0 40px rgba(255,0,100,.32);
+      transform:translate(-245px,-50%) rotate(-7deg) scale(.9);
+      animation:leftSuspense 3.05s cubic-bezier(.18,.82,.22,1) forwards;
+    }
+    .jigsaw-left::after {
+      content:'';
+      position:absolute;
+      width:40px;height:40px;border-radius:50%;
+      right:-20px;top:38px;
+      background:linear-gradient(135deg,#ff3d7c,#f00058);
+      box-shadow:8px 0 12px rgba(255,0,100,.22);
+    }
+
+    .jigsaw-right {
+      right:50%;
+      background:linear-gradient(135deg,#58eaff 0%,#079cff 100%);
+      box-shadow:0 0 16px rgba(0,210,255,.78),0 0 40px rgba(0,210,255,.32);
+      transform:translate(245px,-50%) rotate(7deg) scale(.9);
+      animation:rightSuspense 3.05s cubic-bezier(.18,.82,.22,1) forwards;
+    }
+    .jigsaw-right::before {
+      content:'';
+      position:absolute;
+      width:42px;height:42px;border-radius:50%;
+      left:-21px;top:37px;
+      background:#080c16;
+      box-shadow:inset 0 0 10px rgba(0,0,0,.65), -5px 0 10px rgba(0,0,0,.3);
+      z-index:3;
+    }
+
+    .jigsaw-knob { position:absolute;width:34px;height:34px;border-radius:50%; }
+    .jigsaw-left .jigsaw-knob-top { top:-17px;left:41px;background:#ff4b85; }
+    .jigsaw-left .jigsaw-knob-bottom { bottom:-17px;left:41px;background:#f00058; }
+    .jigsaw-right .jigsaw-knob-top { top:-17px;left:41px;background:#51e5ff; }
+    .jigsaw-right .jigsaw-knob-bottom { bottom:-17px;left:41px;background:#079cff; }
+
+    @keyframes leftSuspense {
+      0%{transform:translate(-245px,-50%) rotate(-7deg) scale(.9);opacity:0}
+      28%{opacity:1}
+      56%{transform:translate(-92px,-50%) rotate(1.5deg) scale(1)}
+      70%{transform:translate(-105px,-50%) rotate(-1deg) scale(.98)}
+      84%{transform:translate(-78px,-50%) rotate(.4deg) scale(1.01)}
+      100%{transform:translate(-72px,-50%) rotate(0) scale(1)}
+    }
+    @keyframes rightSuspense {
+      0%{transform:translate(245px,-50%) rotate(7deg) scale(.9);opacity:0}
+      28%{opacity:1}
+      56%{transform:translate(92px,-50%) rotate(-1.5deg) scale(1)}
+      70%{transform:translate(105px,-50%) rotate(1deg) scale(.98)}
+      84%{transform:translate(78px,-50%) rotate(-.4deg) scale(1.01)}
+      100%{transform:translate(72px,-50%) rotate(0) scale(1)}
+    }
+
+    .suspense-stage.reveal.is-connected .jigsaw-left {
+      animation:leftConnect .62s cubic-bezier(.16,.9,.2,1.15) forwards;
+    }
+    .suspense-stage.reveal.is-connected .jigsaw-right {
+      animation:rightConnect .62s cubic-bezier(.16,.9,.2,1.15) forwards;
+    }
+    @keyframes leftConnect {
+      0%{transform:translate(-72px,-50%)}
+      72%{transform:translate(-55px,-50%) scale(1.035)}
+      100%{transform:translate(-58px,-50%) scale(1)}
+    }
+    @keyframes rightConnect {
+      0%{transform:translate(72px,-50%)}
+      72%{transform:translate(55px,-50%) scale(1.035)}
+      100%{transform:translate(58px,-50%) scale(1)}
+    }
+
+    .suspense-stage.reveal.is-apart .jigsaw-left {
+      animation:leftDrift .95s ease-in forwards;
+    }
+    .suspense-stage.reveal.is-apart .jigsaw-right {
+      animation:rightDrift .95s ease-in forwards;
+    }
+    @keyframes leftDrift {
+      0%{transform:translate(-72px,-50%);opacity:1}
+      22%{transform:translate(-60px,-50%) rotate(.5deg)}
+      100%{transform:translate(-185px,-50%) rotate(-7deg) scale(.92);opacity:.18}
+    }
+    @keyframes rightDrift {
+      0%{transform:translate(72px,-50%);opacity:1}
+      22%{transform:translate(60px,-50%) rotate(-.5deg)}
+      100%{transform:translate(185px,-50%) rotate(7deg) scale(.92);opacity:.18}
+    }
+
+    .suspense-flash,.suspense-ring { animation:none !important; }
+    .suspense-stage.reveal.is-connected .suspense-flash { animation:puzzleFlash .72s ease-out .38s forwards !important; }
+    .suspense-stage.reveal.is-connected .suspense-ring { animation:puzzleRing 1s ease-out .38s forwards !important; }
+
+    .suspense-stage.reveal.is-apart::after {
+      content:'・・・';
+      position:absolute;
+      left:50%;top:calc(50% + 105px);
+      transform:translateX(-50%);
+      color:rgba(255,255,255,.72);
+      font-size:20px;
+      letter-spacing:.35em;
+      animation:quietDots .8s ease-out forwards;
+    }
+    @keyframes quietDots { from{opacity:0;transform:translateX(-50%) translateY(8px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+    @media (max-width:420px){
+      .suspense-stage{height:300px}
+      .jigsaw-piece{width:98px;height:98px}
+      .jigsaw-left::after{width:34px;height:34px;right:-17px;top:32px}
+      .jigsaw-right::before{width:36px;height:36px;left:-18px;top:31px}
+      .jigsaw-knob{width:30px;height:30px}
+      .jigsaw-left .jigsaw-knob-top,.jigsaw-right .jigsaw-knob-top{top:-15px;left:34px}
+      .jigsaw-left .jigsaw-knob-bottom,.jigsaw-right .jigsaw-knob-bottom{bottom:-15px;left:34px}
+    }
+
 </style>
 </head>
 <body>
@@ -1619,89 +1804,61 @@
     }
 
 
-    function playPuzzleMatchAnimation(layer) {
+    /* ===== 結果直前：最後まで結果を隠すパズル演出 ===== */
+    function playPuzzleResultAnimation(layer, connected) {
       return new Promise(resolve => {
         layer.innerHTML = `
-          <div class="puzzle-match-overlay">
-            <div class="puzzle-stage">
-              <div class="puzzle-piece puzzle-red" aria-hidden="true">
-                <svg viewBox="0 0 120 120">
-                  <defs>
-                    <linearGradient id="redPuzzleGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stop-color="#ff5b87"/>
-                      <stop offset="100%" stop-color="#e6004f"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M10 22 Q10 12 20 12 H48
-                           C45 3 51 -3 60 -3
-                           C69 -3 75 3 72 12
-                           H100 Q110 12 110 22
-                           V48
-                           C101 45 95 51 95 60
-                           C95 69 101 75 110 72
-                           V100 Q110 110 100 110
-                           H72
-                           C75 101 69 95 60 95
-                           C51 95 45 101 48 110
-                           H20 Q10 110 10 100
-                           V72
-                           C19 75 25 69 25 60
-                           C25 51 19 45 10 48 Z"
-                        fill="url(#redPuzzleGrad)" stroke="#ff9fba" stroke-width="2"/>
-                </svg>
+          <div class="puzzle-match-overlay suspense-overlay">
+            <div class="suspense-vignette"></div>
+            <div class="puzzle-stage suspense-stage ${connected ? 'is-connected' : 'is-apart'}">
+              <div class="suspense-copy">RESULT</div>
+              <div class="suspense-dots"><span></span><span></span><span></span></div>
+
+              <div class="jigsaw-piece jigsaw-left" aria-hidden="true">
+                <div class="jigsaw-knob jigsaw-knob-top"></div>
+                <div class="jigsaw-knob jigsaw-knob-bottom"></div>
+              </div>
+              <div class="jigsaw-piece jigsaw-right" aria-hidden="true">
+                <div class="jigsaw-knob jigsaw-knob-top"></div>
+                <div class="jigsaw-knob jigsaw-knob-bottom"></div>
               </div>
 
-              <div class="puzzle-piece puzzle-blue" aria-hidden="true">
-                <svg viewBox="0 0 120 120">
-                  <defs>
-                    <linearGradient id="bluePuzzleGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stop-color="#62f3ff"/>
-                      <stop offset="100%" stop-color="#008cff"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M10 22 Q10 12 20 12 H48
-                           C45 3 51 -3 60 -3
-                           C69 -3 75 3 72 12
-                           H100 Q110 12 110 22
-                           V48
-                           C101 45 95 51 95 60
-                           C95 69 101 75 110 72
-                           V100 Q110 110 100 110
-                           H72
-                           C75 101 69 95 60 95
-                           C51 95 45 101 48 110
-                           H20 Q10 110 10 100
-                           V72
-                           C19 75 25 69 25 60
-                           C25 51 19 45 10 48 Z"
-                        fill="url(#bluePuzzleGrad)" stroke="#a8f8ff" stroke-width="2"/>
-                </svg>
-              </div>
-
-              <div class="puzzle-flash"></div>
-              <div class="puzzle-ring"></div>
-              <div class="puzzle-match-text">MATCH!</div>
+              <div class="puzzle-flash suspense-flash"></div>
+              <div class="puzzle-ring suspense-ring"></div>
             </div>
           </div>
         `;
 
-        setTimeout(() => {
-          triggerVibrate([70, 35, 160]);
+        // ここまでは結果に関係なく同じ動き
+        setTimeout(() => triggerVibrate([55, 80, 55]), 650);
+        setTimeout(() => triggerVibrate([70, 55, 70]), 1450);
+        setTimeout(() => triggerVibrate([95, 45, 95]), 2250);
 
-          if (typeof confetti === 'function') {
-            confetti({
-              particleCount: 150,
-              spread: 95,
-              startVelocity: 42,
-              origin: { x: 0.5, y: 0.5 }
-            });
+        // 最後の瞬間だけ結果に応じて分岐
+        setTimeout(() => {
+          const stage = layer.querySelector('.suspense-stage');
+          if (!stage) return;
+          stage.classList.add('reveal');
+
+          if (connected) {
+            triggerVibrate([90, 35, 170]);
+            if (typeof confetti === 'function') {
+              confetti({
+                particleCount: 150,
+                spread: 95,
+                startVelocity: 42,
+                origin: { x: 0.5, y: 0.5 }
+              });
+            }
+          } else {
+            triggerVibrate([70, 90, 45]);
           }
-        }, 1020);
+        }, 3050);
 
         setTimeout(() => {
-          layer.innerHTML = "";
+          layer.innerHTML = '';
           resolve();
-        }, 2100);
+        }, connected ? 4300 : 4450);
       });
     }
 
@@ -1801,10 +1958,8 @@
 
       layer.innerHTML = "";
 
-      // マッチしたときだけ、結果カードの前に赤×青パズル演出
-      if (data.matched) {
-        await playPuzzleMatchAnimation(layer);
-      }
+      // 結果に関係なく同じ演出を開始し、最後の瞬間だけ分岐する
+      await playPuzzleResultAnimation(layer, !!data.matched);
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
