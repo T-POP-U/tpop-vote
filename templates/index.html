@@ -1497,52 +1497,13 @@
 </style>
 
 <style>
-/* ===== パズル修正：凹みを背景色の円で描かず、本当に切り抜く ===== */
-/* 赤ピース：左側の凹みを透明に切り抜く */
-.jigsaw-left {
-  -webkit-mask-image: radial-gradient(circle 19px at 0 50%, transparent 18px, #000 19px);
-  mask-image: radial-gradient(circle 19px at 0 50%, transparent 18px, #000 19px);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}
-.jigsaw-left::before { display:none !important; }
-
-/* 青ピース：左の接続用凹み＋右側の凹みを、どちらも透明に切り抜く */
-.jigsaw-right {
-  -webkit-mask-image:
-    radial-gradient(circle 21px at 0 50%, transparent 20px, #000 21px),
-    radial-gradient(circle 19px at 100% 50%, transparent 18px, #000 19px);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    radial-gradient(circle 21px at 0 50%, transparent 20px, #000 21px),
-    radial-gradient(circle 19px at 100% 50%, transparent 18px, #000 19px);
-  mask-composite: intersect;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}
-.jigsaw-right::before,
-.jigsaw-right::after { display:none !important; }
-
-@media (max-width:420px){
-  .jigsaw-left {
-    -webkit-mask-image: radial-gradient(circle 16px at 0 50%, transparent 15px, #000 16px);
-    mask-image: radial-gradient(circle 16px at 0 50%, transparent 15px, #000 16px);
-  }
-  .jigsaw-right {
-    -webkit-mask-image:
-      radial-gradient(circle 18px at 0 50%, transparent 17px, #000 18px),
-      radial-gradient(circle 16px at 100% 50%, transparent 15px, #000 16px);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      radial-gradient(circle 18px at 0 50%, transparent 17px, #000 18px),
-      radial-gradient(circle 16px at 100% 50%, transparent 15px, #000 16px);
-    mask-composite: intersect;
-  }
-}
+/* ===== パズル形状固定版：元の形をSVGでそのまま描き、色付き/黒い円を使わない ===== */
+.jigsaw-piece{background:none!important;box-shadow:none!important;overflow:visible!important;}
+.jigsaw-piece::before,.jigsaw-piece::after,.jigsaw-piece .jigsaw-knob{display:none!important;}
+.jigsaw-piece .piece-svg{position:absolute;left:-22px;top:-18px;width:160px;height:152px;overflow:visible;filter:drop-shadow(0 0 8px currentColor) drop-shadow(0 0 18px currentColor);}
+.jigsaw-left{color:#ff176d;-webkit-mask:none!important;mask:none!important;}
+.jigsaw-right{color:#20cfff;-webkit-mask:none!important;mask:none!important;}
+@media(max-width:420px){.jigsaw-piece .piece-svg{left:-18px;top:-15px;width:134px;height:128px;}}
 </style>
 </head>
 <body>
@@ -1983,12 +1944,18 @@
               <div class="suspense-dots"><span></span><span></span><span></span></div>
 
               <div class="jigsaw-piece jigsaw-left" aria-hidden="true">
-                <div class="jigsaw-knob jigsaw-knob-top"></div>
-                <div class="jigsaw-knob jigsaw-knob-bottom"></div>
+                <svg class="piece-svg" viewBox="-22 -18 160 152" xmlns="http://www.w3.org/2000/svg">
+                  <defs><linearGradient id="redPieceGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5a91"/><stop offset="1" stop-color="#f00058"/></linearGradient></defs>
+                  <!-- 上下は凸、左は凹、右は凸。円を重ねず1本の輪郭で描画 -->
+                  <path fill="url(#redPieceGrad)" d="M0 0 H38 C38 -10 45 -17 55 -17 C65 -17 72 -10 72 0 H116 V36 C128 36 137 44 137 55 C137 66 128 74 116 74 V116 H72 C72 128 65 136 55 136 C45 136 38 128 38 116 H0 V75 C11 75 19 67 19 57 C19 47 11 39 0 39 Z"/>
+                </svg>
               </div>
               <div class="jigsaw-piece jigsaw-right" aria-hidden="true">
-                <div class="jigsaw-knob jigsaw-knob-top"></div>
-                <div class="jigsaw-knob jigsaw-knob-bottom"></div>
+                <svg class="piece-svg" viewBox="-22 -18 160 152" xmlns="http://www.w3.org/2000/svg">
+                  <defs><linearGradient id="bluePieceGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#58eaff"/><stop offset="1" stop-color="#079cff"/></linearGradient></defs>
+                  <!-- 上下は凸、左と右は凹。左の凹に赤の右凸がカチッとはまる -->
+                  <path fill="url(#bluePieceGrad)" d="M0 0 H38 C38 -10 45 -17 55 -17 C65 -17 72 -10 72 0 H116 V39 C105 39 97 47 97 57 C97 67 105 75 116 75 V116 H72 C72 128 65 136 55 136 C45 136 38 128 38 116 H0 V74 C12 74 21 66 21 55 C21 44 12 36 0 36 Z"/>
+                </svg>
               </div>
 
               <div class="puzzle-flash suspense-flash"></div>
