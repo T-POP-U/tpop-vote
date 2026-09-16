@@ -1495,6 +1495,55 @@
     }
 
 </style>
+
+<style>
+/* ===== パズル修正：凹みを背景色の円で描かず、本当に切り抜く ===== */
+/* 赤ピース：左側の凹みを透明に切り抜く */
+.jigsaw-left {
+  -webkit-mask-image: radial-gradient(circle 19px at 0 50%, transparent 18px, #000 19px);
+  mask-image: radial-gradient(circle 19px at 0 50%, transparent 18px, #000 19px);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.jigsaw-left::before { display:none !important; }
+
+/* 青ピース：左の接続用凹み＋右側の凹みを、どちらも透明に切り抜く */
+.jigsaw-right {
+  -webkit-mask-image:
+    radial-gradient(circle 21px at 0 50%, transparent 20px, #000 21px),
+    radial-gradient(circle 19px at 100% 50%, transparent 18px, #000 19px);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(circle 21px at 0 50%, transparent 20px, #000 21px),
+    radial-gradient(circle 19px at 100% 50%, transparent 18px, #000 19px);
+  mask-composite: intersect;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.jigsaw-right::before,
+.jigsaw-right::after { display:none !important; }
+
+@media (max-width:420px){
+  .jigsaw-left {
+    -webkit-mask-image: radial-gradient(circle 16px at 0 50%, transparent 15px, #000 16px);
+    mask-image: radial-gradient(circle 16px at 0 50%, transparent 15px, #000 16px);
+  }
+  .jigsaw-right {
+    -webkit-mask-image:
+      radial-gradient(circle 18px at 0 50%, transparent 17px, #000 18px),
+      radial-gradient(circle 16px at 100% 50%, transparent 15px, #000 16px);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      radial-gradient(circle 18px at 0 50%, transparent 17px, #000 18px),
+      radial-gradient(circle 16px at 100% 50%, transparent 15px, #000 16px);
+    mask-composite: intersect;
+  }
+}
+</style>
 </head>
 <body>
 
