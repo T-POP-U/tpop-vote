@@ -1011,6 +1011,163 @@
       cursor: not-allowed !important;
       pointer-events: none !important;
     }
+
+    /* ===== マッチ時：赤×青パズルがはまる演出 ===== */
+    .puzzle-match-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.08), transparent 24%),
+        rgba(11, 15, 25, 0.94);
+      pointer-events: auto;
+    }
+
+    .puzzle-stage {
+      position: relative;
+      width: min(86vw, 430px);
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .puzzle-piece {
+      position: absolute;
+      top: 50%;
+      width: 132px;
+      height: 132px;
+      filter: drop-shadow(0 0 10px currentColor)
+              drop-shadow(0 0 24px currentColor);
+      will-change: transform, opacity;
+    }
+
+    .puzzle-piece svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .puzzle-red {
+      color: #ff2b67;
+      left: 50%;
+      transform: translate(-270px, -50%) rotate(-10deg) scale(.88);
+      opacity: 0;
+      animation: puzzleRedIn 1.05s cubic-bezier(.18,.84,.22,1) forwards;
+    }
+
+    .puzzle-blue {
+      color: #00cfff;
+      right: 50%;
+      transform: translate(270px, -50%) rotate(10deg) scale(.88);
+      opacity: 0;
+      animation: puzzleBlueIn 1.05s cubic-bezier(.18,.84,.22,1) forwards;
+    }
+
+    @keyframes puzzleRedIn {
+      0%   { transform: translate(-270px,-50%) rotate(-10deg) scale(.88); opacity:0; }
+      68%  { transform: translate(-54px,-50%) rotate(1.5deg) scale(1.02); opacity:1; }
+      86%  { transform: translate(-64px,-50%) rotate(0deg) scale(.99); opacity:1; }
+      100% { transform: translate(-61px,-50%) rotate(0deg) scale(1); opacity:1; }
+    }
+
+    @keyframes puzzleBlueIn {
+      0%   { transform: translate(270px,-50%) rotate(10deg) scale(.88); opacity:0; }
+      68%  { transform: translate(54px,-50%) rotate(-1.5deg) scale(1.02); opacity:1; }
+      86%  { transform: translate(64px,-50%) rotate(0deg) scale(.99); opacity:1; }
+      100% { transform: translate(61px,-50%) rotate(0deg) scale(1); opacity:1; }
+    }
+
+    .puzzle-flash {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      box-shadow:
+        0 0 18px #fff,
+        0 0 42px #ff4fa3,
+        0 0 72px #00f0ff;
+      animation: puzzleFlash .7s ease-out 1.02s forwards;
+    }
+
+    @keyframes puzzleFlash {
+      0%   { transform: translate(-50%,-50%) scale(0); opacity:0; }
+      18%  { transform: translate(-50%,-50%) scale(2.2); opacity:1; }
+      100% { transform: translate(-50%,-50%) scale(7); opacity:0; }
+    }
+
+    .puzzle-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255,255,255,.95);
+      border-radius: 50%;
+      transform: translate(-50%,-50%) scale(.2);
+      opacity: 0;
+      box-shadow: 0 0 18px rgba(255,255,255,.9);
+      animation: puzzleRing 1s ease-out 1.02s forwards;
+    }
+
+    @keyframes puzzleRing {
+      0%   { transform: translate(-50%,-50%) scale(.2); opacity:1; }
+      100% { transform: translate(-50%,-50%) scale(7.5); opacity:0; }
+    }
+
+    .puzzle-match-text {
+      position: absolute;
+      left: 50%;
+      top: calc(50% + 105px);
+      width: 100%;
+      transform: translateX(-50%) translateY(12px);
+      text-align: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      opacity: 0;
+      letter-spacing: .04em;
+      text-shadow:
+        0 0 7px rgba(255,255,255,.95),
+        0 0 18px rgba(255,0,127,.65),
+        0 0 28px rgba(0,240,255,.55);
+      animation: puzzleTextIn .55s ease-out 1.18s forwards;
+    }
+
+    @keyframes puzzleTextIn {
+      to { opacity:1; transform:translateX(-50%) translateY(0); }
+    }
+
+    @media (max-width: 420px) {
+      .puzzle-stage { height: 270px; }
+      .puzzle-piece { width: 112px; height: 112px; }
+      @keyframes puzzleRedIn {
+        0%   { transform: translate(-220px,-50%) rotate(-10deg) scale(.88); opacity:0; }
+        68%  { transform: translate(-46px,-50%) rotate(1.5deg) scale(1.02); opacity:1; }
+        86%  { transform: translate(-55px,-50%) rotate(0deg) scale(.99); opacity:1; }
+        100% { transform: translate(-52px,-50%) rotate(0deg) scale(1); opacity:1; }
+      }
+      @keyframes puzzleBlueIn {
+        0%   { transform: translate(220px,-50%) rotate(10deg) scale(.88); opacity:0; }
+        68%  { transform: translate(46px,-50%) rotate(-1.5deg) scale(1.02); opacity:1; }
+        86%  { transform: translate(55px,-50%) rotate(0deg) scale(.99); opacity:1; }
+        100% { transform: translate(52px,-50%) rotate(0deg) scale(1); opacity:1; }
+      }
+      .puzzle-match-text {
+        top: calc(50% + 92px);
+        font-size: 17px;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -1439,6 +1596,93 @@
       draw();
     }
 
+
+    function playPuzzleMatchAnimation(layer) {
+      return new Promise(resolve => {
+        layer.innerHTML = `
+          <div class="puzzle-match-overlay">
+            <div class="puzzle-stage">
+              <div class="puzzle-piece puzzle-red" aria-hidden="true">
+                <svg viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="redPuzzleGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#ff5b87"/>
+                      <stop offset="100%" stop-color="#e6004f"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M10 22 Q10 12 20 12 H48
+                           C45 3 51 -3 60 -3
+                           C69 -3 75 3 72 12
+                           H100 Q110 12 110 22
+                           V48
+                           C101 45 95 51 95 60
+                           C95 69 101 75 110 72
+                           V100 Q110 110 100 110
+                           H72
+                           C75 101 69 95 60 95
+                           C51 95 45 101 48 110
+                           H20 Q10 110 10 100
+                           V72
+                           C19 75 25 69 25 60
+                           C25 51 19 45 10 48 Z"
+                        fill="url(#redPuzzleGrad)" stroke="#ff9fba" stroke-width="2"/>
+                </svg>
+              </div>
+
+              <div class="puzzle-piece puzzle-blue" aria-hidden="true">
+                <svg viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="bluePuzzleGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#62f3ff"/>
+                      <stop offset="100%" stop-color="#008cff"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M10 22 Q10 12 20 12 H48
+                           C45 3 51 -3 60 -3
+                           C69 -3 75 3 72 12
+                           H100 Q110 12 110 22
+                           V48
+                           C101 45 95 51 95 60
+                           C95 69 101 75 110 72
+                           V100 Q110 110 100 110
+                           H72
+                           C75 101 69 95 60 95
+                           C51 95 45 101 48 110
+                           H20 Q10 110 10 100
+                           V72
+                           C19 75 25 69 25 60
+                           C25 51 19 45 10 48 Z"
+                        fill="url(#bluePuzzleGrad)" stroke="#a8f8ff" stroke-width="2"/>
+                </svg>
+              </div>
+
+              <div class="puzzle-flash"></div>
+              <div class="puzzle-ring"></div>
+              <div class="puzzle-match-text">MATCH!</div>
+            </div>
+          </div>
+        `;
+
+        setTimeout(() => {
+          triggerVibrate([70, 35, 160]);
+
+          if (typeof confetti === 'function') {
+            confetti({
+              particleCount: 150,
+              spread: 95,
+              startVelocity: 42,
+              origin: { x: 0.5, y: 0.5 }
+            });
+          }
+        }, 1020);
+
+        setTimeout(() => {
+          layer.innerHTML = "";
+          resolve();
+        }, 2100);
+      });
+    }
+
     async function checkResultWithAnimation() {
       const my_id = document.getElementById('res_my_id').value;
       const pin = document.getElementById('res_pin').value;
@@ -1534,6 +1778,11 @@
       await new Promise(r => setTimeout(r, 750));
 
       layer.innerHTML = "";
+
+      // マッチしたときだけ、結果カードの前に赤×青パズル演出
+      if (data.matched) {
+        await playPuzzleMatchAnimation(layer);
+      }
 
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
