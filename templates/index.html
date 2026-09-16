@@ -1075,16 +1075,14 @@
         </div>
 
         <div class="form-group">
-          <label class="selection-title">番号札を選択（複数OK）</label>
+          <label class="selection-title">「また話せたらいいな」を選択（複数OK）</label>
           
           <div class="motto-reasons">
-            <p style="font-weight:bold; color:#fff; margin-bottom:4px;">💡 こんな感覚で選んでOK！</p>
+            <p style="font-weight:bold; color:#fff; margin-bottom:4px;">💡 軽い気持ちで選んでOK！</p>
             <ul>
-              <li>「純粋に話して楽しかった、また話したいかも」</li>
-              <li>「もっといろんな話聞きたい」</li>
-              <li>「まだ全然わからないけど、ほんの少しは気になるかも？」</li>
-              <li>「なんとなく雰囲気が良かった！」</li>
-              <div class="etc-text">などなど</div>
+              <li>「純粋に話して楽しかった」</li>
+              <li>「気になるとかじゃないけど、ほんの少し惹かれる」</li>
+              <li>「なんとなく雰囲気が好き」</li>
             </ul>
             <div class="motto-reasons-footer">お互いに選びあったときしか相手にはわからないので、気軽に選んでくださいね！</div>
           </div>
@@ -1540,7 +1538,7 @@
       let html = `<div class="result-section-header">【 結 果 】</div>`;
 
       /* =========================
-         「また話したい」が重なりました
+         「また話せたらいいな」が重なりました！
          ========================= */
       if (data.matched) {
         triggerVibrate([100, 50, 100, 50, 250]);
@@ -1548,7 +1546,7 @@
         html += `
           <div class="result-card-success">
             <div class="match-header-badge">✨ matane ✨</div>
-            <div class="match-title">🎉 「また話したい」が重なりました!</div>
+            <div class="match-title">🎉 「また話せたらいいな」が重なりました！!</div>
 
             <p style="
               color:#ffb3d9;
@@ -1558,7 +1556,7 @@
               text-align:center;
               text-shadow:0 0 10px #ff007f;
             ">
-              おめでとうございます！お互い「また話したい」と思っているようです✨
+              おめでとうございます！お互いに「また話せたらいいな」と思っているようです✨
             </p>
         `;
 
