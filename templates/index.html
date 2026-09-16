@@ -1250,49 +1250,75 @@
     .suspense-dots span:nth-child(3){ animation-delay:.3s; }
     @keyframes suspenseDot { 0%,100%{opacity:.18;transform:scale(.75)} 50%{opacity:1;transform:scale(1.25)} }
 
+    /* 参考画像に寄せたジグソーピース：上=凸、下=凸、外側=凹、接続側は赤=凸 / 青=凹 */
     .jigsaw-piece {
       position:absolute;
       top:50%;
       width:116px;
       height:116px;
-      border-radius:8px;
+      border-radius:5px;
       will-change:transform,filter,opacity;
+      isolation:isolate;
     }
 
     .jigsaw-left {
       left:50%;
       background:linear-gradient(135deg,#ff5a91 0%,#f00058 100%);
-      box-shadow:0 0 16px rgba(255,0,100,.75),0 0 40px rgba(255,0,100,.32);
+      box-shadow:0 0 16px rgba(255,0,100,.82),0 0 42px rgba(255,0,100,.38);
       transform:translate(-245px,-50%) rotate(-7deg) scale(.9);
       animation:leftSuspense 3.05s cubic-bezier(.18,.82,.22,1) forwards;
     }
+    /* 赤：右側の凸（青の凹にはまる） */
     .jigsaw-left::after {
       content:'';
       position:absolute;
-      width:40px;height:40px;border-radius:50%;
-      right:-20px;top:38px;
-      background:linear-gradient(135deg,#ff3d7c,#f00058);
-      box-shadow:8px 0 12px rgba(255,0,100,.22);
+      width:42px;height:42px;border-radius:50%;
+      right:-21px;top:37px;
+      background:linear-gradient(135deg,#ff4d86,#f00058);
+      box-shadow:6px 0 13px rgba(255,0,100,.28);
+      z-index:2;
+    }
+    /* 赤：参考画像の左側の凹 */
+    .jigsaw-left::before {
+      content:'';
+      position:absolute;
+      width:38px;height:38px;border-radius:50%;
+      left:-19px;top:39px;
+      background:#080c16;
+      box-shadow:inset -4px 0 10px rgba(0,0,0,.55);
+      z-index:3;
     }
 
     .jigsaw-right {
       right:50%;
       background:linear-gradient(135deg,#58eaff 0%,#079cff 100%);
-      box-shadow:0 0 16px rgba(0,210,255,.78),0 0 40px rgba(0,210,255,.32);
+      box-shadow:0 0 16px rgba(0,210,255,.84),0 0 42px rgba(0,210,255,.38);
       transform:translate(245px,-50%) rotate(7deg) scale(.9);
       animation:rightSuspense 3.05s cubic-bezier(.18,.82,.22,1) forwards;
     }
+    /* 青：左側の凹。赤の凸と同じ中心・大きさにしてカチッとはまる */
     .jigsaw-right::before {
       content:'';
       position:absolute;
       width:42px;height:42px;border-radius:50%;
       left:-21px;top:37px;
       background:#080c16;
-      box-shadow:inset 0 0 10px rgba(0,0,0,.65), -5px 0 10px rgba(0,0,0,.3);
+      box-shadow:inset 5px 0 10px rgba(0,0,0,.62);
+      z-index:4;
+    }
+    /* 青：参考画像の右側の凹 */
+    .jigsaw-right::after {
+      content:'';
+      position:absolute;
+      width:38px;height:38px;border-radius:50%;
+      right:-19px;top:39px;
+      background:#080c16;
+      box-shadow:inset 4px 0 10px rgba(0,0,0,.55);
       z-index:3;
     }
 
-    .jigsaw-knob { position:absolute;width:34px;height:34px;border-radius:50%; }
+    .jigsaw-knob { position:absolute;width:34px;height:34px;border-radius:50%;z-index:1; }
+    /* 画像のように両ピースとも上・下に丸い凸 */
     .jigsaw-left .jigsaw-knob-top { top:-17px;left:41px;background:#ff4b85; }
     .jigsaw-left .jigsaw-knob-bottom { bottom:-17px;left:41px;background:#f00058; }
     .jigsaw-right .jigsaw-knob-top { top:-17px;left:41px;background:#51e5ff; }
@@ -1373,6 +1399,10 @@
       .jigsaw-knob{width:30px;height:30px}
       .jigsaw-left .jigsaw-knob-top,.jigsaw-right .jigsaw-knob-top{top:-15px;left:34px}
       .jigsaw-left .jigsaw-knob-bottom,.jigsaw-right .jigsaw-knob-bottom{bottom:-15px;left:34px}
+      .jigsaw-left::before,.jigsaw-right::after{width:32px;height:32px;top:33px}
+      .jigsaw-left::before{left:-16px}.jigsaw-right::after{right:-16px}
+      @keyframes leftConnect{0%{transform:translate(-72px,-50%)}72%{transform:translate(-46px,-50%) scale(1.035)}100%{transform:translate(-49px,-50%) scale(1)}}
+      @keyframes rightConnect{0%{transform:translate(72px,-50%)}72%{transform:translate(46px,-50%) scale(1.035)}100%{transform:translate(49px,-50%) scale(1)}}
     }
 
 
