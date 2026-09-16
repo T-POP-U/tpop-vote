@@ -1375,6 +1375,95 @@
       .jigsaw-left .jigsaw-knob-bottom,.jigsaw-right .jigsaw-knob-bottom{bottom:-15px;left:34px}
     }
 
+
+    /* ===== 修正版：凸ピースと凹ピースが「重ならず」カチッとはまる ===== */
+    /* 青ピース左端の円を本当に切り抜き、赤ピース右端の凸部がそこへ入る */
+    .jigsaw-right {
+      -webkit-mask:
+        radial-gradient(circle 21px at 0 50%, transparent 20px, #000 21px),
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: source-in;
+      mask:
+        radial-gradient(circle 21px at 0 50%, transparent 20px, #000 21px),
+        linear-gradient(#000 0 0);
+      mask-composite: intersect;
+    }
+    .jigsaw-right::before { display:none !important; }
+
+    /* 結果判明直前：まだ少しだけ隙間を残す */
+    @keyframes leftSuspense {
+      0%{transform:translate(-300px,-50%) rotate(-7deg) scale(.9);opacity:0}
+      28%{opacity:1}
+      56%{transform:translate(-142px,-50%) rotate(1.5deg) scale(1)}
+      70%{transform:translate(-153px,-50%) rotate(-1deg) scale(.98)}
+      84%{transform:translate(-126px,-50%) rotate(.4deg) scale(1.01)}
+      100%{transform:translate(-124px,-50%) rotate(0) scale(1)}
+    }
+    @keyframes rightSuspense {
+      0%{transform:translate(300px,-50%) rotate(7deg) scale(.9);opacity:0}
+      28%{opacity:1}
+      56%{transform:translate(142px,-50%) rotate(-1.5deg) scale(1)}
+      70%{transform:translate(153px,-50%) rotate(1deg) scale(.98)}
+      84%{transform:translate(126px,-50%) rotate(-.4deg) scale(1.01)}
+      100%{transform:translate(124px,-50%) rotate(0) scale(1)}
+    }
+
+    /* 選び合っていた場合：本体同士の辺は中央で接するだけ。凸部だけが凹部へ入る */
+    @keyframes leftConnect {
+      0%{transform:translate(-124px,-50%)}
+      72%{transform:translate(-113px,-50%) scale(1.025)}
+      100%{transform:translate(-116px,-50%) scale(1)}
+    }
+    @keyframes rightConnect {
+      0%{transform:translate(124px,-50%)}
+      72%{transform:translate(113px,-50%) scale(1.025)}
+      100%{transform:translate(116px,-50%) scale(1)}
+    }
+
+    /* 選び合っていない場合：一度かなり近づくが、はまる直前で離れる */
+    @keyframes leftDrift {
+      0%{transform:translate(-124px,-50%);opacity:1}
+      22%{transform:translate(-118px,-50%) rotate(.35deg);opacity:1}
+      38%{transform:translate(-120px,-50%) rotate(0deg);opacity:1}
+      100%{transform:translate(-210px,-50%) rotate(-7deg) scale(.92);opacity:.18}
+    }
+    @keyframes rightDrift {
+      0%{transform:translate(124px,-50%);opacity:1}
+      22%{transform:translate(118px,-50%) rotate(-.35deg);opacity:1}
+      38%{transform:translate(120px,-50%) rotate(0deg);opacity:1}
+      100%{transform:translate(210px,-50%) rotate(7deg) scale(.92);opacity:.18}
+    }
+
+    @media (max-width:420px){
+      /* 98pxピースでは、接続位置も98pxに合わせる */
+      @keyframes leftSuspense {
+        0%{transform:translate(-250px,-50%) rotate(-7deg) scale(.9);opacity:0}
+        28%{opacity:1}
+        56%{transform:translate(-122px,-50%) rotate(1.5deg) scale(1)}
+        70%{transform:translate(-133px,-50%) rotate(-1deg) scale(.98)}
+        84%{transform:translate(-108px,-50%) rotate(.4deg) scale(1.01)}
+        100%{transform:translate(-106px,-50%) rotate(0) scale(1)}
+      }
+      @keyframes rightSuspense {
+        0%{transform:translate(250px,-50%) rotate(7deg) scale(.9);opacity:0}
+        28%{opacity:1}
+        56%{transform:translate(122px,-50%) rotate(-1.5deg) scale(1)}
+        70%{transform:translate(133px,-50%) rotate(1deg) scale(.98)}
+        84%{transform:translate(108px,-50%) rotate(-.4deg) scale(1.01)}
+        100%{transform:translate(106px,-50%) rotate(0) scale(1)}
+      }
+      @keyframes leftConnect { 0%{transform:translate(-106px,-50%)} 72%{transform:translate(-95px,-50%) scale(1.025)} 100%{transform:translate(-98px,-50%) scale(1)} }
+      @keyframes rightConnect { 0%{transform:translate(106px,-50%)} 72%{transform:translate(95px,-50%) scale(1.025)} 100%{transform:translate(98px,-50%) scale(1)} }
+      @keyframes leftDrift { 0%{transform:translate(-106px,-50%);opacity:1} 25%{transform:translate(-100px,-50%)} 100%{transform:translate(-175px,-50%) rotate(-7deg) scale(.92);opacity:.18} }
+      @keyframes rightDrift { 0%{transform:translate(106px,-50%);opacity:1} 25%{transform:translate(100px,-50%)} 100%{transform:translate(175px,-50%) rotate(7deg) scale(.92);opacity:.18} }
+      .jigsaw-right {
+        -webkit-mask: radial-gradient(circle 18px at 0 50%, transparent 17px, #000 18px), linear-gradient(#000 0 0);
+        -webkit-mask-composite: source-in;
+        mask: radial-gradient(circle 18px at 0 50%, transparent 17px, #000 18px), linear-gradient(#000 0 0);
+        mask-composite: intersect;
+      }
+    }
+
 </style>
 </head>
 <body>
